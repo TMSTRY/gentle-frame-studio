@@ -42,6 +42,9 @@ export default function Hero() {
 
     // --- Entrance, held until the intro card lifts -----------------
     gsap.set(q("[data-hero-fade]"), { opacity: 0 });
+    // Re-express the CSS hide (translateY 115%) in GSAP's own
+    // transform space so the reveal tween can drive it.
+    gsap.set(q(".reveal-word"), { yPercent: 115, y: 0 });
 
     let entrance: gsap.core.Timeline | null = null;
     const play = () => {
@@ -117,50 +120,64 @@ export default function Hero() {
       aria-label="Gentle Frame Studio — where memories meet imagination"
     >
       <div ref={stageRef} className="relative flex h-full w-full items-center justify-center">
+        {/*
+          Every mouse-depth layer is split in two: a static outer
+          element owns the CSS centering transform, an inner element
+          owns the GSAP-driven drift — so they never fight over the
+          same transform.
+        */}
+
         {/* Ambient warm light */}
-        <div
-          data-hero-glow
-          className="animate-breathe absolute top-1/2 left-1/2 h-[70vmin] w-[90vmin] -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{
-            background:
-              "radial-gradient(closest-side, rgba(230,213,179,0.13), rgba(194,161,101,0.05) 55%, transparent 75%)",
-          }}
-        />
+        <div className="absolute top-1/2 left-1/2 h-[70vmin] w-[90vmin] -translate-x-1/2 -translate-y-1/2">
+          <div data-hero-glow className="h-full w-full">
+            <div
+              className="animate-breathe h-full w-full rounded-full"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(230,213,179,0.13), rgba(194,161,101,0.05) 55%, transparent 75%)",
+              }}
+            />
+          </div>
+        </div>
 
         {/* Back frame — memory */}
-        <svg
-          data-hero-back
-          viewBox="0 0 100 82"
-          fill="none"
-          aria-hidden="true"
-          className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[62%] -translate-y-[60%] text-champagne/45"
-        >
-          <rect
-            x="4" y="4" width="92" height="74" rx="10"
-            stroke="currentColor" strokeWidth="0.8" pathLength={1}
-            style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
-          />
-        </svg>
+        <div className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[62%] -translate-y-[60%]">
+          <svg
+            data-hero-back
+            viewBox="0 0 100 82"
+            fill="none"
+            aria-hidden="true"
+            className="w-full text-champagne/40"
+          >
+            <rect
+              x="4" y="4" width="92" height="74" rx="10"
+              stroke="currentColor" strokeWidth="0.5" pathLength={1}
+              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
+            />
+          </svg>
+        </div>
 
         {/* Front frame + crossbar — imagination */}
-        <svg
-          data-hero-front
-          viewBox="0 0 100 82"
-          fill="none"
-          aria-hidden="true"
-          className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[38%] -translate-y-[40%] text-champagne/70"
-        >
-          <rect
-            x="4" y="4" width="92" height="74" rx="10"
-            stroke="currentColor" strokeWidth="0.8" pathLength={1}
-            style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
-          />
-          <line
-            x1="-14" y1="41" x2="46" y2="41"
-            stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" pathLength={1}
-            style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
-          />
-        </svg>
+        <div className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[38%] -translate-y-[40%]">
+          <svg
+            data-hero-front
+            viewBox="0 0 100 82"
+            fill="none"
+            aria-hidden="true"
+            className="w-full text-champagne/65"
+          >
+            <rect
+              x="4" y="4" width="92" height="74" rx="10"
+              stroke="currentColor" strokeWidth="0.5" pathLength={1}
+              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
+            />
+            <line
+              x1="-14" y1="41" x2="46" y2="41"
+              stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" pathLength={1}
+              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
+            />
+          </svg>
+        </div>
 
         {/* Headline */}
         <div data-hero-head className="relative z-10 px-6 text-center">
