@@ -179,6 +179,15 @@ export default function Hero() {
           </svg>
         </div>
 
+        {/* Atmosphere: strokes sink away behind the headline */}
+        <div
+          className="absolute top-1/2 left-1/2 h-[64vmin] w-[100vmin] -translate-x-1/2 -translate-y-1/2"
+          aria-hidden="true"
+          style={{
+            background: "radial-gradient(closest-side, rgba(10,9,8,0.92), rgba(10,9,8,0.55) 55%, transparent 78%)",
+          }}
+        />
+
         {/* Headline */}
         <div data-hero-head className="relative z-10 px-6 text-center">
           <p data-hero-fade className="text-eyebrow mb-8">
