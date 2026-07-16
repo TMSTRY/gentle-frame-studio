@@ -15,6 +15,7 @@ export default function Cursor() {
   const [label, setLabel] = useState<string | null>(null);
   const [hoveringLink, setHoveringLink] = useState(false);
   const [enabled, setEnabled] = useState(false);
+  const [awake, setAwake] = useState(false);
 
   useEffect(() => {
     const finePointer = window.matchMedia("(pointer: fine)").matches;
@@ -33,6 +34,7 @@ export default function Cursor() {
     const ringY = gsap.quickTo(ring, "y", { duration: 0.45, ease: "power3.out" });
 
     const onMove = (event: MouseEvent) => {
+      setAwake(true);
       dotX(event.clientX);
       dotY(event.clientY);
       ringX(event.clientX);
@@ -71,7 +73,12 @@ export default function Cursor() {
   }
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[95]">
+    <div
+      aria-hidden="true"
+      className={`pointer-events-none fixed inset-0 z-[95] transition-opacity duration-300 ${
+        awake ? "opacity-100" : "opacity-0"
+      }`}
+    >
       {/* Outer elements carry the GSAP position; inner ones center themselves. */}
       <div ref={ringRef} className="absolute top-0 left-0">
         <div

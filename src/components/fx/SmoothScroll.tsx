@@ -21,6 +21,13 @@ export default function SmoothScroll() {
     });
     setLenis(lenis);
 
+    // Honor hash deep-links: the browser's native jump happens
+    // before hydration, so anchor Lenis there instead of 0.
+    if (window.location.hash) {
+      const target = document.querySelector<HTMLElement>(window.location.hash);
+      if (target) lenis.scrollTo(target, { immediate: true });
+    }
+
     lenis.on("scroll", ScrollTrigger.update);
 
     const raf = (time: number) => lenis.raf(time * 1000);
