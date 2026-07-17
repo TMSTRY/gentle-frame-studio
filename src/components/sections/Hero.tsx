@@ -150,14 +150,16 @@ export default function Hero() {
             className="w-full text-champagne/40"
           >
             <rect
-              x="4" y="4" width="92" height="74" rx="10"
+              x="4" y="4" width="92" height="74" rx="9"
               stroke="currentColor" strokeWidth="0.5" pathLength={1}
               style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
             />
           </svg>
         </div>
 
-        {/* Front frame + crossbar — imagination */}
+        {/* Front frame + crossbar — imagination. The bar follows the
+            mark's proportions: ~40% down the frame, reaching a quarter
+            frame-width past the left edge and 38% into the interior. */}
         <div className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[38%] -translate-y-[40%]">
           <svg
             data-hero-front
@@ -167,13 +169,13 @@ export default function Hero() {
             className="w-full text-champagne/65"
           >
             <rect
-              x="4" y="4" width="92" height="74" rx="10"
+              x="4" y="4" width="92" height="74" rx="9"
               stroke="currentColor" strokeWidth="0.5" pathLength={1}
               style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
             />
             <line
-              x1="-14" y1="41" x2="46" y2="41"
-              stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" pathLength={1}
+              x1="-19.2" y1="33.4" x2="39.3" y2="33.4"
+              stroke="currentColor" strokeWidth="0.5" pathLength={1}
               style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
             />
           </svg>
