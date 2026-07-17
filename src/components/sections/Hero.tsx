@@ -141,8 +141,11 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Back frame — memory */}
-        <div className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[62%] -translate-y-[60%]">
+        {/* Back frame — memory. The spread between the frames follows
+            the mark: the back frame's right edge cuts through the
+            middle of the front frame, its bottom edge through the
+            front frame's lower third. */}
+        <div className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[72%] -translate-y-[65%]">
           <svg
             data-hero-back
             viewBox="0 0 100 82"
@@ -159,7 +162,7 @@ export default function Hero() {
         </div>
 
         {/* Front frame — imagination */}
-        <div className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[38%] -translate-y-[40%]">
+        <div className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[28%] -translate-y-[35%]">
           <svg
             data-hero-front
             viewBox="0 0 100 82"
@@ -212,13 +215,18 @@ export default function Hero() {
               </span>
             ))}
           </h1>
-          {/* The mark's crossbar, anchored to the headline instead of
-              the frames so it can never land behind the text: it
-              underlines "meet" and bleeds left past the container. */}
+          {/* The mark's crossbar. Vertically it tracks the headline so
+              it can never land behind the text; horizontally it derives
+              from the frames' own width so it starts inside the back
+              frame and reaches 38% into the front one, like the logo. */}
           <div aria-hidden="true" className="relative mt-7 h-[3px] md:h-1">
             <span
               data-hero-bar
-              className="absolute inset-y-0 -left-[10%] w-[52%] bg-champagne/65"
+              className="absolute inset-y-0 bg-champagne/65"
+              style={{
+                left: "calc(50% - 0.61 * min(74vw, 760px))",
+                width: "calc(0.72 * min(74vw, 760px))",
+              }}
             />
           </div>
           <p data-hero-fade className="mx-auto mt-8 max-w-md text-sm leading-relaxed font-light text-taupe md:text-base">
