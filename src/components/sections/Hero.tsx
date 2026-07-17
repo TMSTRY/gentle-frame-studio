@@ -189,7 +189,16 @@ export default function Hero() {
 
         {/* Headline */}
         <div data-hero-head className="relative z-10 px-6 text-center">
-          <p data-hero-fade className="text-eyebrow mb-8">
+          <p data-hero-fade className="text-eyebrow relative mb-8">
+            {/* Soft scrim so frame strokes melt away behind the text */}
+            <span
+              aria-hidden="true"
+              className="absolute -inset-x-16 -inset-y-8 -z-10"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(10,9,8,0.9), rgba(10,9,8,0.5) 55%, transparent 78%)",
+              }}
+            />
             A cinematic creative studio — {site.location}, working worldwide
           </p>
           <h1 className="font-display text-[clamp(3rem,9vw,8.25rem)] leading-[1.02] font-medium tracking-[-0.01em] text-cream">
@@ -219,7 +228,7 @@ export default function Hero() {
               it can never land behind the text; horizontally it derives
               from the frames' own width so it starts inside the back
               frame and reaches 38% into the front one, like the logo. */}
-          <div aria-hidden="true" className="relative mt-7 h-[3px] md:h-1">
+          <div aria-hidden="true" className="relative mt-3 h-[3px] md:mt-4 md:h-1">
             <span
               data-hero-bar
               className="absolute inset-y-0 bg-champagne/65"
@@ -229,7 +238,16 @@ export default function Hero() {
               }}
             />
           </div>
-          <p data-hero-fade className="mx-auto mt-8 max-w-md text-sm leading-relaxed font-light text-taupe md:text-base">
+          <p data-hero-fade className="relative mx-auto mt-12 max-w-md text-sm leading-relaxed font-light text-taupe md:text-base">
+            {/* Soft scrim so frame strokes melt away behind the text */}
+            <span
+              aria-hidden="true"
+              className="absolute -inset-x-20 -inset-y-10 -z-10"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(10,9,8,0.92), rgba(10,9,8,0.55) 55%, transparent 78%)",
+              }}
+            />
             We craft memorial films, luxury visuals and quiet software —
             with new tools and an old-fashioned heart.
           </p>

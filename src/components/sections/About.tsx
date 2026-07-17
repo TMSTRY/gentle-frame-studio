@@ -2,7 +2,7 @@ import Image from "next/image";
 import Parallax from "@/components/fx/Parallax";
 import Reveal from "@/components/fx/Reveal";
 
-const ROLES = ["Psychiatric nurse", "AI filmmaker", "Musician", "Developer", "Maker"];
+const ROLES = ["Correctional officer", "AI filmmaker", "Musician", "Developer", "Maker"];
 
 /**
  * The human behind the studio — a story, a place reserved for a
@@ -13,13 +13,34 @@ export default function About() {
     <section id="studio" className="scroll-mt-24" aria-label="About the studio">
       <div className="mx-auto max-w-[1680px] px-6 py-36 md:px-12 md:py-56">
         <div className="grid gap-16 md:grid-cols-12 md:gap-12">
-          {/* Portrait — framed by the brand's overlapping frames */}
+          {/* Portrait — two cards held like a hand of playing cards.
+              The monogram card sits on top; hovering fans it right
+              while the portrait behind it fans left into view. */}
           <div className="md:col-span-5">
             <Reveal>
               <Parallax speed={0.08}>
-                <figure className="relative mx-auto max-w-[420px]">
+                <figure
+                  className="group relative mx-auto max-w-[420px] outline-none"
+                  tabIndex={0}
+                  data-cursor="Meet"
+                  aria-label="Portrait of Tim Mostrey — hover to reveal"
+                >
                   <div className="absolute -top-4 -left-4 h-full w-full rounded-xl border border-champagne/25" aria-hidden="true" />
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-xl border border-champagne/50">
+
+                  {/* Portrait card — behind, fans left on hover */}
+                  <div className="absolute inset-0 origin-bottom overflow-hidden rounded-xl border border-champagne/40 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-x-[44%] group-hover:-rotate-[8deg] group-focus-visible:-translate-x-[44%] group-focus-visible:-rotate-[8deg]">
+                    <Image
+                      src="/brand/artistiek.png"
+                      alt="Tim Mostrey, founder of Gentle Frame Studio — black-and-white portrait"
+                      fill
+                      sizes="(max-width: 768px) 90vw, 420px"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent" aria-hidden="true" />
+                  </div>
+
+                  {/* Monogram card — on top, fans right on hover */}
+                  <div className="relative aspect-[4/5] origin-bottom overflow-hidden rounded-xl border border-champagne/50 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[44%] group-hover:rotate-[8deg] group-focus-visible:translate-x-[44%] group-focus-visible:rotate-[8deg]">
                     <div
                       className="absolute inset-0"
                       style={{
@@ -36,7 +57,7 @@ export default function About() {
                     />
                     <figcaption className="absolute inset-x-0 bottom-0 flex items-center justify-between p-5 text-[0.6rem] tracking-[0.28em] text-taupe uppercase">
                       <span>The founder</span>
-                      <span>Portrait — soon</span>
+                      <span>Tim Mostrey</span>
                     </figcaption>
                   </div>
                 </figure>
@@ -59,9 +80,9 @@ export default function About() {
               <div className="mt-10 space-y-7 text-[0.95rem] leading-[2] font-light text-cream/70">
                 <p>
                   Before there was a studio, there were night shifts. Years spent as a
-                  psychiatric nurse, sitting with people in their heaviest hours —
-                  learning that presence matters more than words, and that everyone
-                  carries a story worth keeping.
+                  correctional officer, keeping watch through the quietest hours of a
+                  prison — learning that presence matters more than words, and that
+                  everyone carries a story worth keeping.
                 </p>
                 <p>
                   Somewhere along the way, the stories asked for form. Music got
