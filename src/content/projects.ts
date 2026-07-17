@@ -43,6 +43,8 @@ export const projects: Project[] = [
     year: "2026",
     blurb: "A space-themed learning universe where children practice math and French between the stars.",
     tone: { base: "#0b0d16", glow: "#8b9dc9", light: "72% 18%" },
+    image: "/work/ruimteschool.jpg",
+    url: "https://ruimteschool.com/",
   },
   {
     id: "quietwalk",
