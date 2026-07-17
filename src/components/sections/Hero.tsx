@@ -32,7 +32,7 @@ export default function Hero() {
     const one = (selector: string) => section.querySelector<HTMLElement>(selector);
 
     if (prefersReducedMotion()) {
-      gsap.set(q("[data-hero-back] rect, [data-hero-front] rect, [data-hero-front] line"), {
+      gsap.set(q("[data-hero-back] rect, [data-hero-front] rect"), {
         strokeDashoffset: 0,
       });
       gsap.set(q(".reveal-word"), { yPercent: 0, y: 0 });
@@ -42,6 +42,7 @@ export default function Hero() {
 
     // --- Entrance, held until the intro card lifts -----------------
     gsap.set(q("[data-hero-fade]"), { opacity: 0 });
+    gsap.set(q("[data-hero-bar]"), { scaleX: 0, transformOrigin: "left center" });
     // Re-express the CSS hide (translateY 115%) in GSAP's own
     // transform space so the reveal tween can drive it.
     gsap.set(q(".reveal-word"), { yPercent: 115, y: 0 });
@@ -52,7 +53,7 @@ export default function Hero() {
         .timeline({ defaults: { ease: "power3.out" } })
         .to(q("[data-hero-back] rect"), { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, 0)
         .to(q("[data-hero-front] rect"), { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, 0.35)
-        .to(q("[data-hero-front] line"), { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, 1.3)
+        .to(q("[data-hero-bar]"), { scaleX: 1, duration: 0.6, ease: "power2.inOut" }, 1.3)
         .to(q(".reveal-word"), { yPercent: 0, duration: 1.2, stagger: 0.09 }, 0.5)
         .to(q("[data-hero-fade]"), { opacity: 1, duration: 1.4, stagger: 0.12 }, 1.4);
     };
@@ -157,9 +158,7 @@ export default function Hero() {
           </svg>
         </div>
 
-        {/* Front frame + crossbar — imagination. The bar echoes the
-            mark's crossbar but sits lower than in the logo, clearing
-            the headline: it underlines "meet" instead of crossing it. */}
+        {/* Front frame — imagination */}
         <div className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[38%] -translate-y-[40%]">
           <svg
             data-hero-front
@@ -170,11 +169,6 @@ export default function Hero() {
           >
             <rect
               x="4" y="4" width="92" height="74" rx="9"
-              stroke="currentColor" strokeWidth="0.7" pathLength={1}
-              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
-            />
-            <line
-              x1="-19.2" y1="54" x2="39.3" y2="54"
               stroke="currentColor" strokeWidth="0.7" pathLength={1}
               style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
             />
@@ -218,7 +212,16 @@ export default function Hero() {
               </span>
             ))}
           </h1>
-          <p data-hero-fade className="mx-auto mt-10 max-w-md text-sm leading-relaxed font-light text-taupe md:text-base">
+          {/* The mark's crossbar, anchored to the headline instead of
+              the frames so it can never land behind the text: it
+              underlines "meet" and bleeds left past the container. */}
+          <div aria-hidden="true" className="relative mt-7 h-[3px] md:h-1">
+            <span
+              data-hero-bar
+              className="absolute inset-y-0 -left-[10%] w-[52%] bg-champagne/65"
+            />
+          </div>
+          <p data-hero-fade className="mx-auto mt-8 max-w-md text-sm leading-relaxed font-light text-taupe md:text-base">
             We craft memorial films, luxury visuals and quiet software —
             with new tools and an old-fashioned heart.
           </p>
