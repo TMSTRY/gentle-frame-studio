@@ -146,7 +146,7 @@ function CoverCard({
             alt=""
             fill
             sizes="(max-width: 900px) 78vw, 440px"
-            className="object-cover object-center saturate-[0.88] transition-[transform,clip-path] duration-700 ease-out group-hover:scale-[1.03] [clip-path:polygon(0_62%,100%_38%,100%_100%,0_100%)] group-hover:[clip-path:polygon(0_58%,100%_34%,100%_100%,0_100%)]"
+            className="object-cover object-left saturate-[0.88] transition-[transform,clip-path] duration-700 ease-out group-hover:scale-[1.03] [clip-path:polygon(0_62%,100%_38%,100%_100%,0_100%)] group-hover:[clip-path:polygon(0_58%,100%_34%,100%_100%,0_100%)]"
           />
           <div
             aria-hidden="true"
