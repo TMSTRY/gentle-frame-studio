@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import FrameMark from "@/components/brand/FrameMark";
 import Reveal from "@/components/fx/Reveal";
+import WorkLightbox from "@/components/sections/WorkLightbox";
 import { projects, type Project } from "@/content/projects";
 import { gsap } from "@/lib/gsap";
 
@@ -16,6 +17,7 @@ import { gsap } from "@/lib/gsap";
 export default function Work() {
   const pinRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const [screening, setScreening] = useState<Project | null>(null);
 
   useEffect(() => {
     const pinArea = pinRef.current;
@@ -81,7 +83,12 @@ export default function Work() {
           className="flex w-max max-w-[100vw] snap-x snap-mandatory items-stretch gap-[4vw] overflow-x-auto px-6 py-10 [-ms-overflow-style:none] [scrollbar-width:none] md:px-12 [&::-webkit-scrollbar]:hidden"
         >
           {projects.map((project, index) => (
-            <CoverCard key={project.id} project={project} index={index} />
+            <CoverCard
+              key={project.id}
+              project={project}
+              index={index}
+              onPlay={() => setScreening(project)}
+            />
           ))}
 
           {/* Closing slate */}
@@ -99,25 +106,62 @@ export default function Work() {
           </div>
         </div>
       </div>
+
+      {/* Fixed overlay lives outside the pinned, transformed track —
+          a transform would otherwise become its containing block. */}
+      {screening ? <WorkLightbox project={screening} onClose={() => setScreening(null)} /> : null}
     </section>
   );
 }
 
-function CoverCard({ project, index }: { project: Project; index: number }) {
+function CoverCard({
+  project,
+  index,
+  onPlay,
+}: {
+  project: Project;
+  index: number;
+  onPlay: () => void;
+}) {
   const number = String(index + 1).padStart(2, "0");
+  const playable = Boolean(project.video || project.youtube);
   const cardClass =
-    "group relative block aspect-[3/4] w-[78vw] max-w-[460px] shrink-0 snap-center overflow-hidden rounded-md border border-line transition-transform duration-700 ease-out hover:-translate-y-2 md:w-[440px]";
+    "group relative block aspect-[3/4] w-[78vw] max-w-[460px] shrink-0 snap-center overflow-hidden rounded-md border border-line text-left transition-transform duration-700 ease-out hover:-translate-y-2 md:w-[440px]";
 
   const cover = project.image ? (
     <>
-      {/* Screenshot cover — eases into focus on hover */}
-      <Image
-        src={project.image}
-        alt={`${project.title} — screenshot`}
-        fill
-        sizes="(max-width: 900px) 78vw, 440px"
-        className="object-cover object-top saturate-[0.88] transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-      />
+      {project.imageB ? (
+        <>
+          {/* Diagonal split: two views of one world, hinged on a
+              champagne seam that drifts up as you hover */}
+          <Image
+            src={project.image}
+            alt={`${project.title} — screenshot`}
+            fill
+            sizes="(max-width: 900px) 78vw, 440px"
+            className="object-cover object-top saturate-[0.88] transition-[transform,clip-path] duration-700 ease-out group-hover:scale-[1.03] [clip-path:polygon(0_0,100%_0,100%_38%,0_62%)] group-hover:[clip-path:polygon(0_0,100%_0,100%_34%,0_58%)]"
+          />
+          <Image
+            src={project.imageB}
+            alt=""
+            fill
+            sizes="(max-width: 900px) 78vw, 440px"
+            className="object-cover object-center saturate-[0.88] transition-[transform,clip-path] duration-700 ease-out group-hover:scale-[1.03] [clip-path:polygon(0_62%,100%_38%,100%_100%,0_100%)] group-hover:[clip-path:polygon(0_58%,100%_34%,100%_100%,0_100%)]"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute top-[50%] -left-[10%] h-[2px] w-[120%] -rotate-[17.7deg] bg-champagne/60 shadow-[0_0_18px_rgba(230,213,179,0.35)] transition-[top] duration-700 ease-out group-hover:top-[46%]"
+          />
+        </>
+      ) : (
+        <Image
+          src={project.image}
+          alt={`${project.title} — screenshot`}
+          fill
+          sizes="(max-width: 900px) 78vw, 440px"
+          className="object-cover object-top saturate-[0.88] transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+        />
+      )}
       {/* Readability veil: always present at the edges, deepens on
           hover so the text overlay never fights the screenshot */}
       <div
@@ -174,6 +218,14 @@ function CoverCard({ project, index }: { project: Project; index: number }) {
           <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-champagne uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
             Open project ↗
           </p>
+        ) : playable ? (
+          <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-champagne uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+            Play the film ▶
+          </p>
+        ) : project.note ? (
+          <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-taupe uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+            {project.note}
+          </p>
         ) : null}
       </div>
     </div>
@@ -193,6 +245,22 @@ function CoverCard({ project, index }: { project: Project; index: number }) {
         {cover}
         {content}
       </a>
+    );
+  }
+
+  if (playable) {
+    return (
+      <button
+        type="button"
+        onClick={onPlay}
+        data-cursor="Play"
+        aria-label={`${project.title} — play the film`}
+        className={cardClass}
+        style={{ backgroundColor: project.tone.base }}
+      >
+        {cover}
+        {content}
+      </button>
     );
   }
 

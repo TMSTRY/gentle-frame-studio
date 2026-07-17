@@ -31,8 +31,18 @@ export interface Project {
   tone: ProjectTone;
   /** Screenshot cover, e.g. "/work/ruimteschool.jpg" (public/work/) */
   image?: string;
+  /** Second screenshot — renders a diagonal split with `image` */
+  imageB?: string;
   /** Live project URL — the card links here in a new tab */
   url?: string;
+  /** Self-hosted film (public/work/*.mp4) — plays in the lightbox */
+  video?: string;
+  /** YouTube video id — plays chrome-less in the lightbox */
+  youtube?: string;
+  /** Small caption shown in the lightbox, e.g. a consent line */
+  caption?: string;
+  /** Replaces the hover cue when the project can't be visited */
+  note?: string;
 }
 
 export const projects: Project[] = [
@@ -53,6 +63,8 @@ export const projects: Project[] = [
     year: "2026",
     blurb: "A pocket companion for slow walks — presence, breath and attention, nothing else.",
     tone: { base: "#0d120d", glow: "#a8bd9a", light: "30% 24%" },
+    image: "/work/quietwalk.jpg",
+    url: "https://quietwalk-two.vercel.app/",
   },
   {
     id: "shift-planning",
@@ -61,6 +73,8 @@ export const projects: Project[] = [
     year: "2026",
     blurb: "Scheduling software for night-shift teams — built inside the walls it serves.",
     tone: { base: "#0e1014", glow: "#7f96b8", light: "50% 85%" },
+    image: "/work/shift-planning.jpg",
+    note: "Private — a closed, secured environment",
   },
   {
     id: "memorial-films",
@@ -69,6 +83,9 @@ export const projects: Project[] = [
     year: "Ongoing",
     blurb: "Tributes in light. Films that give families a place to return to.",
     tone: { base: "#141009", glow: "#e3c893", light: "50% 30%" },
+    image: "/work/memorial-films.jpg",
+    video: "/work/memorial-rudy.mp4",
+    caption: "Shared with the family’s blessing",
   },
   {
     id: "music-videos",
@@ -77,6 +94,8 @@ export const projects: Project[] = [
     year: "Ongoing",
     blurb: "Cinematic worlds for original music — written, produced and framed in-house.",
     tone: { base: "#120b10", glow: "#c98ba4", light: "20% 70%" },
+    image: "/work/music-videos.jpg",
+    youtube: "pFtzxu9FHRo",
   },
   {
     id: "nft-collections",
@@ -85,14 +104,19 @@ export const projects: Project[] = [
     year: "2025",
     blurb: "Five on-chain drops — collectible artifacts excavated from a fictional mining world.",
     tone: { base: "#100e0a", glow: "#c9a96a", light: "80% 60%" },
+    image: "/work/excavara-a.jpg",
+    imageB: "/work/excavara-b.jpg",
+    url: "https://excavara.com/",
   },
   {
-    id: "creative-experiments",
-    title: "Creative Experiments",
-    category: "The Lab",
-    year: "Always",
-    blurb: "Shaders, engines, easter eggs and small strange machines. Where the next thing starts.",
-    tone: { base: "#0a0f12", glow: "#89bdb4", light: "40% 12%" },
+    id: "tmstry",
+    title: "TMSTRY",
+    category: "AI Music Artist",
+    year: "Ongoing",
+    blurb: "Human // signal // AI — an artist site built as a living transmission: music, videos and a signal to tune into.",
+    tone: { base: "#0b0e14", glow: "#9db4c9", light: "40% 12%" },
+    image: "/work/tmstry.jpg",
+    url: "https://www.tmstry.com",
   },
   {
     id: "future-products",
