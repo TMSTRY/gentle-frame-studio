@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import FrameMark from "@/components/brand/FrameMark";
 import Reveal from "@/components/fx/Reveal";
@@ -104,13 +105,32 @@ export default function Work() {
 
 function CoverCard({ project, index }: { project: Project; index: number }) {
   const number = String(index + 1).padStart(2, "0");
+  const cardClass =
+    "group relative block aspect-[3/4] w-[78vw] max-w-[460px] shrink-0 snap-center overflow-hidden rounded-md border border-line transition-transform duration-700 ease-out hover:-translate-y-2 md:w-[440px]";
 
-  return (
-    <article
-      data-cursor="View"
-      className="group relative aspect-[3/4] w-[78vw] max-w-[460px] shrink-0 snap-center overflow-hidden rounded-md border border-line transition-transform duration-700 ease-out hover:-translate-y-2 md:w-[440px]"
-      style={{ backgroundColor: project.tone.base }}
-    >
+  const cover = project.image ? (
+    <>
+      {/* Screenshot cover — eases into focus on hover */}
+      <Image
+        src={project.image}
+        alt={`${project.title} — screenshot`}
+        fill
+        sizes="(max-width: 900px) 78vw, 440px"
+        className="object-cover object-top saturate-[0.88] transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+      />
+      {/* Readability veil: always present at the edges, deepens on
+          hover so the text overlay never fights the screenshot */}
+      <div
+        className="absolute inset-0 transition-opacity duration-700"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(10,9,8,0.62), transparent 26%), linear-gradient(to top, rgba(10,9,8,0.88) 8%, rgba(10,9,8,0.35) 38%, transparent 60%)",
+        }}
+      />
+      <div className="absolute inset-0 bg-ink/45 opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
+    </>
+  ) : (
+    <>
       {/* Generative cover light */}
       <div
         className="absolute inset-0 transition-opacity duration-700 group-hover:opacity-90"
@@ -124,25 +144,62 @@ function CoverCard({ project, index }: { project: Project; index: number }) {
         className="absolute -right-10 -bottom-10 w-56 text-cream opacity-[0.05] transition-transform duration-700 group-hover:scale-105"
         strokeWidth={2}
       />
+    </>
+  );
 
-      <div className="relative flex h-full flex-col justify-between p-7 md:p-9">
-        <div className="flex items-start justify-between text-[0.6rem] tracking-[0.28em] text-cream/50 uppercase">
-          <span>Gentle Frames — Case</span>
-          <span className="tabular">N°{number}</span>
-        </div>
-
-        <div>
-          <p className="text-eyebrow mb-4" style={{ color: project.tone.glow }}>
-            {project.category} — {project.year}
-          </p>
-          <h3 className="font-display text-[clamp(2rem,3.2vw,2.9rem)] leading-[1.05] font-medium text-cream">
-            {project.title}
-          </h3>
-          <p className="mt-5 max-w-[300px] text-[0.82rem] leading-relaxed font-light text-cream/55">
-            {project.blurb}
-          </p>
-        </div>
+  const content = (
+    <div className="relative flex h-full flex-col justify-between p-7 md:p-9">
+      <div className="flex items-start justify-between text-[0.6rem] tracking-[0.28em] text-cream/60 uppercase">
+        <span>Gentle Frames — Case</span>
+        <span className="tabular">N°{number}</span>
       </div>
+
+      <div>
+        <p className="text-eyebrow mb-4" style={{ color: project.tone.glow }}>
+          {project.category} — {project.year}
+        </p>
+        <h3 className="font-display text-[clamp(2rem,3.2vw,2.9rem)] leading-[1.05] font-medium text-cream">
+          {project.title}
+        </h3>
+        <p
+          className={`mt-5 max-w-[300px] text-[0.82rem] leading-relaxed font-light text-cream/60 ${
+            project.image
+              ? "translate-y-3 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100"
+              : ""
+          }`}
+        >
+          {project.blurb}
+        </p>
+        {project.url ? (
+          <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-champagne uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+            Open project ↗
+          </p>
+        ) : null}
+      </div>
+    </div>
+  );
+
+  if (project.url) {
+    return (
+      <a
+        href={project.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cursor="Visit"
+        aria-label={`${project.title} — opens in a new tab`}
+        className={cardClass}
+        style={{ backgroundColor: project.tone.base }}
+      >
+        {cover}
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <article data-cursor="View" className={cardClass} style={{ backgroundColor: project.tone.base }}>
+      {cover}
+      {content}
     </article>
   );
 }

@@ -34,7 +34,7 @@ export default function About() {
                       alt="Tim Mostrey, founder of Gentle Frame Studio — black-and-white portrait"
                       fill
                       sizes="(max-width: 768px) 90vw, 420px"
-                      className="object-cover"
+                      className="object-cover object-top"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent" aria-hidden="true" />
                   </div>

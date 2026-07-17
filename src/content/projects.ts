@@ -5,6 +5,12 @@
  *
  * `tone` drives the generative cover treatment: two colors and
  * a light position, composed with grain and the frame motif.
+ *
+ * `image` (optional) swaps the generative cover for a screenshot:
+ * drop the file in public/work/ named after the id, portrait 3:4,
+ * ideally 1200x1600 JPG under ~600 KB (a tall browser capture at
+ * ~1200px wide works well — the card crops from the top).
+ * `url` (optional) makes the whole card a link, opened in a new tab.
  */
 
 export interface ProjectTone {
@@ -23,6 +29,10 @@ export interface Project {
   year: string;
   blurb: string;
   tone: ProjectTone;
+  /** Screenshot cover, e.g. "/work/ruimteschool.jpg" (public/work/) */
+  image?: string;
+  /** Live project URL — the card links here in a new tab */
+  url?: string;
 }
 
 export const projects: Project[] = [
