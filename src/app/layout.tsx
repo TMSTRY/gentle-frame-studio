@@ -2,9 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
 import Cursor from "@/components/fx/Cursor";
 import SmoothScroll from "@/components/fx/SmoothScroll";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
-import Preloader from "@/components/layout/Preloader";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -91,14 +88,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
 
-        <Preloader />
         <SmoothScroll />
         <Cursor />
-        <Header />
 
         {children}
-
-        <Footer />
 
         {/* Cinematic finish: grain + vignette above everything */}
         <div className="grain" aria-hidden="true" />
