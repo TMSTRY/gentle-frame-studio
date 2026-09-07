@@ -64,7 +64,7 @@ export const projects: Project[] = [
     blurb: "A pocket companion for slow walks — presence, breath and attention, nothing else.",
     tone: { base: "#0d120d", glow: "#a8bd9a", light: "30% 24%" },
     image: "/work/quietwalk.jpg",
-    url: "https://quietwalk-two.vercel.app/",
+    url: "https://quietwalk.app/",
   },
   {
     id: "shift-planning",
