@@ -66,6 +66,14 @@ function ServiceChapter({ service }: { service: Service }) {
           <p className="mt-8 text-[0.65rem] tracking-[0.24em] text-cream/50 uppercase">
             {service.tags.join("  /  ")}
           </p>
+          {service.href ? (
+            <a
+              href={service.href}
+              className="link-line mt-8 inline-block text-[0.68rem] tracking-[0.3em] text-champagne uppercase"
+            >
+              {service.linkLabel ?? "Read more"} →
+            </a>
+          ) : null}
         </Reveal>
       </div>
 

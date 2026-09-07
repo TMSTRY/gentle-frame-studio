@@ -67,6 +67,12 @@ export default function Header() {
 
   const goTo = useCallback((href: string) => {
     setMenuOpen(false);
+    // Section anchors live on the home page; from any other route,
+    // hand over to a full navigation and let SmoothScroll anchor.
+    if (window.location.pathname !== "/") {
+      window.location.href = `/${href}`;
+      return;
+    }
     // Wait a beat so the overlay releases the scroll lock first.
     requestAnimationFrame(() => scrollToTarget(href));
   }, []);

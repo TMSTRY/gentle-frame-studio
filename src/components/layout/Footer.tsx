@@ -31,13 +31,21 @@ export default function Footer() {
                 {navLinks.map((link) => (
                   <li key={link.href}>
                     <a
-                      href={link.href}
+                      href={`/${link.href}`}
                       className="link-line text-sm text-cream/70 transition-colors hover:text-cream"
                     >
                       {link.label}
                     </a>
                   </li>
                 ))}
+                <li>
+                  <a
+                    href="/memorial-films"
+                    className="link-line text-sm text-cream/70 transition-colors hover:text-cream"
+                  >
+                    Memorial Films
+                  </a>
+                </li>
               </ul>
             </nav>
 

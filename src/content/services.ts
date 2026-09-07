@@ -22,6 +22,9 @@ export interface Service {
   body: string;
   tags: string[];
   motif: ServiceMotif;
+  /** Optional deep-dive page for this service */
+  href?: string;
+  linkLabel?: string;
 }
 
 export const services: Service[] = [
@@ -34,6 +37,8 @@ export const services: Service[] = [
     body: "From photographs, voices and fragments of a life, we craft serene films that let a memory breathe again. Made slowly, gently, in close dialogue with the family — never generic, never rushed. A place to return to, forever.",
     tags: ["Tribute films", "Restored memories", "Family archives", "Ceremony visuals"],
     motif: "glow",
+    href: "/memorial-films",
+    linkLabel: "Read how a memorial film comes to be",
   },
   {
     id: "product-films",
