@@ -12,6 +12,13 @@ const nextConfig: NextConfig = {
         destination: "https://gentleframestudio.com/:path*",
         permanent: true,
       },
+      // The original Vercel address keeps working but hands over too.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "gentle-frame-studio.vercel.app" }],
+        destination: "https://gentleframestudio.com/:path*",
+        permanent: true,
+      },
     ];
   },
 };
