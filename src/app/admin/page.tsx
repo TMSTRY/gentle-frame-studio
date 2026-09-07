@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+
+// Private zone: always rendered per request, never at build time.
+export const dynamic = "force-dynamic";
 import PortalShell from "@/components/portal/PortalShell";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";

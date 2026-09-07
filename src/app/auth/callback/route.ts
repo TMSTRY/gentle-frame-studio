@@ -1,4 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
+
+export const dynamic = "force-dynamic";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 
