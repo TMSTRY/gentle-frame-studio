@@ -1,8 +1,8 @@
 import Image from "next/image";
 import FrameMark from "@/components/brand/FrameMark";
-import Magnetic from "@/components/fx/Magnetic";
+import ContactForm from "@/components/contact/ContactForm";
 import Reveal from "@/components/fx/Reveal";
-import { site } from "@/content/site";
+import { contactCopy } from "@/content/contact";
 
 /**
  * The closing invitation — a glowing frame around a single
@@ -57,15 +57,8 @@ export default function ContactCta() {
             A memory, a product, a song, an idea that needs a frame —
             write to us and we&rsquo;ll listen first.
           </p>
-          <div className="mt-14 flex justify-center">
-            <Magnetic strength={0.25}>
-              <a
-                href={`mailto:${site.email}`}
-                className="inline-block rounded-full border border-champagne/50 px-10 py-5 text-[0.7rem] tracking-[0.3em] text-champagne uppercase transition-colors duration-500 hover:bg-champagne hover:text-ink"
-              >
-                {site.email}
-              </a>
-            </Magnetic>
+          <div className="mt-14">
+            <ContactForm variant="studio" lang="en" copy={contactCopy["studio-en"]} />
           </div>
         </Reveal>
       </div>

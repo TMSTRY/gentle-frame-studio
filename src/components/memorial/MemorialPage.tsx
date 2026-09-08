@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import FrameMark from "@/components/brand/FrameMark";
+import ContactForm from "@/components/contact/ContactForm";
 import HtmlLang from "@/components/fx/HtmlLang";
-import Magnetic from "@/components/fx/Magnetic";
 import Parallax from "@/components/fx/Parallax";
 import Reveal from "@/components/fx/Reveal";
 import FilmPoster from "@/components/memorial/FilmPoster";
+import { contactCopy } from "@/content/contact";
 import type { MemorialCopy } from "@/content/memorial";
 import { site } from "@/content/site";
 
@@ -280,17 +281,14 @@ export default function MemorialPage({ copy }: { copy: MemorialCopy }) {
           </Reveal>
           <Reveal delay={0.25}>
             <p className="mx-auto mt-10 max-w-md text-sm leading-relaxed text-taupe">{copy.cta.body}</p>
-            <div className="mt-14 flex justify-center">
-              <Magnetic strength={0.25}>
-                <a
-                  href={`mailto:${site.email}`}
-                  className="inline-block rounded-full border border-champagne/50 px-10 py-5 text-[0.7rem] tracking-[0.3em] text-champagne uppercase transition-colors duration-500 hover:bg-champagne hover:text-ink"
-                >
-                  {site.email}
-                </a>
-              </Magnetic>
+            <div className="mt-14">
+              <ContactForm
+                variant="memorial"
+                lang={copy.locale}
+                copy={contactCopy[`memorial-${copy.locale}`]}
+              />
             </div>
-            <p className="mt-8 text-[0.66rem] tracking-[0.24em] text-taupe uppercase">{copy.cta.reassurance}</p>
+            <p className="mt-10 text-[0.66rem] tracking-[0.24em] text-taupe uppercase">{copy.cta.reassurance}</p>
           </Reveal>
         </div>
       </section>

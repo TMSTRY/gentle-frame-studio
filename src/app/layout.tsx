@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import Cursor from "@/components/fx/Cursor";
 import SmoothScroll from "@/components/fx/SmoothScroll";
 import { site } from "@/content/site";
@@ -96,6 +97,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* Cinematic finish: grain + vignette above everything */}
         <div className="grain" aria-hidden="true" />
         <div className="vignette" aria-hidden="true" />
+        <Analytics />
 
         <script
           type="application/ld+json"
