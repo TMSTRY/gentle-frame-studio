@@ -1,6 +1,6 @@
 # Klantenportaal & Admin — plan
 
-Status: fase 1 in opbouw (gestart 7 sep 2026). Dit document is de bron van
+Status: fase 1 in opbouw (gestart 7 sep 2026). Live sinds 8 sep: fundering (login, callback, shells), contactformulier, en plak 1 van de admin — klanten (aanmaken, bewerken, uitnodigen met gebrande mail), projecten (status, tijdlijn met klant-zichtbare updates) en de klantweergave van een project. Volgende plak: documenten (offerte/factuur/contract) met regels en PDF. Dit document is de bron van
 waarheid voor het portaal; werk het bij bij elke beslissing.
 
 ## Doel
