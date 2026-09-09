@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
-import { acceptQuoteAction } from "@/app/portal/actions";
+import { acceptQuoteAction, signContractAction } from "@/app/portal/actions";
 import PortalShell from "@/components/portal/PortalShell";
-import { BackLink, buttonClass, ghostButtonClass, Notice, PageHeader } from "@/components/portal/ui";
+import { BackLink, buttonClass, ghostButtonClass, inputClass, labelClass, Notice, PageHeader } from "@/components/portal/ui";
 import { loadDocumentBundle } from "@/lib/portal/documents";
 import { requireUser } from "@/lib/portal/guard";
 import { DOC_STATUS_LABEL, KIND_LABEL, KIND_LABEL_NL, formatDate, formatMoney } from "@/lib/portal/labels";
@@ -17,7 +17,7 @@ export default async function PortalDocumentPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ accepted?: string }>;
+  searchParams: Promise<{ accepted?: string; signed?: string; error?: string }>;
 }) {
   const { supabase, user } = await requireUser();
   const { id } = await params;
@@ -25,7 +25,7 @@ export default async function PortalDocumentPage({
   // As the signed-in client: RLS hides drafts and other people's documents.
   const bundle = await loadDocumentBundle(supabase, id);
   if (!bundle) notFound();
-  const { document, lines, client, studio, project } = bundle;
+  const { document, lines, client, studio, project, signatures } = bundle;
   const nl = client.language === "nl";
   const kindLabel = (nl ? KIND_LABEL_NL : KIND_LABEL)[document.kind];
   const isMoney = document.kind === "quote" || document.kind === "invoice";
@@ -48,6 +48,12 @@ export default async function PortalDocumentPage({
 
       {flags.accepted ? (
         <Notice tone="warm">{nl ? "Dank je — we gaan aan de slag. Je hoort snel van ons." : "Thank you — we’re on it. You’ll hear from us soon."}</Notice>
+      ) : null}
+      {flags.signed ? (
+        <Notice tone="warm">{nl ? "Getekend en bewaard — dank je. Je ontvangt een bevestiging per mail." : "Signed and stored — thank you. A confirmation is on its way by email."}</Notice>
+      ) : null}
+      {flags.error === "sign" ? (
+        <Notice tone="alert">{nl ? "Vul je naam in en vink aan dat je akkoord gaat." : "Please type your name and tick the agreement box."}</Notice>
       ) : null}
 
       <div className="mt-10 grid gap-8 border-t border-line pt-8 md:grid-cols-3">
@@ -124,7 +130,31 @@ export default async function PortalDocumentPage({
           <p className="text-sm text-champagne">{nl ? "Betaald — dank je." : "Paid — thank you."}</p>
         ) : null}
         {document.kind === "contract" && document.status === "sent" ? (
-          <p className="text-sm text-taupe">{nl ? "Online tekenen komt binnenkort. Tot dan: antwoord op de mail met “akkoord”." : "Online signing is coming soon. Until then: reply to the email with “agreed”."}</p>
+          <form action={signContractAction} className="max-w-xl">
+            <input type="hidden" name="id" value={id} />
+            <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{nl ? "Tekenen" : "Sign"}</p>
+            <p className="mt-3 text-sm leading-relaxed text-cream/80">
+              {nl
+                ? "Lees het contract hierboven (of de PDF). Typ dan je volledige naam en bevestig — dat geldt als je elektronische handtekening. We bewaren je naam, e-mailadres, het tijdstip en een vingerafdruk van precies deze tekst."
+                : "Read the contract above (or the PDF). Then type your full name and confirm — that counts as your electronic signature. We store your name, email address, the time and a fingerprint of exactly this text."}
+            </p>
+            <div className="mt-8">
+              <label htmlFor="signer_name" className={labelClass}>{nl ? "Volledige naam" : "Full name"}</label>
+              <input id="signer_name" name="signer_name" required minLength={2} defaultValue={client.name} className={inputClass} />
+            </div>
+            <label className="mt-6 flex items-start gap-3 text-sm leading-relaxed text-cream/80">
+              <input type="checkbox" name="agree" required className="mt-1 h-4 w-4 accent-[#e6d5b3]" />
+              <span>{nl ? "Ik heb dit contract gelezen en ga akkoord met de inhoud." : "I have read this contract and agree to its contents."}</span>
+            </label>
+            <button type="submit" className={`${buttonClass} mt-10`}>{nl ? "Tekenen" : "Sign the contract"}</button>
+          </form>
+        ) : null}
+        {document.kind === "contract" && document.status === "signed" && signatures.length ? (
+          <div className="text-sm leading-relaxed text-cream/80">
+            <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{nl ? "Getekend" : "Signed"}</p>
+            <p className="font-display mt-3 text-2xl text-cream italic">{signatures[signatures.length - 1].signer_name}</p>
+            <p className="mt-2 text-taupe">{formatDate(signatures[signatures.length - 1].signed_at)} · {signatures[signatures.length - 1].signer_email}</p>
+          </div>
         ) : null}
       </section>
     </PortalShell>

@@ -102,3 +102,15 @@ export const DEFAULT_STUDIO: StudioSettings = {
   payment_terms_days: 14,
   invoice_footer: "Thank you for trusting us with your story.",
 };
+
+export interface SignatureRecord {
+  id: string;
+  document_id: string;
+  signer_name: string;
+  signer_email: string;
+  method: "click" | "itsme";
+  document_hash: string;
+  ip: string | null;
+  user_agent: string | null;
+  signed_at: string;
+}

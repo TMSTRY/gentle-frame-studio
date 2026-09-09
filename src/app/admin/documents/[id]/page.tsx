@@ -47,7 +47,7 @@ export default async function DocumentDetailPage({
   const admin = createAdminClient();
   const bundle = await loadDocumentBundle(admin, id);
   if (!bundle) notFound();
-  const { document, lines, client, project, studio } = bundle;
+  const { document, lines, client, project, studio, signatures } = bundle;
   const [{ data: clients }, { data: projects }] = await Promise.all([
     admin.from("clients").select("id, name, company").order("name"),
     admin.from("projects").select("id, title, client_id").order("updated_at", { ascending: false }),
@@ -132,6 +132,19 @@ export default async function DocumentDetailPage({
               <span className="text-right">{formatMoney(document.vat_cents, document.currency)}</span>
             </li>
           </ul>
+        </section>
+      ) : null}
+
+      {signatures.length ? (
+        <section className="mt-12 border-t border-line pt-8">
+          <h2 className="text-eyebrow mb-4">Signature</h2>
+          {signatures.map((signature) => (
+            <p key={signature.id} className="text-sm leading-relaxed text-cream/80">
+              <span className="font-display text-xl text-cream italic">{signature.signer_name}</span>
+              <span className="ml-3 text-taupe">{signature.signer_email} · {new Date(signature.signed_at).toLocaleString("en-GB", { timeZone: "Europe/Brussels" })}{signature.ip ? ` · ` : ""}</span>
+              <span className="mt-1 block font-mono text-[0.68rem] text-taupe/80">{signature.document_hash}</span>
+            </p>
+          ))}
         </section>
       ) : null}
 

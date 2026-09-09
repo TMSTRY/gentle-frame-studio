@@ -1,5 +1,13 @@
+import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { DEFAULT_STUDIO, type Client, type DocumentLine, type DocumentRecord, type StudioSettings } from "@/lib/portal/types";
+import {
+  DEFAULT_STUDIO,
+  type Client,
+  type DocumentLine,
+  type DocumentRecord,
+  type SignatureRecord,
+  type StudioSettings,
+} from "@/lib/portal/types";
 
 /** Studio details from `settings.studio`, with sane defaults for anything unset. */
 export async function loadStudio(db: SupabaseClient): Promise<StudioSettings> {
@@ -13,6 +21,7 @@ export interface DocumentBundle {
   client: Client;
   studio: StudioSettings;
   project: { id: string; title: string } | null;
+  signatures: SignatureRecord[];
 }
 
 /**
@@ -22,13 +31,14 @@ export interface DocumentBundle {
 export async function loadDocumentBundle(db: SupabaseClient, id: string): Promise<DocumentBundle | null> {
   const { data: document } = await db.from("documents").select("*").eq("id", id).maybeSingle();
   if (!document) return null;
-  const [{ data: lines }, { data: client }, studio, projectRes] = await Promise.all([
+  const [{ data: lines }, { data: client }, studio, projectRes, { data: signatures }] = await Promise.all([
     db.from("document_lines").select("*").eq("document_id", id).order("position"),
     db.from("clients").select("*").eq("id", document.client_id).maybeSingle(),
     loadStudio(db),
     document.project_id
       ? db.from("projects").select("id, title").eq("id", document.project_id).maybeSingle()
       : Promise.resolve({ data: null }),
+    db.from("signatures").select("*").eq("document_id", id).order("signed_at"),
   ]);
   if (!client) return null;
   return {
@@ -37,6 +47,7 @@ export async function loadDocumentBundle(db: SupabaseClient, id: string): Promis
     client: client as Client,
     studio,
     project: (projectRes.data as { id: string; title: string } | null) ?? null,
+    signatures: (signatures ?? []) as SignatureRecord[],
   };
 }
 
@@ -45,4 +56,24 @@ export function computeTotals(lines: { quantity: number; unit_price_cents: numbe
   const subtotal = lines.reduce((sum, line) => sum + Math.round(line.quantity * line.unit_price_cents), 0);
   const vat = Math.round((subtotal * vatRate) / 100);
   return { subtotal_cents: subtotal, vat_cents: vat, total_cents: subtotal + vat };
+}
+
+/**
+ * Fingerprint of what was agreed to: the fields a reader sees, in a
+ * fixed order. Stored with every signature so later edits can never
+ * silently change a signed document.
+ */
+export function documentHash(document: DocumentRecord, lines: DocumentLine[]): string {
+  const payload = JSON.stringify({
+    id: document.id,
+    kind: document.kind,
+    number: document.number,
+    title: document.title,
+    issue_date: document.issue_date,
+    due_date: document.due_date,
+    total_cents: document.total_cents,
+    body: document.body,
+    lines: lines.map((line) => [line.description, Number(line.quantity), line.unit_price_cents]),
+  });
+  return createHash("sha256").update(payload).digest("hex");
 }

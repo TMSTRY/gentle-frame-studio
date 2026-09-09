@@ -51,6 +51,9 @@ const styles = StyleSheet.create({
   grandText: { fontFamily: "Cormorant", fontWeight: 500, fontSize: 16 },
   body: { marginTop: 26, fontSize: 9.5, lineHeight: 1.7 },
   bodyPara: { marginBottom: 8 },
+  signBox: { marginTop: 28, borderTopWidth: 0.6, borderTopColor: INK, paddingTop: 12 },
+  signName: { fontFamily: "Cormorant", fontWeight: 500, fontStyle: "italic", fontSize: 20, marginTop: 4 },
+  signMeta: { fontSize: 7.5, lineHeight: 1.6, color: TAUPE, marginTop: 6 },
   footer: { position: "absolute", left: 54, right: 54, bottom: 30, borderTopWidth: 0.6, borderTopColor: LINE, paddingTop: 10, flexDirection: "row", justifyContent: "space-between" },
   footerText: { fontSize: 6.5, letterSpacing: 1.6, textTransform: "uppercase", color: TAUPE },
   closing: { marginTop: 30, fontFamily: "Cormorant", fontWeight: 500, fontStyle: "italic", fontSize: 13, color: "#4a4238" },
@@ -88,9 +91,22 @@ const words = (nl: boolean) => ({
   iban: "IBAN",
   reference: nl ? "Mededeling" : "Reference",
   draft: nl ? "Ontwerp" : "Draft",
+  signedBy: nl ? "Elektronisch getekend door" : "Electronically signed by",
+  signedOn: nl ? "op" : "on",
+  hash: nl ? "Documentvingerafdruk" : "Document fingerprint",
 });
 
-export default function DocumentPdf({ document, lines, client, studio, project }: DocumentBundle) {
+const formatMoment = (value: string, nl: boolean) =>
+  new Date(value).toLocaleString(nl ? "nl-BE" : "en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Brussels",
+  });
+
+export default function DocumentPdf({ document, lines, client, studio, project, signatures }: DocumentBundle) {
   const nl = client.language === "nl";
   const t = words(nl);
   const kindLabel = (nl ? KIND_LABEL_NL : KIND_LABEL)[document.kind];
@@ -196,6 +212,17 @@ export default function DocumentPdf({ document, lines, client, studio, project }
             {document.number ? <Text>{`${t.reference} ${document.number}`}</Text> : null}
           </View>
         ) : null}
+
+        {signatures.map((signature) => (
+          <View key={signature.id} style={styles.signBox} wrap={false}>
+            <Text style={styles.metaLabel}>{t.signedBy}</Text>
+            <Text style={styles.signName}>{signature.signer_name}</Text>
+            <Text style={styles.signMeta}>
+              {`${signature.signer_email} · ${t.signedOn} ${formatMoment(signature.signed_at, nl)}${signature.ip ? ` · IP ${signature.ip}` : ""}`}
+            </Text>
+            <Text style={styles.signMeta}>{`${t.hash} ${signature.document_hash}`}</Text>
+          </View>
+        ))}
 
         <Text style={styles.closing}>{studio.invoice_footer}</Text>
 

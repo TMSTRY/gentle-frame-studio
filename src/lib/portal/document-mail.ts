@@ -39,3 +39,26 @@ export function documentMail({ kind, number, title, clientName, language, url, t
   const text = `Hello ${first},\n\nA new ${label} is waiting in your portal: ${title}${totalLabel ? ` (${totalLabel})` : ""}.\n${url}\n\nSign in with this email address — you’ll receive a sign-in link.\n\nWarmly, Tim`;
   return { subject, html, text };
 }
+
+/** Confirmation to the client after signing, with a link to their signed copy. */
+export function signedMail({ language, clientName, number, title, url }: { language: "nl" | "en"; clientName: string; number: string; title: string; url: string }) {
+  const first = clientName.split(" ")[0];
+  if (language === "nl") {
+    const subject = `Getekend: contract ${number} — ${title}`;
+    const html = wrapMail(
+      `Dag ${first},`,
+      mailParagraph(`Dank je. Het contract <strong>${title}</strong> is getekend en bewaard. Je vindt je exemplaar — met het handtekeningblok — altijd terug in je portaal.`) +
+        mailButton(url, "Bekijk het contract") +
+        mailParagraph("Warm,<br/>Tim — Gentle Frame Studio"),
+    );
+    return { subject, html, text: `Dag ${first},\n\nHet contract ${title} is getekend en bewaard: ${url}\n\nWarm, Tim` };
+  }
+  const subject = `Signed: contract ${number} — ${title}`;
+  const html = wrapMail(
+    `Hello ${first},`,
+    mailParagraph(`Thank you. The contract <strong>${title}</strong> has been signed and stored. Your copy — with the signature block — is always available in your portal.`) +
+      mailButton(url, "View the contract") +
+      mailParagraph("Warmly,<br/>Tim — Gentle Frame Studio"),
+  );
+  return { subject, html, text: `Hello ${first},\n\nThe contract ${title} has been signed and stored: ${url}\n\nWarmly, Tim` };
+}
