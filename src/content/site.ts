@@ -29,14 +29,3 @@ export const navLinks: NavLink[] = [
   { label: "Process", href: "#process" },
   { label: "Contact", href: "#contact" },
 ];
-
-export interface SocialLink {
-  label: string;
-  href: string;
-}
-
-export const socialLinks: SocialLink[] = [
-  { label: "Instagram", href: "https://instagram.com/gentleframestudio" },
-  { label: "YouTube", href: "https://youtube.com/@gentleframestudio" },
-  { label: "LinkedIn", href: "https://linkedin.com/company/gentle-frame-studio" },
-];

@@ -1,7 +1,7 @@
 import FrameMark from "@/components/brand/FrameMark";
 import Wordmark from "@/components/brand/Wordmark";
 import Reveal from "@/components/fx/Reveal";
-import { navLinks, site, socialLinks } from "@/content/site";
+import { navLinks, site } from "@/content/site";
 
 /**
  * Quiet closing credits: navigation, socials and contact above a
@@ -25,7 +25,7 @@ export default function Footer() {
               </p>
             </div>
 
-            <nav className="md:col-span-2" aria-label="Footer">
+            <nav className="md:col-span-3" aria-label="Footer">
               <h3 className="text-eyebrow mb-6">Menu</h3>
               <ul className="space-y-3">
                 {navLinks.map((link) => (
@@ -49,25 +49,7 @@ export default function Footer() {
               </ul>
             </nav>
 
-            <div className="md:col-span-2">
-              <h3 className="text-eyebrow mb-6">Elsewhere</h3>
-              <ul className="space-y-3">
-                {socialLinks.map((social) => (
-                  <li key={social.label}>
-                    <a
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="link-line text-sm text-cream/70 transition-colors hover:text-cream"
-                    >
-                      {social.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="md:col-span-3">
+            <div className="md:col-span-4">
               <h3 className="text-eyebrow mb-6">Write us</h3>
               <a
                 href={`mailto:${site.email}`}
