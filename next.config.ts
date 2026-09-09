@@ -3,6 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   serverExternalPackages: ["@react-pdf/renderer"],
+  // pdfkit loads its built-in font data through computed paths that
+  // file tracing can't follow; ship the whole package with the PDF routes.
+  outputFileTracingIncludes: {
+    "/admin/documents/[id]/pdf": ["./node_modules/pdfkit/**/*", "./node_modules/@react-pdf/**/*", "./node_modules/fontkit/**/*"],
+    "/portal/documents/[id]/pdf": ["./node_modules/pdfkit/**/*", "./node_modules/@react-pdf/**/*", "./node_modules/fontkit/**/*"],
+  },
   async redirects() {
     return [
       // Canonical host: the bare domain. www carries a certificate
