@@ -4,6 +4,7 @@ import type { ContactLang, ContactVariant } from "@/content/contact";
 import { site } from "@/content/site";
 import { confirmationMail, notificationMail, type ContactPayload } from "@/lib/contact-mail";
 import { getResend, MAIL_FROM } from "@/lib/resend";
+import { adminEmail } from "@/lib/supabase/env";
 
 export interface ContactState {
   status: "idle" | "sent" | "error";
@@ -48,7 +49,9 @@ export async function sendContactMessage(_previous: ContactState, formData: Form
   const [toStudio, toVisitor] = await Promise.all([
     resend.emails.send({
       from: MAIL_FROM,
-      to: site.email,
+      // Straight to the studio inbox: routing hello@ back through the
+      // forwarder made a from-hello-to-hello mail that got dropped.
+      to: adminEmail() || site.email,
       replyTo: payload.email,
       subject: notification.subject,
       html: notification.html,
