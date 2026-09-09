@@ -53,7 +53,7 @@ const en: MemorialCopy = {
     paragraphs: [
       "Most of us are left with a phone full of photos, a few voice messages and a box of prints nobody has looked at in years. A memorial film brings those pieces into one quiet, cinematic story — one you can play at the ceremony, send to family abroad, and return to on the hard days.",
       "We work from what you have. Old prints are restored and gently brought to life; voice notes become narration; a favourite song sets the pace. Nothing is invented. We never put words in someone’s mouth, or moments in their life that weren’t there.",
-      "The result runs between three and eight minutes, finished with the care of a small film — because that is what it is.",
+      "The result runs from thirty seconds to about three minutes — longer when the story asks for it — finished with the care of a small film, because that is what it is.",
     ],
   },
   film: {
@@ -121,7 +121,7 @@ const en: MemorialCopy = {
     eyebrow: "Practical",
     title: "The details, plainly.",
     items: [
-      { label: "Length", value: "Three to eight minutes, depending on the material and the setting." },
+      { label: "Length", value: "From thirty seconds to about three minutes, depending on the material and the setting. Longer is possible when the story asks for it — every extra minute is real work, and priced as such." },
       { label: "Timeline", value: "Typically two to four weeks. A ceremony version can be ready in days when it has to be." },
       { label: "Material", value: "Photos (prints or files), video fragments, voice messages, letters, music. Any quality — we restore." },
       { label: "Languages", value: "Dutch and English. Other languages in collaboration with the family." },
@@ -188,7 +188,7 @@ const nl: MemorialCopy = {
     paragraphs: [
       "De meesten van ons blijven achter met een telefoon vol foto’s, een paar spraakberichten en een doos afdrukken waar al jaren niemand naar kijkt. Een herinneringsfilm brengt die stukken samen in één rustig, filmisch verhaal — om te tonen op de uitvaart, te sturen naar familie ver weg, en om naar terug te keren op de moeilijke dagen.",
       "We werken met wat je hebt. Oude afdrukken worden hersteld en voorzichtig tot leven gebracht; spraakberichten worden vertelstem; een lievelingslied bepaalt het tempo. Niets wordt verzonnen. We leggen niemand woorden in de mond en voegen geen momenten toe aan een leven waar ze niet in zaten.",
-      "Het resultaat duurt drie tot acht minuten, afgewerkt met de zorg van een kleine film — want dat is het.",
+      "Het resultaat duurt van dertig seconden tot ongeveer drie minuten — langer als het verhaal erom vraagt — afgewerkt met de zorg van een kleine film, want dat is het.",
     ],
   },
   film: {
@@ -256,7 +256,7 @@ const nl: MemorialCopy = {
     eyebrow: "Praktisch",
     title: "De details, gewoon gezegd.",
     items: [
-      { label: "Lengte", value: "Drie tot acht minuten, afhankelijk van het materiaal en de gelegenheid." },
+      { label: "Lengte", value: "Van dertig seconden tot ongeveer drie minuten, afhankelijk van het materiaal en de gelegenheid. Langer kan als het verhaal erom vraagt — elke extra minuut is echt werk, en wordt ook zo geprijsd." },
       { label: "Doorlooptijd", value: "Meestal twee tot vier weken. Een versie voor de dienst kan in enkele dagen klaar zijn als het moet." },
       { label: "Materiaal", value: "Foto’s (afdrukken of bestanden), videofragmenten, spraakberichten, brieven, muziek. Elke kwaliteit — wij herstellen." },
       { label: "Talen", value: "Nederlands en Engels. Andere talen in samenspraak met de familie." },
