@@ -14,6 +14,10 @@ interface ContactFormProps {
 const field =
   "w-full border-b border-line bg-transparent py-3 text-[0.95rem] font-light text-cream placeholder:text-taupe/60 transition-colors duration-500 focus:border-champagne focus:outline-none";
 const label = "mb-1 block text-[0.62rem] tracking-[0.28em] text-taupe uppercase";
+// Frosted plate: the mark keeps breathing behind it, and it deepens
+// a touch on hover or while a field has focus, so the text reads.
+const plate =
+  "relative mx-auto w-full max-w-xl rounded-2xl border border-line bg-ink/35 px-7 py-9 backdrop-blur-[6px] transition-[background-color,border-color] duration-700 hover:bg-ink/55 focus-within:border-champagne/30 focus-within:bg-ink/60 md:px-11 md:py-11";
 
 /**
  * Editorial contact form: underlined fields, one quiet button. The
@@ -30,7 +34,7 @@ export default function ContactForm({ variant, lang, copy }: ContactFormProps) {
 
   if (state.status === "sent") {
     return (
-      <div className="mx-auto max-w-md text-center" role="status" aria-live="polite">
+      <div className={`${plate} text-center`} role="status" aria-live="polite">
         <p className="font-display text-3xl font-medium text-cream italic">{copy.success.title}</p>
         <p className="mt-5 text-sm leading-relaxed text-taupe">{copy.success.body}</p>
       </div>
@@ -38,7 +42,7 @@ export default function ContactForm({ variant, lang, copy }: ContactFormProps) {
   }
 
   return (
-    <form action={action} className="mx-auto w-full max-w-xl text-left" noValidate={false}>
+    <form action={action} className={`${plate} text-left`} noValidate={false}>
       <input type="hidden" name="variant" value={variant} />
       <input type="hidden" name="lang" value={lang} />
       <input type="hidden" name="ts" value={renderedAt} />

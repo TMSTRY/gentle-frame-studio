@@ -44,7 +44,8 @@ export default function Cursor() {
     const onOver = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       const labelled = target.closest<HTMLElement>("[data-cursor]");
-      if (labelled?.dataset.cursor) {
+      // <html data-cursor="on"> only switches the native cursor off — never a label.
+      if (labelled && labelled !== document.documentElement && labelled.dataset.cursor) {
         setLabel(labelled.dataset.cursor);
         setHoveringLink(false);
         return;
