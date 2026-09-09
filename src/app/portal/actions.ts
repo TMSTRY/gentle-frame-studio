@@ -44,3 +44,44 @@ export async function signOut() {
   await supabase.auth.signOut();
   redirect("/portal/login");
 }
+
+/**
+ * A client accepts a sent quote. Ownership is proven by reading the
+ * document as the signed-in user (RLS); the write then runs with the
+ * service role. The studio gets a short notification.
+ */
+export async function acceptQuoteAction(formData: FormData) {
+  const id = String(formData.get("id") ?? "").slice(0, 60);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/portal/login");
+
+  const { data: document } = await supabase
+    .from("documents")
+    .select("id, kind, status, project_id, title, number")
+    .eq("id", id)
+    .maybeSingle();
+  if (!document || document.kind !== "quote" || document.status !== "sent") redirect(`/portal/documents/${id}`);
+
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const admin = createAdminClient();
+  await admin.from("documents").update({ status: "accepted" }).eq("id", id);
+  if (document.project_id) {
+    await admin.from("projects").update({ status: "accepted" }).eq("id", document.project_id).in("status", ["inquiry", "quoted"]);
+  }
+
+  const { getResend, MAIL_FROM } = await import("@/lib/resend");
+  const { adminEmail } = await import("@/lib/supabase/env");
+  const resend = getResend();
+  if (resend) {
+    await resend.emails.send({
+      from: MAIL_FROM,
+      to: adminEmail() || site.email,
+      subject: `Quote accepted — ${document.number ?? ""} ${document.title}`,
+      text: `${user.email} accepted quote ${document.number ?? ""} "${document.title}".\n${site.url}/admin/documents/${id}`,
+    });
+  }
+  redirect(`/portal/documents/${id}?accepted=1`);
+}

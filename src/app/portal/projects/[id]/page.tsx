@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 import PortalShell from "@/components/portal/PortalShell";
 import { BackLink, EmptyRow, PageHeader, StatusTrack } from "@/components/portal/ui";
 import { requireUser } from "@/lib/portal/guard";
-import { SERVICE_LABEL, STATUS_LABEL, formatDate } from "@/lib/portal/labels";
-import type { Project, ProjectUpdate } from "@/lib/portal/types";
+import { DOC_STATUS_LABEL, KIND_LABEL, SERVICE_LABEL, STATUS_LABEL, formatDate, formatMoney } from "@/lib/portal/labels";
+import type { DocumentRecord, Project, ProjectUpdate } from "@/lib/portal/types";
 import { adminEmail } from "@/lib/supabase/env";
 
 export const metadata: Metadata = { title: "Your project", robots: { index: false, follow: false } };
@@ -16,10 +17,12 @@ export default async function PortalProjectPage({ params }: { params: Promise<{ 
   const { id } = await params;
 
   // Runs as the signed-in client: RLS returns nothing for projects that aren't theirs.
-  const [{ data: project }, { data: updates }] = await Promise.all([
+  const [{ data: project }, { data: updates }, { data: docs }] = await Promise.all([
     supabase.from("projects").select("*").eq("id", id).maybeSingle(),
     supabase.from("project_updates").select("*").eq("project_id", id).order("created_at", { ascending: false }),
+    supabase.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).order("created_at", { ascending: false }),
   ]);
+  const documents = (docs ?? []) as Pick<DocumentRecord, "id" | "kind" | "number" | "title" | "status" | "total_cents" | "currency">[];
   if (!project) notFound();
   const typed = project as Project;
   const timeline = (updates ?? []) as ProjectUpdate[];
@@ -74,7 +77,22 @@ export default async function PortalProjectPage({ params }: { params: Promise<{ 
 
       <section className="mt-20">
         <h2 className="text-eyebrow mb-6">Documents</h2>
-        <EmptyRow>Quotes, invoices and contracts will appear here.</EmptyRow>
+        {documents.length ? (
+          <ul>
+            {documents.map((doc) => (
+              <li key={doc.id} className="border-t border-line">
+                <Link href={`/portal/documents/${doc.id}`} className="grid gap-2 py-4 md:grid-cols-[130px_1fr_140px_120px]">
+                  <span className="text-[0.66rem] tracking-[0.26em] text-taupe uppercase">{KIND_LABEL[doc.kind]} {doc.number ?? ""}</span>
+                  <span className="font-display text-lg text-cream">{doc.title}</span>
+                  <span className="text-sm text-cream/80">{doc.kind === "quote" || doc.kind === "invoice" ? formatMoney(doc.total_cents, doc.currency) : "—"}</span>
+                  <span className="text-[0.66rem] tracking-[0.26em] text-champagne uppercase">{DOC_STATUS_LABEL[doc.status]}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <EmptyRow>Quotes, invoices and contracts will appear here.</EmptyRow>
+        )}
       </section>
     </PortalShell>
   );

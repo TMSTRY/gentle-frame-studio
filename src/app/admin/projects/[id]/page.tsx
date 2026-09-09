@@ -8,8 +8,8 @@ import PortalShell from "@/components/portal/PortalShell";
 import ProjectForm from "@/components/portal/ProjectForm";
 import { BackLink, buttonClass, EmptyRow, Field, ghostButtonClass, inputClass, Notice, PageHeader, StatusTrack } from "@/components/portal/ui";
 import { requireAdmin } from "@/lib/portal/guard";
-import { ADMIN_LINKS, SERVICE_LABEL, STATUS_LABEL } from "@/lib/portal/labels";
-import type { Project, ProjectUpdate } from "@/lib/portal/types";
+import { ADMIN_LINKS, DOC_STATUS_LABEL, KIND_LABEL, SERVICE_LABEL, STATUS_LABEL, formatMoney } from "@/lib/portal/labels";
+import type { DocumentRecord, Project, ProjectUpdate } from "@/lib/portal/types";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = { title: "Project", robots: { index: false, follow: false } };
@@ -29,11 +29,13 @@ export default async function ProjectDetailPage({
   const flags = await searchParams;
   const admin = createAdminClient();
 
-  const [{ data: project }, { data: updates }, { data: clients }] = await Promise.all([
+  const [{ data: project }, { data: updates }, { data: clients }, { data: docs }] = await Promise.all([
     admin.from("projects").select("*, clients(id, name, email)").eq("id", id).maybeSingle(),
     admin.from("project_updates").select("*").eq("project_id", id).order("created_at", { ascending: false }),
     admin.from("clients").select("id, name, company").order("name"),
+    admin.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).order("created_at", { ascending: false }),
   ]);
+  const documents = (docs ?? []) as Pick<DocumentRecord, "id" | "kind" | "number" | "title" | "status" | "total_cents" | "currency">[];
   if (!project) notFound();
   const typed = project as Project & { clients: { id: string; name: string; email: string } | null };
   const timeline = (updates ?? []) as ProjectUpdate[];
@@ -113,8 +115,32 @@ export default async function ProjectDetailPage({
       </section>
 
       <section className="mt-20">
-        <h2 className="text-eyebrow mb-6">Documents</h2>
-        <EmptyRow>Quotes, invoices and contracts arrive in the next build.</EmptyRow>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-6">
+          <h2 className="text-eyebrow">Documents</h2>
+          <div className="flex gap-6">
+            {(["quote", "invoice", "contract"] as const).map((kind) => (
+              <Link key={kind} href={`/admin/documents/new?client=${typed.client_id}&project=${typed.id}&kind=${kind}`} className={ghostButtonClass}>
+                New {kind}
+              </Link>
+            ))}
+          </div>
+        </div>
+        {documents.length ? (
+          <ul>
+            {documents.map((doc) => (
+              <li key={doc.id} className="border-t border-line">
+                <Link href={`/admin/documents/${doc.id}`} className="grid gap-2 py-4 md:grid-cols-[130px_1fr_140px_120px]">
+                  <span className="text-[0.66rem] tracking-[0.26em] text-taupe uppercase">{KIND_LABEL[doc.kind]} {doc.number ?? ""}</span>
+                  <span className="font-display text-lg text-cream">{doc.title}</span>
+                  <span className="text-sm text-cream/80">{doc.kind === "quote" || doc.kind === "invoice" ? formatMoney(doc.total_cents, doc.currency) : "—"}</span>
+                  <span className="text-[0.66rem] tracking-[0.26em] text-champagne uppercase">{DOC_STATUS_LABEL[doc.status]}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <EmptyRow>No documents for this project yet.</EmptyRow>
+        )}
       </section>
     </PortalShell>
   );
