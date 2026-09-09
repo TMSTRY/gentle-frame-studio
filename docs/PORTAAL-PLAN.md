@@ -68,6 +68,7 @@ Zie `supabase/portal/001_schema.sql` voor kolommen, enums, RLS en grants.
 | `RESEND_API_KEY` | Resend → API Keys |
 | `MOLLIE_API_KEY` | Mollie → Developers (eerst `test_…`, later `live_…`) |
 | `PORTAL_ADMIN_EMAIL` | `timmostrey@gmail.com` (zelfde als in tabel `admins`) |
+| `CRON_SECRET` | willekeurige lange string; Vercel stuurt hem als Bearer-token mee naar de cron-route |
 
 ## Openstaand
 
