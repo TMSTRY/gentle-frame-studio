@@ -29,11 +29,13 @@ export async function sendMagicLink(_previous: LoginState, formData: FormData): 
     email,
     options: {
       emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
-      shouldCreateUser: true,
+      // Invite-only: strangers get the same neutral reply but no account.
+      shouldCreateUser: false,
     },
   });
 
-  if (error) {
+  // "Signups not allowed" means an unknown address: answer as if sent, reveal nothing.
+  if (error && !/signup|not allowed|user not found/i.test(error.message)) {
     return { status: "error", message: "We couldn’t send the link just now. Please try again in a minute.", email };
   }
   return { status: "sent", email };

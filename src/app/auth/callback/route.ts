@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
 import type { EmailOtpType } from "@supabase/supabase-js";
+import { adminEmail } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -17,12 +18,21 @@ export async function GET(request: NextRequest) {
 
   const supabase = await createClient();
 
+  const succeed = async () => {
+    // The studio owner skips the client portal and lands in admin.
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const isAdmin = (user?.email ?? "").toLowerCase() === adminEmail();
+    return NextResponse.redirect(`${origin}${isAdmin && next === "/portal" ? "/admin" : next}`);
+  };
+
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) return NextResponse.redirect(`${origin}${next}`);
+    if (!error) return succeed();
   } else if (tokenHash && type) {
     const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
-    if (!error) return NextResponse.redirect(`${origin}${next}`);
+    if (!error) return succeed();
   }
 
   return NextResponse.redirect(`${origin}/portal/login?error=link`);

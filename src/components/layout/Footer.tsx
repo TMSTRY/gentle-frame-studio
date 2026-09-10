@@ -46,6 +46,14 @@ export default function Footer() {
                     Memorial Films
                   </a>
                 </li>
+                <li className="pt-3">
+                  <a
+                    href="/portal/login"
+                    className="link-line text-[0.66rem] tracking-[0.26em] text-taupe uppercase transition-colors hover:text-cream"
+                  >
+                    Client portal
+                  </a>
+                </li>
               </ul>
             </nav>
 

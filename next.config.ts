@@ -9,6 +9,21 @@ const nextConfig: NextConfig = {
     "/admin/documents/[id]/pdf": ["./node_modules/pdfkit/**/*", "./node_modules/@react-pdf/**/*", "./node_modules/fontkit/**/*"],
     "/portal/documents/[id]/pdf": ["./node_modules/pdfkit/**/*", "./node_modules/@react-pdf/**/*", "./node_modules/fontkit/**/*"],
   },
+  async headers() {
+    const security = [
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "X-Frame-Options", value: "DENY" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+      { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+    ];
+    return [
+      { source: "/(.*)", headers: security },
+      // Private zones are never cached by anything in between.
+      { source: "/admin/:path*", headers: [{ key: "Cache-Control", value: "private, no-store" }] },
+      { source: "/portal/:path*", headers: [{ key: "Cache-Control", value: "private, no-store" }] },
+    ];
+  },
   async redirects() {
     return [
       // Canonical host: the bare domain. www carries a certificate
