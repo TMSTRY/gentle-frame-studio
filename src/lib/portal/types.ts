@@ -56,6 +56,7 @@ export interface DocumentRecord {
   body: string | null;
   notes: string | null;
   pdf_path: string | null;
+  source_document_id?: string | null;
   sent_at: string | null;
   created_at: string;
   updated_at: string;

@@ -132,6 +132,20 @@ export async function setDocumentStatusAction(formData: FormData) {
 
   await admin.from("documents").update({ status }).eq("id", id);
   if (status === "paid") {
+    const bundle = await loadDocumentBundle(admin, id);
+    const resend = getResend();
+    if (bundle && bundle.document.kind === "invoice" && resend) {
+      const { paymentReceivedMail } = await import("@/lib/portal/document-mail");
+      const mail = paymentReceivedMail({
+        language: bundle.client.language,
+        clientName: bundle.client.name,
+        number: bundle.document.number ?? "",
+        title: bundle.document.title,
+        total: formatMoney(bundle.document.total_cents, bundle.document.currency),
+        url: `${site.url}/portal/documents/${id}`,
+      });
+      await resend.emails.send({ from: MAIL_FROM, to: bundle.client.email, replyTo: site.email, subject: mail.subject, html: mail.html, text: mail.text });
+    }
     await admin.from("payments").insert({
       document_id: id,
       provider: "manual",
@@ -172,4 +186,74 @@ export async function saveSettingsAction(formData: FormData) {
   if (error) redirect("/admin/settings?error=save");
   revalidatePath("/admin/settings");
   redirect("/admin/settings?saved=1");
+}
+
+/**
+ * One click from an accepted quote to a draft invoice. "full" copies the
+ * lines; "deposit" bills a percentage as a single line; "balance" copies
+ * the lines and deducts what earlier deposit invoices from this quote
+ * already billed. Needs migration 002 (documents.source_document_id).
+ */
+export async function invoiceFromQuoteAction(formData: FormData) {
+  await requireAdmin();
+  const quoteId = text(formData, "id", 60);
+  const mode = text(formData, "mode", 10) as "full" | "deposit" | "balance";
+  const pct = Math.max(1, Math.min(100, Number(text(formData, "pct", 5)) || 30));
+  const admin = createAdminClient();
+  const bundle = await loadDocumentBundle(admin, quoteId);
+  if (!bundle || bundle.document.kind !== "quote") redirect(`/admin/documents/${quoteId}`);
+  const { document: quote, lines, studio } = bundle;
+  const ref = quote.number ?? quote.title;
+
+  let invoiceLines: { description: string; quantity: number; unit_price_cents: number }[] = [];
+  let title = quote.title;
+  if (mode === "deposit") {
+    const amount = Math.round((quote.subtotal_cents * pct) / 100);
+    invoiceLines = [{ description: `Deposit ${pct}% — ${ref}`, quantity: 1, unit_price_cents: amount }];
+    title = `${quote.title} — deposit ${pct}%`;
+  } else {
+    invoiceLines = lines.map((line) => ({ description: line.description, quantity: Number(line.quantity), unit_price_cents: line.unit_price_cents }));
+    if (mode === "balance") {
+      const { data: deposits } = await admin
+        .from("documents")
+        .select("number, subtotal_cents")
+        .eq("source_document_id", quoteId)
+        .eq("kind", "invoice")
+        .neq("status", "cancelled")
+        .ilike("title", "%deposit%");
+      const billed = (deposits ?? []).reduce((sum, d) => sum + (d.subtotal_cents ?? 0), 0);
+      if (billed > 0) {
+        const numbers = (deposits ?? []).map((d) => d.number).filter(Boolean).join(", ");
+        invoiceLines.push({ description: `Less: deposit already invoiced${numbers ? ` (${numbers})` : ""}`, quantity: 1, unit_price_cents: -billed });
+      }
+      title = `${quote.title} — balance`;
+    }
+  }
+
+  const vatRate = Number(quote.vat_rate);
+  const due = new Date(Date.now() + studio.payment_terms_days * 86400000).toISOString().slice(0, 10);
+  const { data, error } = await admin
+    .from("documents")
+    .insert({
+      kind: "invoice",
+      status: "draft",
+      client_id: quote.client_id,
+      project_id: quote.project_id,
+      source_document_id: quoteId,
+      title,
+      issue_date: new Date().toISOString().slice(0, 10),
+      due_date: due,
+      vat_rate: vatRate,
+      body: quote.body,
+      notes: `Created from quote ${ref}.`,
+      ...computeTotals(invoiceLines, vatRate),
+    })
+    .select("id")
+    .single();
+  if (error || !data) redirect(`/admin/documents/${quoteId}?error=${error?.code === "42703" ? "migration" : "save"}`);
+  await admin.from("document_lines").insert(
+    invoiceLines.map((line, position) => ({ ...line, position, document_id: data.id, line_total_cents: Math.round(line.quantity * line.unit_price_cents) })),
+  );
+  revalidatePath("/admin/documents");
+  redirect(`/admin/documents/${data.id}?saved=1`);
 }

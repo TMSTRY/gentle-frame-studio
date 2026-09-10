@@ -3,10 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
-import { sendDocumentAction, setDocumentStatusAction } from "@/app/admin/documents/actions";
+import { invoiceFromQuoteAction, sendDocumentAction, setDocumentStatusAction } from "@/app/admin/documents/actions";
 import DocumentForm from "@/components/portal/DocumentForm";
 import PortalShell from "@/components/portal/PortalShell";
-import { BackLink, buttonClass, ghostButtonClass, Notice, PageHeader } from "@/components/portal/ui";
+import { BackLink, buttonClass, ghostButtonClass, inputClass, Notice, PageHeader } from "@/components/portal/ui";
 import { loadDocumentBundle } from "@/lib/portal/documents";
 import { requireAdmin } from "@/lib/portal/guard";
 import { ADMIN_LINKS, DOC_STATUS_LABEL, KIND_LABEL, formatDate, formatMoney, type DocumentStatus } from "@/lib/portal/labels";
@@ -20,6 +20,7 @@ const ERRORS: Record<string, string> = {
   save: "Saving failed. Please try again.",
   number: "No number could be assigned. Try again in a minute.",
   mail: "The email could not be sent, so the document stays a draft. Check the Resend key.",
+  migration: "Run supabase/portal/002_invoice_source.sql in the Supabase SQL Editor first — the invoice needs a link back to its quote.",
 };
 
 function StatusButton({ id, status, label }: { id: string; status: DocumentStatus; label: string }) {
@@ -48,10 +49,14 @@ export default async function DocumentDetailPage({
   const bundle = await loadDocumentBundle(admin, id);
   if (!bundle) notFound();
   const { document, lines, client, project, studio, signatures } = bundle;
-  const [{ data: clients }, { data: projects }] = await Promise.all([
+  const [{ data: clients }, { data: projects }, { data: derived }] = await Promise.all([
     admin.from("clients").select("id, name, company").order("name"),
     admin.from("projects").select("id, title, client_id").order("updated_at", { ascending: false }),
+    document.kind === "quote"
+      ? admin.from("documents").select("id, number, title, status, total_cents, currency").eq("source_document_id", id).order("created_at")
+      : Promise.resolve({ data: [] as { id: string; number: string | null; title: string; status: DocumentStatus; total_cents: number; currency: string }[] }),
   ]);
+  const invoicesFromQuote = (derived ?? []) as { id: string; number: string | null; title: string; status: DocumentStatus; total_cents: number; currency: string }[];
 
   const isMoney = document.kind === "quote" || document.kind === "invoice";
   const draft = document.status === "draft";
@@ -145,6 +150,39 @@ export default async function DocumentDetailPage({
               <span className="mt-1 block font-mono text-[0.68rem] text-taupe/80">{signature.document_hash}</span>
             </p>
           ))}
+        </section>
+      ) : null}
+
+      {document.kind === "quote" && ["sent", "accepted"].includes(document.status) ? (
+        <section className="mt-12 border-t border-line pt-8">
+          <h2 className="text-eyebrow mb-6">Invoice this quote</h2>
+          <form action={invoiceFromQuoteAction} className="flex flex-wrap items-end gap-8">
+            <input type="hidden" name="id" value={id} />
+            <div className="flex flex-wrap gap-6 text-sm text-cream/80">
+              <label className="flex items-center gap-2"><input type="radio" name="mode" value="deposit" defaultChecked className="accent-[#e6d5b3]" /> Deposit</label>
+              <label className="flex items-center gap-2"><input type="radio" name="mode" value="balance" className="accent-[#e6d5b3]" /> Balance (total minus deposits)</label>
+              <label className="flex items-center gap-2"><input type="radio" name="mode" value="full" className="accent-[#e6d5b3]" /> Full amount</label>
+            </div>
+            <div className="w-24">
+              <label htmlFor="pct" className="mb-1 block text-[0.62rem] tracking-[0.28em] text-taupe uppercase">Deposit %</label>
+              <input id="pct" name="pct" inputMode="numeric" defaultValue="30" className={inputClass} />
+            </div>
+            <button type="submit" className={buttonClass}>Create draft invoice</button>
+          </form>
+          {invoicesFromQuote.length ? (
+            <ul className="mt-8">
+              {invoicesFromQuote.map((inv) => (
+                <li key={inv.id} className="border-t border-line">
+                  <Link href={`/admin/documents/${inv.id}`} className="grid gap-2 py-3 text-sm md:grid-cols-[130px_1fr_140px_120px]">
+                    <span className="text-[0.66rem] tracking-[0.26em] text-taupe uppercase">Invoice {inv.number ?? "— draft"}</span>
+                    <span className="text-cream/85">{inv.title}</span>
+                    <span className="text-cream/80">{formatMoney(inv.total_cents, inv.currency)}</span>
+                    <span className="text-[0.66rem] tracking-[0.26em] text-champagne uppercase">{DOC_STATUS_LABEL[inv.status]}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </section>
       ) : null}
 

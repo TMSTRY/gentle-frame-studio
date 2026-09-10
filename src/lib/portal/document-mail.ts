@@ -62,3 +62,26 @@ export function signedMail({ language, clientName, number, title, url }: { langu
   );
   return { subject, html, text: `Hello ${first},\n\nThe contract ${title} has been signed and stored: ${url}\n\nWarmly, Tim` };
 }
+
+/** Sent when an invoice is marked paid — closing the loop with a thank-you. */
+export function paymentReceivedMail({ language, clientName, number, title, total, url }: { language: "nl" | "en"; clientName: string; number: string; title: string; total: string; url: string }) {
+  const first = clientName.split(" ")[0];
+  if (language === "nl") {
+    const subject = `Betaling ontvangen — factuur ${number}`;
+    const html = wrapMail(
+      `Dag ${first},`,
+      mailParagraph(`We hebben je betaling van <strong>${total}</strong> voor factuur ${number} (${title}) goed ontvangen. Dank je — ook voor het vertrouwen.`) +
+        mailButton(url, "Bekijk de factuur") +
+        mailParagraph("Warm,<br/>Tim — Gentle Frame Studio"),
+    );
+    return { subject, html, text: `Dag ${first},\n\nJe betaling van ${total} voor factuur ${number} (${title}) is goed ontvangen. Dank je.\n${url}\n\nWarm, Tim` };
+  }
+  const subject = `Payment received — invoice ${number}`;
+  const html = wrapMail(
+    `Hello ${first},`,
+    mailParagraph(`We’ve received your payment of <strong>${total}</strong> for invoice ${number} (${title}). Thank you — for the payment, and for the trust.`) +
+      mailButton(url, "View the invoice") +
+      mailParagraph("Warmly,<br/>Tim — Gentle Frame Studio"),
+  );
+  return { subject, html, text: `Hello ${first},\n\nWe’ve received your payment of ${total} for invoice ${number} (${title}). Thank you.\n${url}\n\nWarmly, Tim` };
+}
