@@ -15,8 +15,8 @@ export interface ContactPayload {
 export function notificationMail(p: ContactPayload) {
   const isMemorial = p.variant === "memorial";
   const subject = isMemorial
-    ? `Memorial film inquiry — ${p.name}`
-    : `New message — ${p.topic || "General"} — ${p.name}`;
+    ? `Memorial film inquiry · ${p.name}`
+    : `New message · ${p.topic || "General"} · ${p.name}`;
   const html = wrap(
     isMemorial ? "A family wrote to us." : "Someone wrote to us.",
     row("Name", p.name) +
@@ -36,10 +36,10 @@ export function confirmationMail(p: ContactPayload) {
   const subject = nl ? "We hebben je bericht ontvangen" : "We’ve received your message";
   const title = nl ? "Dank je om te schrijven." : "Thank you for writing.";
   const body = nl
-    ? "Je bericht is aangekomen bij Gentle Frame Studio. We lezen het met aandacht en antwoorden binnen twee werkdagen — door een mens, niet door een machine."
-    : "Your message has arrived at Gentle Frame Studio. We read it with care and answer within two working days — by a human, not a machine.";
+    ? "Je bericht is aangekomen bij Gentle Frame Studio. We lezen het met aandacht en antwoorden binnen twee werkdagen. Door een mens, niet door een machine."
+    : "Your message has arrived at Gentle Frame Studio. We read it with care and answer within two working days. By a human, not a machine.";
   const echoLabel = nl ? "Wat je schreef" : "What you wrote";
-  const closing = nl ? "Warm,<br/>Tim — Gentle Frame Studio" : "Warmly,<br/>Tim — Gentle Frame Studio";
+  const closing = nl ? "Warm,<br/>Tim · Gentle Frame Studio" : "Warmly,<br/>Tim · Gentle Frame Studio";
   const html = wrap(title, mailParagraph(body) + row(echoLabel, p.message) + mailParagraph(closing));
   const text = `${title}\n\n${body}\n\n${echoLabel}:\n${p.message}\n\n${closing.replace("<br/>", "\n")}`;
   return { subject, html, text };

@@ -62,7 +62,7 @@ export default function Work() {
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <p className="text-eyebrow mb-6">Selected work — the archive</p>
+              <p className="text-eyebrow mb-6">Selected work · the archive</p>
               <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
                 Frames we&rsquo;ve kept
                 <span className="text-taupe align-super text-[0.3em] tracking-[0.2em]">
@@ -71,7 +71,7 @@ export default function Work() {
               </h2>
             </div>
             <p className="max-w-xs pb-2 text-sm leading-relaxed text-taupe">
-              Films, platforms and experiments. The archive grows slowly — on purpose.
+              Films, platforms and experiments. The archive grows slowly, on purpose.
             </p>
           </div>
         </Reveal>
@@ -107,7 +107,7 @@ export default function Work() {
         </div>
       </div>
 
-      {/* Fixed overlay lives outside the pinned, transformed track —
+      {/* Fixed overlay lives outside the pinned, transformed track -
           a transform would otherwise become its containing block. */}
       {screening ? <WorkLightbox project={screening} onClose={() => setScreening(null)} /> : null}
     </section>
@@ -136,7 +136,7 @@ function CoverCard({
               champagne seam that drifts up as you hover */}
           <Image
             src={project.image}
-            alt={`${project.title} — screenshot`}
+            alt={`${project.title}, screenshot`}
             fill
             sizes="(max-width: 900px) 78vw, 440px"
             className="object-cover object-top saturate-[0.88] transition-[transform,clip-path] duration-700 ease-out group-hover:scale-[1.03] [clip-path:polygon(0_0,100%_0,100%_38%,0_62%)] group-hover:[clip-path:polygon(0_0,100%_0,100%_34%,0_58%)]"
@@ -156,7 +156,7 @@ function CoverCard({
       ) : (
         <Image
           src={project.image}
-          alt={`${project.title} — screenshot`}
+          alt={`${project.title}, screenshot`}
           fill
           sizes="(max-width: 900px) 78vw, 440px"
           className="object-cover object-top saturate-[0.88] transition-transform duration-700 ease-out group-hover:scale-[1.04]"
@@ -194,13 +194,13 @@ function CoverCard({
   const content = (
     <div className="relative flex h-full flex-col justify-between p-7 md:p-9">
       <div className="flex items-start justify-between text-[0.6rem] tracking-[0.28em] text-cream/60 uppercase">
-        <span>Gentle Frames — Case</span>
+        <span>Gentle Frames · Case</span>
         <span className="tabular">N°{number}</span>
       </div>
 
       <div>
         <p className="text-eyebrow mb-4" style={{ color: project.tone.glow }}>
-          {project.category} — {project.year}
+          {project.category} · {project.year}
         </p>
         <h3 className="font-display text-[clamp(2rem,3.2vw,2.9rem)] leading-[1.05] font-medium text-cream">
           {project.title}
@@ -238,7 +238,7 @@ function CoverCard({
         target="_blank"
         rel="noopener noreferrer"
         data-cursor="Visit"
-        aria-label={`${project.title} — opens in a new tab`}
+        aria-label={`${project.title}, opens in a new tab`}
         className={cardClass}
         style={{ backgroundColor: project.tone.base }}
       >
@@ -254,7 +254,7 @@ function CoverCard({
         type="button"
         onClick={onPlay}
         data-cursor="Play"
-        aria-label={`${project.title} — play the film`}
+        aria-label={`${project.title}, play the film`}
         className={cardClass}
         style={{ backgroundColor: project.tone.base }}
       >

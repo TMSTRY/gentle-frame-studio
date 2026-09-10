@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 import { inviteClientAction } from "@/app/admin/actions";
 import ClientForm from "@/components/portal/ClientForm";
 import PortalShell from "@/components/portal/PortalShell";
+import TrashButton from "@/components/portal/TrashButton";
 import { BackLink, buttonClass, EmptyRow, ghostButtonClass, Notice, PageHeader, StatusBadge } from "@/components/portal/ui";
 import { requireAdmin } from "@/lib/portal/guard";
 import { ADMIN_LINKS, SERVICE_LABEL, formatDate } from "@/lib/portal/labels";
@@ -20,6 +21,7 @@ const ERRORS: Record<string, string> = {
   save: "Saving failed. Please try again.",
   invite: "The sign-in link could not be created. Try again in a minute.",
   mail: "The link was created but the email could not be sent. Check the Resend key.",
+  migration: "Run supabase/portal/003_trash.sql in the Supabase SQL Editor first.",
 };
 
 export default async function ClientDetailPage({
@@ -36,7 +38,7 @@ export default async function ClientDetailPage({
 
   const [{ data: client }, { data: projects }] = await Promise.all([
     admin.from("clients").select("*").eq("id", id).maybeSingle(),
-    admin.from("projects").select("id, title, service, status, due_date").eq("client_id", id).order("updated_at", { ascending: false }),
+    admin.from("projects").select("id, title, service, status, due_date").eq("client_id", id).is("deleted_at", null).order("updated_at", { ascending: false }),
   ]);
   if (!client) notFound();
   const typedClient = client as Client;
@@ -60,6 +62,11 @@ export default async function ClientDetailPage({
               <Link href={`/admin/projects/new?client=${typedClient.id}`} className={buttonClass}>
                 New project
               </Link>
+              {typedClient.deleted_at ? (
+                <TrashButton kind="client" id={typedClient.id} mode="restore" label="Restore from trash" />
+              ) : (
+                <TrashButton kind="client" id={typedClient.id} mode="trash" label="Move to trash" confirmText={`Move ${typedClient.name} to the trash? Their projects and documents go along. You can restore everything from Trash.`} />
+              )}
             </>
           }
         />
@@ -67,8 +74,9 @@ export default async function ClientDetailPage({
 
       {flags.error ? <Notice tone="alert">{ERRORS[flags.error] ?? ERRORS.save}</Notice> : null}
       {flags.saved ? <Notice tone="warm">Saved.</Notice> : null}
+      {typedClient.deleted_at ? <Notice tone="alert">This client is in the trash and invisible to the portal.</Notice> : null}
       {flags.invited ? (
-        <Notice tone="warm">Invitation sent to {typedClient.email} — the link works once and stays valid for an hour.</Notice>
+        <Notice tone="warm">Invitation sent to {typedClient.email}, the link works once and stays valid for an hour.</Notice>
       ) : null}
 
       <p className="mt-6 text-[0.66rem] tracking-[0.26em] text-taupe uppercase">

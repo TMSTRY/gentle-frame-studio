@@ -12,9 +12,9 @@ export function inviteMail(name: string, language: "nl" | "en", link: string) {
       ) +
         mailButton(link, "Open mijn portaal") +
         mailParagraph(
-          "De link is een uur geldig en werkt één keer. Verlopen? Vraag op de inlogpagina gewoon een nieuwe aan met dit e-mailadres — er is geen wachtwoord.",
+          "De link is een uur geldig en werkt één keer. Verlopen? Vraag op de inlogpagina gewoon een nieuwe aan met dit e-mailadres; er is geen wachtwoord.",
         ) +
-        mailParagraph("Warm,<br/>Tim — Gentle Frame Studio"),
+        mailParagraph("Warm,<br/>Tim · Gentle Frame Studio"),
     );
     const text = `Dag ${first},\n\nJe portaal bij Gentle Frame Studio staat klaar: ${link}\n\nDe link is een uur geldig en werkt één keer. Verlopen? Vraag op de inlogpagina een nieuwe aan.\n\nWarm, Tim`;
     return { subject, html, text };
@@ -27,9 +27,9 @@ export function inviteMail(name: string, language: "nl" | "en", link: string) {
     ) +
       mailButton(link, "Open my portal") +
       mailParagraph(
-        "The link is valid for an hour and works once. Expired? Simply request a new one on the sign-in page with this email address — there is no password.",
+        "The link is valid for an hour and works once. Expired? Simply request a new one on the sign-in page with this email address; there is no password.",
       ) +
-      mailParagraph("Warmly,<br/>Tim — Gentle Frame Studio"),
+      mailParagraph("Warmly,<br/>Tim · Gentle Frame Studio"),
   );
   const text = `Hello ${first},\n\nYour portal at Gentle Frame Studio is ready: ${link}\n\nThe link is valid for an hour and works once. Expired? Request a new one on the sign-in page.\n\nWarmly, Tim`;
   return { subject, html, text };

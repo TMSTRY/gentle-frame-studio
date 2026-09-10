@@ -3,8 +3,8 @@ import Reveal from "@/components/fx/Reveal";
 import { services, type Service, type ServiceMotif } from "@/content/services";
 
 /**
- * Seven services, treated as editorial chapters — each with its
- * own reel number, copy and ambient motif — rather than a grid
+ * Seven services, treated as editorial chapters - each with its
+ * own reel number, copy and ambient motif - rather than a grid
  * of interchangeable cards.
  */
 export default function Services() {
@@ -14,7 +14,7 @@ export default function Services() {
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6 pb-20">
             <div>
-              <p className="text-eyebrow mb-6">Services — seven ways in</p>
+              <p className="text-eyebrow mb-6">Services · seven ways in</p>
               <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
                 What we make
               </h2>
@@ -87,7 +87,7 @@ function ServiceChapter({ service }: { service: Service }) {
 }
 
 /**
- * Ambient chapter visuals — small, quiet, each one built from
+ * Ambient chapter visuals - small, quiet, each one built from
  * strokes and light rather than stock imagery.
  */
 function Motif({ kind }: { kind: ServiceMotif }) {

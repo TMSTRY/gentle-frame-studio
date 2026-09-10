@@ -24,7 +24,7 @@ export default function SmoothScroll() {
     // Honor hash deep-links. Anchoring must happen after the section
     // effects in this same commit have registered their pinned
     // ScrollTriggers (their spacers stretch the document), and again
-    // after the load-time ScrollTrigger refresh — unless the visitor
+    // after the load-time ScrollTrigger refresh - unless the visitor
     // has started scrolling themselves by then.
     let interacted = false;
     const markInteracted = () => {
@@ -36,7 +36,7 @@ export default function SmoothScroll() {
       try {
         target = document.querySelector<HTMLElement>(window.location.hash);
       } catch {
-        return; // malformed external hash — nothing to anchor to
+        return; // malformed external hash, nothing to anchor to
       }
       if (target) lenis.scrollTo(target, { immediate: true });
     };

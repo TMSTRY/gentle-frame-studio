@@ -2,10 +2,10 @@ import Reveal from "@/components/fx/Reveal";
 import ScrubWords from "@/components/fx/ScrubWords";
 
 const STATEMENT =
-  "We are a small studio for big feelings. With AI, code and cinema we tell the oldest stories — love, loss, joy, wonder. The technology is our instrument. The emotion is the work.";
+  "We are a small studio for big feelings. With AI, code and cinema we tell the oldest stories: love, loss, joy, wonder. The technology is our instrument. The emotion is the work.";
 
 const FACTS = [
-  ["Est. 2025", "Belgium — worldwide"],
+  ["Est. 2025", "Belgium · worldwide"],
   ["Films · Visuals · Software", "One craft, many frames"],
   ["Human first", "Always"],
 ] as const;
@@ -15,7 +15,7 @@ export default function Manifesto() {
   return (
     <section className="relative mx-auto max-w-[1680px] px-6 py-36 md:px-12 md:py-56" aria-label="Manifesto">
       <Reveal>
-        <p className="text-eyebrow mb-12">The studio — a founding statement</p>
+        <p className="text-eyebrow mb-12">The studio · a founding statement</p>
       </Reveal>
       <ScrubWords
         text={STATEMENT}

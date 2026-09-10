@@ -9,7 +9,7 @@ interface ProjectFormProps {
   defaultClientId?: string;
 }
 
-/** Create or edit a project. Status lives here too — one place to move a project along. */
+/** Create or edit a project. Status lives here too - one place to move a project along. */
 export default function ProjectForm({ project, clients, defaultClientId }: ProjectFormProps) {
   const editing = Boolean(project);
   const selectClass = `${inputClass} cursor-pointer appearance-none bg-ink`;
@@ -31,7 +31,7 @@ export default function ProjectForm({ project, clients, defaultClientId }: Proje
             {clients.map((client) => (
               <option key={client.id} value={client.id} className="bg-ink text-cream">
                 {client.name}
-                {client.company ? ` — ${client.company}` : ""}
+                {client.company ? ` · ${client.company}` : ""}
               </option>
             ))}
           </select>

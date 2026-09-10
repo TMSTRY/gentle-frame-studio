@@ -218,8 +218,8 @@ export async function invoiceFromQuoteAction(formData: FormData) {
   let title = quote.title;
   if (mode === "deposit") {
     const amount = Math.round((quote.subtotal_cents * pct) / 100);
-    invoiceLines = [{ description: `Deposit ${pct}% — ${ref}`, quantity: 1, unit_price_cents: amount }];
-    title = `${quote.title} — deposit ${pct}%`;
+    invoiceLines = [{ description: `Deposit ${pct}% · ${ref}`, quantity: 1, unit_price_cents: amount }];
+    title = `${quote.title}, deposit ${pct}%`;
   } else {
     invoiceLines = lines.map((line) => ({ description: line.description, quantity: Number(line.quantity), unit_price_cents: line.unit_price_cents }));
     if (mode === "balance") {
@@ -235,7 +235,7 @@ export async function invoiceFromQuoteAction(formData: FormData) {
         const numbers = (deposits ?? []).map((d) => d.number).filter(Boolean).join(", ");
         invoiceLines.push({ description: `Less: deposit already invoiced${numbers ? ` (${numbers})` : ""}`, quantity: 1, unit_price_cents: -billed });
       }
-      title = `${quote.title} — balance`;
+      title = `${quote.title}, balance`;
     }
   }
 

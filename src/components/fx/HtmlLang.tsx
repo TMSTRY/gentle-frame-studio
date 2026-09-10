@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 /**
  * Sets the document language for a page rendered inside the
- * English root layout — restores the previous value on unmount.
+ * English root layout - restores the previous value on unmount.
  */
 export default function HtmlLang({ lang }: { lang: string }) {
   useEffect(() => {

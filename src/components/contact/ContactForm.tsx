@@ -46,7 +46,7 @@ export default function ContactForm({ variant, lang, copy }: ContactFormProps) {
       <input type="hidden" name="variant" value={variant} />
       <input type="hidden" name="lang" value={lang} />
       <input type="hidden" name="ts" value={renderedAt} />
-      {/* Honeypot — invisible to people, irresistible to bots */}
+      {/* Honeypot - invisible to people, irresistible to bots */}
       <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
         <label>
           Website

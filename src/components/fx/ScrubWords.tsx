@@ -11,7 +11,7 @@ interface ScrubWordsProps {
 
 /**
  * A statement paragraph whose words brighten one by one as the
- * reader scrolls through it — ink to cream, tied to scroll.
+ * reader scrolls through it - ink to cream, tied to scroll.
  */
 export default function ScrubWords({ text, className }: ScrubWordsProps) {
   const ref = useRef<HTMLParagraphElement>(null);

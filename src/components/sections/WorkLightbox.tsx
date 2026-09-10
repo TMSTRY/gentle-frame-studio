@@ -58,7 +58,7 @@ export default function WorkLightbox({ project, onClose }: WorkLightboxProps) {
       className="fixed inset-0 z-[90] flex items-center justify-center bg-ink-deep/90 p-4 backdrop-blur-sm md:p-10"
       role="dialog"
       aria-modal="true"
-      aria-label={`${project.title} — film`}
+      aria-label={`${project.title}, film`}
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}

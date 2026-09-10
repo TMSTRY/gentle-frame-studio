@@ -21,12 +21,13 @@ export default async function AdminHome() {
   const admin = createAdminClient();
 
   const [clientsRes, projectsRes, documentsRes, recentRes] = await Promise.all([
-    admin.from("clients").select("*", { count: "exact", head: true }),
-    admin.from("projects").select("*", { count: "exact", head: true }).not("status", "in", "(closed,cancelled)"),
-    admin.from("documents").select("*", { count: "exact", head: true }).in("status", ["sent", "accepted", "overdue"]),
+    admin.from("clients").select("*", { count: "exact", head: true }).is("deleted_at", null),
+    admin.from("projects").select("*", { count: "exact", head: true }).not("status", "in", "(closed,cancelled)").is("deleted_at", null),
+    admin.from("documents").select("*", { count: "exact", head: true }).in("status", ["sent", "accepted", "overdue"]).is("deleted_at", null),
     admin
       .from("projects")
       .select("id, title, service, status, updated_at, clients(name)")
+      .is("deleted_at", null)
       .order("updated_at", { ascending: false })
       .limit(6),
   ]);
@@ -83,7 +84,7 @@ export default async function AdminHome() {
             ))}
           </ul>
         ) : (
-          <EmptyRow>No projects yet — start with a client, then a project.</EmptyRow>
+          <EmptyRow>No projects yet, start with a client, then a project.</EmptyRow>
         )}
       </section>
     </PortalShell>

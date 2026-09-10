@@ -32,7 +32,7 @@ export default async function PortalProjectPage({ params }: { params: Promise<{ 
     <PortalShell zone="Client portal" email={user.email} links={isAdmin ? [{ href: `/admin/projects/${id}`, label: "Open in admin" }] : []}>
       <BackLink href="/portal" label="Your portal" />
       <div className="mt-8">
-        <PageHeader eyebrow={`${SERVICE_LABEL[typed.service]} — ${STATUS_LABEL[typed.status]}`} title={typed.title} />
+        <PageHeader eyebrow={`${SERVICE_LABEL[typed.service]} · ${STATUS_LABEL[typed.status]}`} title={typed.title} />
       </div>
 
       <div className="mt-12">
@@ -70,7 +70,7 @@ export default async function PortalProjectPage({ params }: { params: Promise<{ 
               ))}
             </ul>
           ) : (
-            <EmptyRow>Nothing yet — we’ll write here as the work moves.</EmptyRow>
+            <EmptyRow>Nothing yet, we’ll write here as the work moves.</EmptyRow>
           )}
         </div>
       </div>
@@ -84,7 +84,7 @@ export default async function PortalProjectPage({ params }: { params: Promise<{ 
                 <Link href={`/portal/documents/${doc.id}`} className="grid gap-2 py-4 md:grid-cols-[130px_1fr_140px_120px]">
                   <span className="text-[0.66rem] tracking-[0.26em] text-taupe uppercase">{KIND_LABEL[doc.kind]} {doc.number ?? ""}</span>
                   <span className="font-display text-lg text-cream">{doc.title}</span>
-                  <span className="text-sm text-cream/80">{doc.kind === "quote" || doc.kind === "invoice" ? formatMoney(doc.total_cents, doc.currency) : "—"}</span>
+                  <span className="text-sm text-cream/80">{doc.kind === "quote" || doc.kind === "invoice" ? formatMoney(doc.total_cents, doc.currency) : "·"}</span>
                   <span className="text-[0.66rem] tracking-[0.26em] text-champagne uppercase">{DOC_STATUS_LABEL[doc.status]}</span>
                 </Link>
               </li>

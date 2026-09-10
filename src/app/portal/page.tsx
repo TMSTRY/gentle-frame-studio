@@ -34,7 +34,7 @@ export default async function PortalHome() {
       {!client ? (
         <p className="mt-8 max-w-lg text-sm leading-relaxed text-taupe">
           Your address isn’t linked to a project yet. If you’re expecting one, the studio will connect it
-          shortly — or write to hello@gentleframestudio.com.
+          shortly, or write to hello@gentleframestudio.com.
         </p>
       ) : null}
 
@@ -66,7 +66,7 @@ export default async function PortalHome() {
                 <Link href={`/portal/documents/${doc.id}`} className="grid gap-2 py-5 md:grid-cols-[130px_1fr_140px_120px]">
                   <span className="text-[0.66rem] tracking-[0.26em] text-taupe uppercase">{KIND_LABEL[doc.kind]} {doc.number ?? ""}</span>
                   <span className="font-display text-lg text-cream">{doc.title}</span>
-                  <span className="text-sm text-cream/80">{doc.kind === "quote" || doc.kind === "invoice" ? formatMoney(doc.total_cents, doc.currency) : "—"}</span>
+                  <span className="text-sm text-cream/80">{doc.kind === "quote" || doc.kind === "invoice" ? formatMoney(doc.total_cents, doc.currency) : "·"}</span>
                   <span className="text-[0.66rem] tracking-[0.26em] text-champagne uppercase">{DOC_STATUS_LABEL[doc.status]}</span>
                 </Link>
               </li>

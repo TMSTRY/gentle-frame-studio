@@ -7,7 +7,7 @@ import { testimonials } from "@/content/testimonials";
 const ROTATION_MS = 7000;
 
 /**
- * Kind words, one voice at a time — generous whitespace, large
+ * Kind words, one voice at a time - generous whitespace, large
  * italic serif, slow rotation with manual override.
  */
 export default function Testimonials() {
@@ -45,7 +45,7 @@ export default function Testimonials() {
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
                 <footer className="mt-10 text-[0.65rem] tracking-[0.3em] text-taupe uppercase">
-                  {testimonial.author} — {testimonial.context}
+                  {testimonial.author} · {testimonial.context}
                 </footer>
               </blockquote>
             ))}

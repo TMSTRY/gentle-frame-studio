@@ -58,7 +58,7 @@ export default function Footer() {
                 {site.email}
               </a>
               <p className="mt-3 text-sm text-taupe">
-                {site.location} — working worldwide
+                {site.location}, working worldwide
               </p>
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-3 border-t border-line pt-8 text-[0.65rem] tracking-[0.22em] text-taupe uppercase md:flex-row">
           <span>© {year} {site.legalName}</span>
-          <span>Two frames overlapping — where memories meet imagination</span>
+          <span>Two frames overlapping, where memories meet imagination</span>
           <span>{site.domain}</span>
         </div>
       </div>

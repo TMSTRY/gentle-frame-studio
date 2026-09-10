@@ -27,7 +27,7 @@ export default function FilmPoster({ poster, title, playLabel, caption }: FilmPo
         type="button"
         onClick={() => setOpen(true)}
         data-cursor="Play"
-        aria-label={`${playLabel} — ${title}`}
+        aria-label={`${playLabel} · ${title}`}
         className="group relative block aspect-video w-full overflow-hidden rounded-lg border border-champagne/25 text-left"
       >
         <Image

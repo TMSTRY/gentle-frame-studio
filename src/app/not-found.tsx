@@ -19,7 +19,7 @@ export default function NotFound() {
       </div>
 
       <div className="relative z-10 text-center">
-        <p className="text-eyebrow mb-8">404 — Off the reel</p>
+        <p className="text-eyebrow mb-8">404 · Off the reel</p>
         <h1 className="font-display text-[clamp(2.6rem,7vw,6.4rem)] leading-[1.05] font-medium text-cream">
           This frame
           <br />

@@ -27,7 +27,7 @@ export default async function LoginPage({
           Welcome back.
         </h1>
         <p className="mt-6 mb-12 text-sm leading-relaxed text-taupe">
-          Your projects, documents and payments — in one quiet place.
+          Your projects, documents and payments, in one quiet place.
         </p>
         {isSupabaseConfigured() ? (
           <LoginForm next={next} linkError={params.error === "link"} />

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------
-   Gentle Frame Studio — design tokens
+   Gentle Frame Studio - design tokens
    Dark luxury: ink black, off-white cream, champagne, muted gold.
    --------------------------------------------------------------- */
 
@@ -88,7 +88,7 @@ body {
 }
 
 /* ---------------------------------------------------------------
-   Film grain — a single fixed overlay above everything
+   Film grain - a single fixed overlay above everything
    --------------------------------------------------------------- */
 
 .grain {
@@ -123,7 +123,7 @@ body {
    Motion primitives
    --------------------------------------------------------------- */
 
-/* Masked word reveal — words sit inside overflow-hidden slots */
+/* Masked word reveal - words sit inside overflow-hidden slots */
 .reveal-slot {
   display: inline-block;
   overflow: hidden;
@@ -235,7 +235,7 @@ html[data-motion="off"] .reveal-word {
 }
 
 /* ---------------------------------------------------------------
-   Reduced motion — stillness is also cinematic
+   Reduced motion - stillness is also cinematic
    --------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {

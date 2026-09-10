@@ -11,7 +11,7 @@ import type { MemorialCopy } from "@/content/memorial";
 import { site } from "@/content/site";
 
 /**
- * The Memorial Films landing page — one calm layout shared by the
+ * The Memorial Films landing page - one calm layout shared by the
  * English and Dutch versions. Deliberately quieter than the home:
  * more air, one warm image, serif-led, nothing that startles a
  * visitor who arrives here grieving.

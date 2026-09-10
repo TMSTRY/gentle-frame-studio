@@ -5,7 +5,7 @@ import Reveal from "@/components/fx/Reveal";
 const ROLES = ["Correctional officer", "AI filmmaker", "Musician", "Developer", "Maker"];
 
 /**
- * The human behind the studio — a story, a place reserved for a
+ * The human behind the studio - a story, a place reserved for a
  * portrait, and the brand made physical.
  */
 export default function About() {
@@ -13,7 +13,7 @@ export default function About() {
     <section id="studio" className="scroll-mt-24" aria-label="About the studio">
       <div className="mx-auto max-w-[1680px] px-6 py-36 md:px-12 md:py-56">
         <div className="grid gap-16 md:grid-cols-12 md:gap-12">
-          {/* Portrait — two cards held like a hand of playing cards.
+          {/* Portrait - two cards held like a hand of playing cards.
               The monogram card sits on top; hovering fans it right
               while the portrait behind it fans left into view. */}
           <div className="md:col-span-5">
@@ -23,15 +23,15 @@ export default function About() {
                   className="group relative mx-auto max-w-[420px] outline-none"
                   tabIndex={0}
                   data-cursor="Meet"
-                  aria-label="Portrait of Tim Mostrey — hover to reveal"
+                  aria-label="Portrait of Tim Mostrey, hover to reveal"
                 >
                   <div className="absolute -top-4 -left-4 h-full w-full rounded-xl border border-champagne/25" aria-hidden="true" />
 
-                  {/* Portrait card — behind, fans left on hover */}
+                  {/* Portrait card - behind, fans left on hover */}
                   <div className="absolute inset-0 origin-bottom overflow-hidden rounded-xl border border-champagne/40 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-x-[44%] group-hover:-rotate-[8deg] group-focus-visible:-translate-x-[44%] group-focus-visible:-rotate-[8deg]">
                     <Image
                       src="/brand/artistiek.png"
-                      alt="Tim Mostrey, founder of Gentle Frame Studio — black-and-white portrait"
+                      alt="Tim Mostrey, founder of Gentle Frame Studio, black-and-white portrait"
                       fill
                       sizes="(max-width: 768px) 90vw, 420px"
                       className="object-cover object-top"
@@ -39,7 +39,7 @@ export default function About() {
                     <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent" aria-hidden="true" />
                   </div>
 
-                  {/* Monogram card — on top, fans right on hover */}
+                  {/* Monogram card - on top, fans right on hover */}
                   <div className="relative aspect-[4/5] origin-bottom overflow-hidden rounded-xl border border-champagne/50 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[44%] group-hover:rotate-[8deg] group-focus-visible:translate-x-[44%] group-focus-visible:rotate-[8deg]">
                     <div
                       className="absolute inset-0"
@@ -68,7 +68,7 @@ export default function About() {
           {/* The story */}
           <div className="md:col-span-7 lg:col-span-6 lg:col-start-7">
             <Reveal>
-              <p className="text-eyebrow mb-6">The studio — a human story</p>
+              <p className="text-eyebrow mb-6">The studio · a human story</p>
               <h2 className="font-display text-[clamp(2.2rem,4.6vw,4.2rem)] leading-[1.05] font-medium text-cream">
                 The person behind
                 <br />
@@ -81,23 +81,23 @@ export default function About() {
                 <p>
                   Before there was a studio, there were night shifts. Years spent as a
                   correctional officer, keeping watch through the quietest hours of a
-                  prison — learning that presence matters more than words, and that
+                  prison, learning that presence matters more than words, and that
                   everyone carries a story worth keeping.
                 </p>
                 <p>
                   Somewhere along the way, the stories asked for form. Music got
-                  written. Code got shipped. Films got made. The tools kept changing —
-                  guitars, cameras, neural networks — but the job stayed the same:
+                  written. Code got shipped. Films got made. The tools kept changing
+                  (guitars, cameras, neural networks), but the job stayed the same:
                   make someone feel something true.
                 </p>
                 <p>
                   Gentle Frames is that job, taken seriously. A one-person studio in
-                  Belgium working with families, artists and brands worldwide — using
+                  Belgium working with families, artists and brands worldwide, using
                   AI the way a craftsman uses any instrument: quietly, precisely, in
                   service of the human on the other side.
                 </p>
               </div>
-              <p className="font-display mt-10 text-2xl text-champagne italic">— Tim, founder</p>
+              <p className="font-display mt-10 text-2xl text-champagne italic">Tim, founder</p>
               <p className="mt-12 border-t border-line pt-8 text-[0.65rem] tracking-[0.26em] text-taupe uppercase">
                 {ROLES.join("  ·  ")}
               </p>

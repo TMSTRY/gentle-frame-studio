@@ -1,5 +1,5 @@
 /**
- * Copy for the contact form — the studio variant on the home page
+ * Copy for the contact form - the studio variant on the home page
  * and the gentler memorial intake (English and Dutch).
  */
 
@@ -42,7 +42,7 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     sending: "Sending…",
     success: {
       title: "Thank you.",
-      body: "Your message has arrived. We answer within two working days — gently, and by a human.",
+      body: "Your message has arrived. We answer within two working days. Gently, and by a human.",
     },
     error: "Something went wrong on our side. Please try again, or write to us directly.",
     orWrite: "or write to",
@@ -66,7 +66,7 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     sending: "Versturen…",
     success: {
       title: "Dank je.",
-      body: "Je bericht is aangekomen. We antwoorden binnen twee werkdagen — zacht, en door een mens.",
+      body: "Je bericht is aangekomen. We antwoorden binnen twee werkdagen. Zacht, en door een mens.",
     },
     error: "Er ging iets mis aan onze kant. Probeer het opnieuw, of schrijf ons rechtstreeks.",
     orWrite: "of schrijf naar",
@@ -75,7 +75,7 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     name: "Your name",
     email: "Your email",
     message: "Tell us about them",
-    messagePlaceholder: "A few lines — or just a name. We’ll ask the rest in conversation.",
+    messagePlaceholder: "A few lines, or just a name. We’ll ask the rest in conversation.",
     date: "Is there a date we should know about?",
     datePlaceholder: "A ceremony, an anniversary… (optional)",
     submit: "Send",
@@ -91,7 +91,7 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     name: "Je naam",
     email: "Je e-mailadres",
     message: "Vertel ons over hen",
-    messagePlaceholder: "Een paar regels — of gewoon een naam. De rest vragen we in een gesprek.",
+    messagePlaceholder: "Een paar regels, of gewoon een naam. De rest vragen we in een gesprek.",
     date: "Is er een datum die we moeten kennen?",
     datePlaceholder: "Een uitvaart, een herdenking… (optioneel)",
     submit: "Versturen",

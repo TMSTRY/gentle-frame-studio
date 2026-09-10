@@ -1,5 +1,5 @@
 /**
- * Global site configuration — single source of truth for
+ * Global site configuration - single source of truth for
  * brand copy, navigation, contact details and metadata.
  */
 
@@ -10,10 +10,10 @@ export const site = {
   url: "https://gentleframestudio.com",
   tagline: "Memories. Reimagined. Forever.",
   description:
-    "Gentle Frame Studio is a Belgian creative studio crafting memorial films, luxury product films, music videos, AI visual production and digital platforms — technology with a human heart.",
+    "Gentle Frame Studio is a Belgian creative studio crafting memorial films, luxury product films, music videos, AI visual production and digital platforms: technology with a human heart.",
   email: "hello@gentleframestudio.com",
   location: "Belgium",
-  coordinates: "50.85°N — 4.35°E",
+  coordinates: "50.85°N · 4.35°E",
   founded: "2025",
 } as const;
 

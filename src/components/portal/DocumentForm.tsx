@@ -43,7 +43,7 @@ export default function DocumentForm({ document, lines = [], clients, projects, 
             {clients.map((client) => (
               <option key={client.id} value={client.id} className="bg-ink text-cream">
                 {client.name}
-                {client.company ? ` — ${client.company}` : ""}
+                {client.company ? ` · ${client.company}` : ""}
               </option>
             ))}
           </select>
@@ -51,7 +51,7 @@ export default function DocumentForm({ document, lines = [], clients, projects, 
         <Field label="Project (optional)" htmlFor="project_id">
           <select id="project_id" name="project_id" defaultValue={document?.project_id ?? defaults?.project ?? ""} className={selectClass}>
             <option value="" className="bg-ink text-cream">
-              —
+ ·
             </option>
             {projects.map((project) => (
               <option key={project.id} value={project.id} className="bg-ink text-cream">
@@ -62,7 +62,7 @@ export default function DocumentForm({ document, lines = [], clients, projects, 
         </Field>
         <div className="md:col-span-3">
           <Field label="Title (appears on the document)" htmlFor="title">
-            <input id="title" name="title" required minLength={2} defaultValue={document?.title ?? ""} placeholder="Memorial film — Rudy" className={inputClass} />
+            <input id="title" name="title" required minLength={2} defaultValue={document?.title ?? ""} placeholder="Memorial film · Rudy" className={inputClass} />
           </Field>
         </div>
         <Field label="Issue date" htmlFor="issue_date">
@@ -97,7 +97,7 @@ export default function DocumentForm({ document, lines = [], clients, projects, 
       </div>
 
       <div className="mt-12">
-        <Field label="Body text (contracts, terms, a personal note — blank line = new paragraph)" htmlFor="body">
+        <Field label="Body text (contracts, terms, a personal note, blank line = new paragraph)" htmlFor="body">
           <textarea id="body" name="body" rows={8} defaultValue={document?.body ?? ""} className={`${inputClass} resize-y leading-relaxed`} />
         </Field>
       </div>

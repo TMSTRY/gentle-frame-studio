@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 import PortalShell from "@/components/portal/PortalShell";
-import { buttonClass, EmptyRow, PageHeader } from "@/components/portal/ui";
+import { buttonClass, EmptyRow, Notice, PageHeader } from "@/components/portal/ui";
 import { requireAdmin } from "@/lib/portal/guard";
 import { ADMIN_LINKS } from "@/lib/portal/labels";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -20,19 +20,21 @@ interface ClientRow {
   projects: { count: number }[];
 }
 
-export default async function ClientsPage() {
+export default async function ClientsPage({ searchParams }: { searchParams: Promise<{ trashed?: string }> }) {
   const { user } = await requireAdmin();
+  const flags = await searchParams;
   const admin = createAdminClient();
   const { data } = await admin
     .from("clients")
     .select("id, name, email, company, language, user_id, projects(count)")
+    .is("deleted_at", null)
     .order("name");
   const clients = (data ?? []) as unknown as ClientRow[];
 
   return (
     <PortalShell zone="Studio admin" email={user.email} links={ADMIN_LINKS}>
       <PageHeader
-        eyebrow={`Clients — ${clients.length}`}
+        eyebrow={`Clients · ${clients.length}`}
         title="Who we work for."
         aside={
           <Link href="/admin/clients/new" className={buttonClass}>
@@ -40,6 +42,7 @@ export default async function ClientsPage() {
           </Link>
         }
       />
+      {flags.trashed ? <Notice tone="warm">Moved to the trash. Restore it from Trash if that was a slip.</Notice> : null}
       <div className="mt-16">
         {clients.length ? (
           <ul>

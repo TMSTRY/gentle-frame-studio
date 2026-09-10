@@ -16,7 +16,7 @@ function format(totalFrames: number): string {
 
 /**
  * A running 24fps film timecode, counting from the moment the
- * visitor arrived — the site as a take that is being recorded.
+ * visitor arrived - the site as a take that is being recorded.
  */
 export default function Timecode({ className }: { className?: string }) {
   const [code, setCode] = useState("00:00:00:00");

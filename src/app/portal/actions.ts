@@ -12,7 +12,7 @@ export interface LoginState {
 }
 
 /**
- * Sends a magic link. We never reveal whether an address is known —
+ * Sends a magic link. We never reveal whether an address is known -
  * the reply is the same either way.
  */
 export async function sendMagicLink(_previous: LoginState, formData: FormData): Promise<LoginState> {
@@ -79,7 +79,7 @@ export async function acceptQuoteAction(formData: FormData) {
     await resend.emails.send({
       from: MAIL_FROM,
       to: adminEmail() || site.email,
-      subject: `Quote accepted — ${document.number ?? ""} ${document.title}`,
+      subject: `Quote accepted · ${document.number ?? ""} ${document.title}`,
       text: `${user.email} accepted quote ${document.number ?? ""} "${document.title}".\n${site.url}/admin/documents/${id}`,
     });
   }
@@ -144,7 +144,7 @@ export async function signContractAction(formData: FormData) {
       resend.emails.send({
         from: MAIL_FROM,
         to: adminEmail() || site.email,
-        subject: `Contract signed — ${bundle.document.number ?? ""} ${bundle.document.title}`,
+        subject: `Contract signed · ${bundle.document.number ?? ""} ${bundle.document.title}`,
         text: `${signerName} (${user.email}) signed contract ${bundle.document.number ?? ""} "${bundle.document.title}".\n${site.url}/admin/documents/${id}`,
       }),
     ]);

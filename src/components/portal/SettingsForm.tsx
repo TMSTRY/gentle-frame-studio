@@ -2,7 +2,7 @@ import { saveSettingsAction } from "@/app/admin/documents/actions";
 import { buttonClass, Field, inputClass } from "@/components/portal/ui";
 import type { StudioSettings } from "@/lib/portal/types";
 
-/** The studio's own details — printed on every quote, invoice and contract. */
+/** The studio's own details - printed on every quote, invoice and contract. */
 export default function SettingsForm({ studio }: { studio: StudioSettings }) {
   return (
     <form action={saveSettingsAction} className="max-w-2xl">

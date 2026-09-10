@@ -7,6 +7,7 @@ import { invoiceFromQuoteAction, sendDocumentAction } from "@/app/admin/document
 import DocumentForm from "@/components/portal/DocumentForm";
 import PortalShell from "@/components/portal/PortalShell";
 import StatusButton from "@/components/portal/StatusButton";
+import TrashButton from "@/components/portal/TrashButton";
 import { BackLink, buttonClass, ghostButtonClass, inputClass, Notice, PageHeader } from "@/components/portal/ui";
 import { loadDocumentBundle } from "@/lib/portal/documents";
 import { requireAdmin } from "@/lib/portal/guard";
@@ -17,11 +18,12 @@ export const metadata: Metadata = { title: "Document", robots: { index: false, f
 
 const ERRORS: Record<string, string> = {
   invalid: "A client and a title are required.",
-  locked: "Sent documents can’t be edited — cancel it and create a new one.",
+  locked: "Sent documents can’t be edited, cancel it and create a new one.",
   save: "Saving failed. Please try again.",
   number: "No number could be assigned. Try again in a minute.",
   mail: "The email could not be sent, so the document stays a draft. Check the Resend key.",
-  migration: "Run supabase/portal/002_invoice_source.sql in the Supabase SQL Editor first — the invoice needs a link back to its quote.",
+  migration: "Run the latest supabase/portal/*.sql migration in the Supabase SQL Editor first.",
+  "invoice-trash": "Numbered invoices can’t be trashed; cancel them instead so the numbering stays intact.",
 };
 
 export default async function DocumentDetailPage({
@@ -39,10 +41,10 @@ export default async function DocumentDetailPage({
   if (!bundle) notFound();
   const { document, lines, client, project, studio, signatures } = bundle;
   const [{ data: clients }, { data: projects }, { data: derived }] = await Promise.all([
-    admin.from("clients").select("id, name, company").order("name"),
-    admin.from("projects").select("id, title, client_id").order("updated_at", { ascending: false }),
+    admin.from("clients").select("id, name, company").is("deleted_at", null).order("name"),
+    admin.from("projects").select("id, title, client_id").is("deleted_at", null).order("updated_at", { ascending: false }),
     document.kind === "quote"
-      ? admin.from("documents").select("id, number, title, status, total_cents, currency").eq("source_document_id", id).order("created_at")
+      ? admin.from("documents").select("id, number, title, status, total_cents, currency").eq("source_document_id", id).is("deleted_at", null).order("created_at")
       : Promise.resolve({ data: [] as { id: string; number: string | null; title: string; status: DocumentStatus; total_cents: number; currency: string }[] }),
   ]);
   const invoicesFromQuote = (derived ?? []) as { id: string; number: string | null; title: string; status: DocumentStatus; total_cents: number; currency: string }[];
@@ -56,13 +58,18 @@ export default async function DocumentDetailPage({
       <BackLink href="/admin/documents" label="Documents" />
       <div className="mt-8">
         <PageHeader
-          eyebrow={`${KIND_LABEL[document.kind]} ${document.number ?? "— draft"} · ${DOC_STATUS_LABEL[document.status]}`}
+          eyebrow={`${KIND_LABEL[document.kind]} ${document.number ?? "(draft)"} · ${DOC_STATUS_LABEL[document.status]}`}
           title={document.title}
           aside={
             <>
               <a href={`/admin/documents/${id}/pdf`} target="_blank" rel="noopener" className={ghostButtonClass}>
                 View PDF
               </a>
+              {document.deleted_at ? (
+                <TrashButton kind="document" id={id} mode="restore" label="Restore from trash" />
+              ) : !(document.kind === "invoice" && document.number) ? (
+                <TrashButton kind="document" id={id} mode="trash" label="Move to trash" confirmText={`Move this ${KIND_LABEL[document.kind].toLowerCase()} to the trash? You can restore it from Trash.`} />
+              ) : null}
               {draft ? (
                 <form action={sendDocumentAction}>
                   <input type="hidden" name="id" value={id} />
@@ -78,7 +85,8 @@ export default async function DocumentDetailPage({
 
       {flags.error ? <Notice tone="alert">{ERRORS[flags.error] ?? ERRORS.save}</Notice> : null}
       {flags.saved ? <Notice tone="warm">Saved.</Notice> : null}
-      {flags.sent ? <Notice tone="warm">Sent to {client.email} — numbered {document.number}.</Notice> : null}
+      {document.deleted_at ? <Notice tone="alert">This document is in the trash and invisible to the client.</Notice> : null}
+      {flags.sent ? <Notice tone="warm">Sent to {client.email}, numbered {document.number}.</Notice> : null}
 
       <div className="mt-10 grid gap-8 border-t border-line pt-8 md:grid-cols-4">
         <div>
@@ -94,7 +102,7 @@ export default async function DocumentDetailPage({
               {project.title}
             </Link>
           ) : (
-            <p className="mt-2 text-sm text-taupe">—</p>
+            <p className="mt-2 text-sm text-taupe"> · </p>
           )}
         </div>
         <div>
@@ -106,7 +114,7 @@ export default async function DocumentDetailPage({
         </div>
         <div>
           <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">Total</p>
-          <p className="font-display mt-1 text-2xl text-cream">{isMoney ? formatMoney(document.total_cents, document.currency) : "—"}</p>
+          <p className="font-display mt-1 text-2xl text-cream">{isMoney ? formatMoney(document.total_cents, document.currency) : "·"}</p>
         </div>
       </div>
 
@@ -163,7 +171,7 @@ export default async function DocumentDetailPage({
               {invoicesFromQuote.map((inv) => (
                 <li key={inv.id} className="border-t border-line">
                   <Link href={`/admin/documents/${inv.id}`} className="grid gap-2 py-3 text-sm md:grid-cols-[130px_1fr_140px_120px]">
-                    <span className="text-[0.66rem] tracking-[0.26em] text-taupe uppercase">Invoice {inv.number ?? "— draft"}</span>
+                    <span className="text-[0.66rem] tracking-[0.26em] text-taupe uppercase">Invoice {inv.number ?? "(draft)"}</span>
                     <span className="text-cream/85">{inv.title}</span>
                     <span className="text-cream/80">{formatMoney(inv.total_cents, inv.currency)}</span>
                     <span className="text-[0.66rem] tracking-[0.26em] text-champagne uppercase">{DOC_STATUS_LABEL[inv.status]}</span>
@@ -197,7 +205,7 @@ export default async function DocumentDetailPage({
       ) : (
         <section className="mt-16">
           <h2 className="text-eyebrow mb-4">Body</h2>
-          <p className="max-w-2xl text-sm leading-[1.9] whitespace-pre-line text-cream/75">{document.body ?? "—"}</p>
+          <p className="max-w-2xl text-sm leading-[1.9] whitespace-pre-line text-cream/75">{document.body ?? "·"}</p>
           {document.notes ? (
             <>
               <h2 className="text-eyebrow mt-10 mb-4">Internal notes</h2>

@@ -115,7 +115,7 @@ export default function DocumentPdf({ document, lines, client, studio, project, 
   const paragraphs = (document.body ?? "").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 
   return (
-    <Document title={`${kindLabel} ${number} — ${studio.name}`} author={studio.name}>
+    <Document title={`${kindLabel} ${number} · ${studio.name}`} author={studio.name}>
       <Page size="A4" style={styles.page}>
         <View style={styles.headerRow}>
           <View>

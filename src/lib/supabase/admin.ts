@@ -2,7 +2,7 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { supabaseUrl } from "@/lib/supabase/env";
 
 /**
- * Service-role client — bypasses Row Level Security. Server only,
+ * Service-role client - bypasses Row Level Security. Server only,
  * for the studio's own operations: numbering, PDFs, payments,
  * signatures. Never import this from a client component.
  */

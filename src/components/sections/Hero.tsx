@@ -13,7 +13,7 @@ const HEADLINE = [
 
 /**
  * The opening scene. Two brand frames draw themselves around the
- * headline and drift on separate depth layers under the cursor —
+ * headline and drift on separate depth layers under the cursor -
  * two frames reacting to each other, memories meeting
  * imagination. A film HUD (timecode, coordinates) grounds the
  * cinematic framing; scrolling pushes the whole take gently
@@ -118,13 +118,13 @@ export default function Hero() {
       ref={sectionRef}
       id="top"
       className="relative flex h-[100svh] items-center justify-center overflow-hidden"
-      aria-label="Gentle Frame Studio — where memories meet imagination"
+      aria-label="Gentle Frame Studio, where memories meet imagination"
     >
       <div ref={stageRef} className="relative flex h-full w-full items-center justify-center">
         {/*
           Every mouse-depth layer is split in two: a static outer
           element owns the CSS centering transform, an inner element
-          owns the GSAP-driven drift — so they never fight over the
+          owns the GSAP-driven drift, so they never fight over the
           same transform.
         */}
 
@@ -141,7 +141,7 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Back frame — memory. The spread between the frames follows
+        {/* Back frame - memory. The spread between the frames follows
             the mark: the back frame's right edge cuts through the
             middle of the front frame, its bottom edge through the
             front frame's lower third. */}
@@ -161,7 +161,7 @@ export default function Hero() {
           </svg>
         </div>
 
-        {/* Front frame — imagination */}
+        {/* Front frame - imagination */}
         <div className="absolute top-1/2 left-1/2 w-[min(74vw,760px)] -translate-x-[28%] -translate-y-[35%]">
           <svg
             data-hero-front
@@ -199,7 +199,7 @@ export default function Hero() {
                   "radial-gradient(closest-side, rgba(10,9,8,0.9), rgba(10,9,8,0.5) 55%, transparent 78%)",
               }}
             />
-            A cinematic creative studio — {site.location}, working worldwide
+            A cinematic creative studio · {site.location}, working worldwide
           </p>
           <h1 className="font-display text-[clamp(3rem,9vw,8.25rem)] leading-[1.02] font-medium tracking-[-0.01em] text-cream">
             {HEADLINE.map((line, lineIndex) => (
@@ -248,8 +248,8 @@ export default function Hero() {
                   "radial-gradient(closest-side, rgba(10,9,8,0.92), rgba(10,9,8,0.55) 55%, transparent 78%)",
               }}
             />
-            We craft memorial films, luxury visuals and quiet software —
-            with new tools and an old-fashioned heart.
+            We craft memorial films, luxury visuals and quiet software.
+            With new tools and an old-fashioned heart.
           </p>
         </div>
       </div>
@@ -269,7 +269,7 @@ export default function Hero() {
           </span>
           <span>Scroll</span>
         </div>
-        <div className="hidden md:block">{site.coordinates} — {site.location}</div>
+        <div className="hidden md:block">{site.coordinates} · {site.location}</div>
       </div>
     </section>
   );

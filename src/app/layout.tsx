@@ -24,8 +24,8 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.legalName} — ${site.tagline}`,
-    template: `%s — ${site.legalName}`,
+    default: `${site.legalName} · ${site.tagline}`,
+    template: `%s · ${site.legalName}`,
   },
   description: site.description,
   keywords: [
@@ -42,14 +42,14 @@ export const metadata: Metadata = {
     type: "website",
     url: site.url,
     siteName: site.legalName,
-    title: `${site.legalName} — ${site.tagline}`,
+    title: `${site.legalName} · ${site.tagline}`,
     description: site.description,
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: `${site.name} — ${site.tagline}` }],
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: `${site.name} · ${site.tagline}` }],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.legalName} — ${site.tagline}`,
+    title: `${site.legalName} · ${site.tagline}`,
     description: site.description,
     images: ["/og.jpg"],
   },

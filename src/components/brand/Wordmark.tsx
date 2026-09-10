@@ -4,7 +4,7 @@ interface WordmarkProps {
 
 /**
  * The typographic wordmark, set live so it stays crisp at any
- * size — serif display for the name, spaced sans for STUDIO.
+ * size - serif display for the name, spaced sans for STUDIO.
  */
 export default function Wordmark({ className }: WordmarkProps) {
   return (

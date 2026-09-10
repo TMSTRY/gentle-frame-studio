@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
 import { addProjectUpdateAction, deleteProjectUpdateAction } from "@/app/admin/actions";
 import PortalShell from "@/components/portal/PortalShell";
+import TrashButton from "@/components/portal/TrashButton";
 import ProjectForm from "@/components/portal/ProjectForm";
 import { BackLink, buttonClass, EmptyRow, Field, ghostButtonClass, inputClass, Notice, PageHeader, StatusTrack } from "@/components/portal/ui";
 import { requireAdmin } from "@/lib/portal/guard";
@@ -32,8 +33,8 @@ export default async function ProjectDetailPage({
   const [{ data: project }, { data: updates }, { data: clients }, { data: docs }] = await Promise.all([
     admin.from("projects").select("*, clients(id, name, email)").eq("id", id).maybeSingle(),
     admin.from("project_updates").select("*").eq("project_id", id).order("created_at", { ascending: false }),
-    admin.from("clients").select("id, name, company").order("name"),
-    admin.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).order("created_at", { ascending: false }),
+    admin.from("clients").select("id, name, company").is("deleted_at", null).order("name"),
+    admin.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).is("deleted_at", null).order("created_at", { ascending: false }),
   ]);
   const documents = (docs ?? []) as Pick<DocumentRecord, "id" | "kind" | "number" | "title" | "status" | "total_cents" | "currency">[];
   if (!project) notFound();
@@ -45,20 +46,28 @@ export default async function ProjectDetailPage({
       <BackLink href="/admin/projects" label="Projects" />
       <div className="mt-8">
         <PageHeader
-          eyebrow={`${SERVICE_LABEL[typed.service]} — ${STATUS_LABEL[typed.status]}`}
+          eyebrow={`${SERVICE_LABEL[typed.service]} · ${STATUS_LABEL[typed.status]}`}
           title={typed.title}
           aside={
-            typed.clients ? (
-              <Link href={`/admin/clients/${typed.clients.id}`} className={ghostButtonClass}>
-                {typed.clients.name}
-              </Link>
-            ) : null
+            <>
+              {typed.clients ? (
+                <Link href={`/admin/clients/${typed.clients.id}`} className={ghostButtonClass}>
+                  {typed.clients.name}
+                </Link>
+              ) : null}
+              {typed.deleted_at ? (
+                <TrashButton kind="project" id={typed.id} mode="restore" label="Restore from trash" />
+              ) : (
+                <TrashButton kind="project" id={typed.id} mode="trash" label="Move to trash" confirmText={`Move "${typed.title}" to the trash? Its documents go along. You can restore it from Trash.`} />
+              )}
+            </>
           }
         />
       </div>
 
       {flags.error ? <Notice tone="alert">{flags.error === "invalid" ? "A title and a message need at least two characters." : "Saving failed. Please try again."}</Notice> : null}
       {flags.saved ? <Notice tone="warm">Saved.</Notice> : null}
+      {typed.deleted_at ? <Notice tone="alert">This project is in the trash and invisible to the client.</Notice> : null}
 
       <div className="mt-12">
         <StatusTrack status={typed.status} />
@@ -132,7 +141,7 @@ export default async function ProjectDetailPage({
                 <Link href={`/admin/documents/${doc.id}`} className="grid gap-2 py-4 md:grid-cols-[130px_1fr_140px_120px]">
                   <span className="text-[0.66rem] tracking-[0.26em] text-taupe uppercase">{KIND_LABEL[doc.kind]} {doc.number ?? ""}</span>
                   <span className="font-display text-lg text-cream">{doc.title}</span>
-                  <span className="text-sm text-cream/80">{doc.kind === "quote" || doc.kind === "invoice" ? formatMoney(doc.total_cents, doc.currency) : "—"}</span>
+                  <span className="text-sm text-cream/80">{doc.kind === "quote" || doc.kind === "invoice" ? formatMoney(doc.total_cents, doc.currency) : "·"}</span>
                   <span className="text-[0.66rem] tracking-[0.26em] text-champagne uppercase">{DOC_STATUS_LABEL[doc.status]}</span>
                 </Link>
               </li>

@@ -47,10 +47,10 @@ export default async function PortalDocumentPage({
       </div>
 
       {flags.accepted ? (
-        <Notice tone="warm">{nl ? "Dank je — we gaan aan de slag. Je hoort snel van ons." : "Thank you — we’re on it. You’ll hear from us soon."}</Notice>
+        <Notice tone="warm">{nl ? "Dank je, we gaan aan de slag. Je hoort snel van ons." : "Thank you, we’re on it. You’ll hear from us soon."}</Notice>
       ) : null}
       {flags.signed ? (
-        <Notice tone="warm">{nl ? "Getekend en bewaard — dank je. Je ontvangt een bevestiging per mail." : "Signed and stored — thank you. A confirmation is on its way by email."}</Notice>
+        <Notice tone="warm">{nl ? "Getekend en bewaard, dank je. Je ontvangt een bevestiging per mail." : "Signed and stored, thank you. A confirmation is on its way by email."}</Notice>
       ) : null}
       {flags.error === "sign" ? (
         <Notice tone="alert">{nl ? "Vul je naam in en vink aan dat je akkoord gaat." : "Please type your name and tick the agreement box."}</Notice>
@@ -110,7 +110,7 @@ export default async function PortalDocumentPage({
           </form>
         ) : null}
         {document.kind === "quote" && document.status === "accepted" ? (
-          <p className="text-sm text-champagne">{nl ? "Aanvaard — dank je." : "Accepted — thank you."}</p>
+          <p className="text-sm text-champagne">{nl ? "Aanvaard, dank je." : "Accepted, thank you."}</p>
         ) : null}
         {document.kind === "invoice" && ["sent", "overdue"].includes(document.status) ? (
           <div className="text-sm leading-relaxed text-cream/80">
@@ -118,7 +118,7 @@ export default async function PortalDocumentPage({
             {studio.iban ? (
               <p className="mt-3">
                 {nl ? "Overschrijven naar" : "Bank transfer to"} <span className="text-cream">{studio.iban}</span>
-                {document.number ? ` — ${nl ? "mededeling" : "reference"} ${document.number}` : ""}
+                {document.number ? ` · ${nl ? "mededeling" : "reference"} ${document.number}` : ""}
               </p>
             ) : (
               <p className="mt-3 text-taupe">{nl ? "Betaalgegevens volgen per mail." : "Payment details follow by email."}</p>
@@ -127,7 +127,7 @@ export default async function PortalDocumentPage({
           </div>
         ) : null}
         {document.kind === "invoice" && document.status === "paid" ? (
-          <p className="text-sm text-champagne">{nl ? "Betaald — dank je." : "Paid — thank you."}</p>
+          <p className="text-sm text-champagne">{nl ? "Betaald, dank je." : "Paid, thank you."}</p>
         ) : null}
         {document.kind === "contract" && document.status === "sent" ? (
           <form action={signContractAction} className="max-w-xl">
@@ -135,8 +135,8 @@ export default async function PortalDocumentPage({
             <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{nl ? "Tekenen" : "Sign"}</p>
             <p className="mt-3 text-sm leading-relaxed text-cream/80">
               {nl
-                ? "Lees het contract hierboven (of de PDF). Typ dan je volledige naam en bevestig — dat geldt als je elektronische handtekening. We bewaren je naam, e-mailadres, het tijdstip en een vingerafdruk van precies deze tekst."
-                : "Read the contract above (or the PDF). Then type your full name and confirm — that counts as your electronic signature. We store your name, email address, the time and a fingerprint of exactly this text."}
+                ? "Lees het contract hierboven (of de PDF). Typ dan je volledige naam en bevestig, dat geldt als je elektronische handtekening. We bewaren je naam, e-mailadres, het tijdstip en een vingerafdruk van precies deze tekst."
+                : "Read the contract above (or the PDF). Then type your full name and confirm, that counts as your electronic signature. We store your name, email address, the time and a fingerprint of exactly this text."}
             </p>
             <div className="mt-8">
               <label htmlFor="signer_name" className={labelClass}>{nl ? "Volledige naam" : "Full name"}</label>

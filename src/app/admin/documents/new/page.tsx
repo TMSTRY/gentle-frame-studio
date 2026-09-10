@@ -20,8 +20,8 @@ export default async function NewDocumentPage({
   const params = await searchParams;
   const admin = createAdminClient();
   const [{ data: clients }, { data: projects }, studio] = await Promise.all([
-    admin.from("clients").select("id, name, company").order("name"),
-    admin.from("projects").select("id, title, client_id").order("updated_at", { ascending: false }),
+    admin.from("clients").select("id, name, company").is("deleted_at", null).order("name"),
+    admin.from("projects").select("id, title, client_id").is("deleted_at", null).order("updated_at", { ascending: false }),
     loadStudio(admin),
   ]);
 
@@ -33,7 +33,7 @@ export default async function NewDocumentPage({
       </div>
       {params.error ? <Notice tone="alert">{params.error === "invalid" ? "Choose a client and give the document a title." : "Saving failed. Please try again."}</Notice> : null}
       {!studio.iban || !studio.address_line1 ? (
-        <Notice>Tip: fill in your address and IBAN under Settings — they print on every document.</Notice>
+        <Notice>Tip: fill in your address and IBAN under Settings, they print on every document.</Notice>
       ) : null}
       <div className="mt-14">
         <DocumentForm clients={clients ?? []} projects={projects ?? []} studio={studio} defaults={params} />

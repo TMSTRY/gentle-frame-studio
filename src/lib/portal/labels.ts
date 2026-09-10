@@ -1,4 +1,4 @@
-/** Shared vocabularies for the portal and admin — mirrors the Postgres enums. */
+/** Shared vocabularies for the portal and admin - mirrors the Postgres enums. */
 
 export const PROJECT_STATUSES = [
   "inquiry",
@@ -67,10 +67,11 @@ export const ADMIN_LINKS = [
   { href: "/admin/projects", label: "Projects" },
   { href: "/admin/documents", label: "Documents" },
   { href: "/admin/settings", label: "Settings" },
+  { href: "/admin/trash", label: "Trash" },
 ];
 
 export function formatDate(value: string | null | undefined): string {
-  if (!value) return "—";
+  if (!value) return "·";
   return new Date(value).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 

@@ -12,7 +12,7 @@ const undrawn: CSSProperties = { strokeDasharray: 1, strokeDashoffset: 1 };
 /**
  * Geometry traced from the official brand asset (public/brand/wordmark.jpg),
  * in stroke-center coordinates on a 120x92 viewBox. The front frame
- * knocks the back frame out where they overlap — that interlock is
+ * knocks the back frame out where they overlap - that interlock is
  * what makes the mark read as crafted rather than as crossed lines.
  */
 const BACK = { x: 4.1, y: 4.1, w: 78.3, h: 60.9, r: 6.9 };
@@ -20,7 +20,7 @@ const FRONT = { x: 45.1, y: 24.2, w: 70.8, h: 63.7, r: 6.9 };
 const BAR = { x1: 25.3, x2: 72.3, y: 49.6 };
 
 /**
- * The Gentle Frames mark — two interlocking frames with the shared
+ * The Gentle Frames mark - two interlocking frames with the shared
  * G/F crossbar. Each shape carries a class (`gf-back`, `gf-front`,
  * `gf-bar`) for stroke-draw animations, enabled by every shape using
  * `pathLength={1}`.

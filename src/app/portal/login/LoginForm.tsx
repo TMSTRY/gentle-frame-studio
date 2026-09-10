@@ -37,7 +37,7 @@ export default function LoginForm({ next, linkError }: { next: string; linkError
         className="mt-4 w-full border-b border-champagne/40 bg-transparent py-3 font-light text-cream placeholder:text-taupe/60 focus:border-champagne focus:outline-none"
       />
       {linkError ? (
-        <p className="mt-4 text-sm text-gold">That link has expired or was already used — request a new one.</p>
+        <p className="mt-4 text-sm text-gold">That link has expired or was already used, request a new one.</p>
       ) : null}
       {state.status === "error" ? <p className="mt-4 text-sm text-gold">{state.message}</p> : null}
       <button
@@ -50,7 +50,7 @@ export default function LoginForm({ next, linkError }: { next: string; linkError
       <p className="mt-6 text-xs leading-relaxed text-taupe">
         No password needed. We email you a one-time link.
         <br />
-        <span className="text-taupe/80">Geen wachtwoord nodig — je krijgt een eenmalige inloglink per e-mail.</span>
+        <span className="text-taupe/80">Geen wachtwoord nodig, je krijgt een eenmalige inloglink per e-mail.</span>
       </p>
     </form>
   );

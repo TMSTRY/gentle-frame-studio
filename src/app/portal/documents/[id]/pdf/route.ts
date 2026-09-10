@@ -6,7 +6,7 @@ import { loadDocumentBundle } from "@/lib/portal/documents";
 import { renderDocumentPdf } from "@/lib/pdf/render";
 import { createClient } from "@/lib/supabase/server";
 
-/** The client's own copy — RLS decides whether the document exists for them. */
+/** The client's own copy - RLS decides whether the document exists for them. */
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
   const {

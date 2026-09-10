@@ -96,7 +96,7 @@ export default function Header() {
               goTo("#top");
             }}
             className="flex items-center gap-4"
-            aria-label="Gentle Frame Studio — back to top"
+            aria-label="Gentle Frame Studio, back to top"
           >
             <FrameMark className="w-9 text-champagne" strokeWidth={5} />
             <Wordmark className="hidden sm:flex" />

@@ -18,7 +18,7 @@ export default async function NewProjectPage({
   const { user } = await requireAdmin();
   const { client, error } = await searchParams;
   const admin = createAdminClient();
-  const { data: clients } = await admin.from("clients").select("id, name, company").order("name");
+  const { data: clients } = await admin.from("clients").select("id, name, company").is("deleted_at", null).order("name");
 
   return (
     <PortalShell zone="Studio admin" email={user.email} links={ADMIN_LINKS}>
@@ -29,7 +29,7 @@ export default async function NewProjectPage({
       {error ? (
         <Notice tone="alert">{error === "invalid" ? "Choose a client and give the project a title." : "Saving failed. Please try again."}</Notice>
       ) : null}
-      {!clients?.length ? <Notice>Create a client first — a project always belongs to someone.</Notice> : null}
+      {!clients?.length ? <Notice>Create a client first, a project always belongs to someone.</Notice> : null}
       <div className="mt-14">
         <ProjectForm clients={clients ?? []} defaultClientId={client} />
       </div>

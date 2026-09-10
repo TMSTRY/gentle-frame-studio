@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 import PortalShell from "@/components/portal/PortalShell";
-import { buttonClass, EmptyRow, PageHeader } from "@/components/portal/ui";
+import { buttonClass, EmptyRow, Notice, PageHeader } from "@/components/portal/ui";
 import { requireAdmin } from "@/lib/portal/guard";
 import { ADMIN_LINKS, DOC_STATUS_LABEL, KIND_LABEL, formatDate, formatMoney } from "@/lib/portal/labels";
 import type { DocumentRecord } from "@/lib/portal/types";
@@ -21,19 +21,21 @@ const groups: { label: string; statuses: DocumentRecord["status"][] }[] = [
   { label: "Settled", statuses: ["accepted", "signed", "paid", "cancelled"] },
 ];
 
-export default async function DocumentsPage() {
+export default async function DocumentsPage({ searchParams }: { searchParams: Promise<{ trashed?: string }> }) {
   const { user } = await requireAdmin();
+  const flags = await searchParams;
   const admin = createAdminClient();
   const { data } = await admin
     .from("documents")
     .select("id, kind, number, title, status, issue_date, due_date, total_cents, currency, clients(name)")
+    .is("deleted_at", null)
     .order("updated_at", { ascending: false });
   const rows = (data ?? []) as unknown as Row[];
 
   return (
     <PortalShell zone="Studio admin" email={user.email} links={ADMIN_LINKS}>
       <PageHeader
-        eyebrow={`Documents — ${rows.length}`}
+        eyebrow={`Documents · ${rows.length}`}
         title="Quotes, invoices, contracts."
         aside={
           <Link href="/admin/documents/new" className={buttonClass}>
@@ -41,6 +43,7 @@ export default async function DocumentsPage() {
           </Link>
         }
       />
+      {flags.trashed ? <Notice tone="warm">Moved to the trash. Restore it from Trash if that was a slip.</Notice> : null}
       {groups.map((group) => {
         const items = rows.filter((row) => group.statuses.includes(row.status));
         return (
@@ -58,7 +61,7 @@ export default async function DocumentsPage() {
                         {row.title}
                         <span className="ml-3 text-sm text-taupe">{row.clients?.name}</span>
                       </span>
-                      <span className="text-sm text-cream/80">{row.kind === "contract" || row.kind === "other" ? "—" : formatMoney(row.total_cents, row.currency)}</span>
+                      <span className="text-sm text-cream/80">{row.kind === "contract" || row.kind === "other" ? "·" : formatMoney(row.total_cents, row.currency)}</span>
                       <span className="text-[0.66rem] tracking-[0.26em] text-champagne uppercase">{DOC_STATUS_LABEL[row.status]}</span>
                       <span className="text-[0.66rem] tracking-[0.26em] text-taupe uppercase">{formatDate(row.due_date ?? row.issue_date)}</span>
                     </Link>

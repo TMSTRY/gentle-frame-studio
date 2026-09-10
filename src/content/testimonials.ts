@@ -1,5 +1,5 @@
 /**
- * Kind words — elegant placeholders until real client
+ * Kind words - elegant placeholders until real client
  * testimonials take their place.
  */
 
@@ -11,7 +11,7 @@ export interface Testimonial {
 
 export const testimonials: Testimonial[] = [
   {
-    quote: "It felt like they understood before we could explain. The film still makes us cry — in the best possible way.",
+    quote: "It felt like they understood before we could explain. The film still makes us cry, in the best possible way.",
     author: "A family",
     context: "Memorial Film",
   },

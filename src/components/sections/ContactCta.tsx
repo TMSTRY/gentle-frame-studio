@@ -5,7 +5,7 @@ import Reveal from "@/components/fx/Reveal";
 import { contactCopy } from "@/content/contact";
 
 /**
- * The closing invitation — a glowing frame around a single
+ * The closing invitation - a glowing frame around a single
  * promise, with the circular submark turning like a projector
  * reel in the corner.
  */
@@ -54,7 +54,7 @@ export default function ContactCta() {
         </Reveal>
         <Reveal delay={0.25}>
           <p className="mx-auto mt-10 max-w-md text-sm leading-relaxed text-taupe">
-            A memory, a product, a song, an idea that needs a frame —
+            A memory, a product, a song, an idea that needs a frame,
             write to us and we&rsquo;ll listen first.
           </p>
           <div className="mt-14">

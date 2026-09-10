@@ -43,16 +43,24 @@ export async function GET(request: Request) {
   const today = new Date().toISOString().slice(0, 10);
   const digest: string[] = [];
 
+  // Trash older than 30 days is purged for good (FKs cascade).
+  const cutoff = new Date(Date.now() - 30 * DAY).toISOString();
+  for (const table of ["documents", "projects", "clients"] as const) {
+    const { count } = await admin.from(table).delete({ count: "exact" }).lt("deleted_at", cutoff);
+    if (count) digest.push(`Purged ${count} ${table} from the trash`);
+  }
+
   const { data } = await admin
     .from("documents")
     .select("id, kind, number, title, status, due_date, sent_at, total_cents, currency, clients(name, email, language)")
-    .in("status", ["sent", "overdue"]);
+    .in("status", ["sent", "overdue"])
+    .is("deleted_at", null);
   const rows = (data ?? []) as unknown as DueRow[];
 
   for (const row of rows) {
     if (!row.clients) continue;
     const url = `${site.url}/portal/documents/${row.id}`;
-    const label = `${row.number ?? "(draft)"} — ${row.title} — ${row.clients.name}`;
+    const label = `${row.number ?? "(draft)"} · ${row.title} · ${row.clients.name}`;
 
     // Invoices: flip to overdue on the first day past due, remind on day 0, 7, 14.
     if (row.kind === "invoice" && row.due_date && row.due_date < today) {
@@ -101,7 +109,7 @@ export async function GET(request: Request) {
     await resend.emails.send({
       from: MAIL_FROM,
       to: adminEmail() || site.email,
-      subject: `Studio reminders — ${formatDate(today)}`,
+      subject: `Studio reminders · ${formatDate(today)}`,
       text: `${digest.join("\n")}\n\n${site.url}/admin/documents`,
     });
   }

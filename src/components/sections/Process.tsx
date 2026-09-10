@@ -7,7 +7,7 @@ import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 
 /**
- * How we work — five frames on a filmstrip. Scroll pulls light
+ * How we work - five frames on a filmstrip. Scroll pulls light
  * through the strip, illuminating each phase in turn.
  */
 export default function Process() {
@@ -55,7 +55,7 @@ export default function Process() {
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6 pb-24">
             <div>
-              <p className="text-eyebrow mb-6">How we work — the quiet method</p>
+              <p className="text-eyebrow mb-6">How we work, the quiet method</p>
               <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
                 Five frames, one film
               </h2>
