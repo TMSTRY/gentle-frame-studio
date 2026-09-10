@@ -117,7 +117,7 @@ export async function sendDocumentAction(formData: FormData) {
   redirect(`/admin/documents/${id}?sent=1`);
 }
 
-const MANUAL: DocumentStatus[] = ["accepted", "signed", "paid", "cancelled", "overdue"];
+const MANUAL: DocumentStatus[] = ["accepted", "signed", "paid", "cancelled", "overdue", "sent"];
 
 /** Manual status changes; "paid" also books a manual payment for the full amount. */
 export async function setDocumentStatusAction(formData: FormData) {
@@ -127,8 +127,17 @@ export async function setDocumentStatusAction(formData: FormData) {
   if (!MANUAL.includes(status)) redirect(`/admin/documents/${id}`);
 
   const admin = createAdminClient();
-  const { data: document } = await admin.from("documents").select("id, kind, total_cents, project_id").eq("id", id).maybeSingle();
+  const { data: document } = await admin.from("documents").select("id, kind, status, total_cents, project_id, sent_at").eq("id", id).maybeSingle();
   if (!document) redirect("/admin/documents");
+
+  // "sent" is only ever set manually to reopen a cancelled document.
+  if (status === "sent") {
+    if (document.status !== "cancelled") redirect(`/admin/documents/${id}`);
+    await admin.from("documents").update({ status: "sent", sent_at: document.sent_at ?? new Date().toISOString() }).eq("id", id);
+    revalidatePath(`/admin/documents/${id}`);
+    revalidatePath("/admin/documents");
+    redirect(`/admin/documents/${id}?saved=1`);
+  }
 
   await admin.from("documents").update({ status }).eq("id", id);
   if (status === "paid") {

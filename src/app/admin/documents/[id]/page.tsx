@@ -3,9 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
-import { invoiceFromQuoteAction, sendDocumentAction, setDocumentStatusAction } from "@/app/admin/documents/actions";
+import { invoiceFromQuoteAction, sendDocumentAction } from "@/app/admin/documents/actions";
 import DocumentForm from "@/components/portal/DocumentForm";
 import PortalShell from "@/components/portal/PortalShell";
+import StatusButton from "@/components/portal/StatusButton";
 import { BackLink, buttonClass, ghostButtonClass, inputClass, Notice, PageHeader } from "@/components/portal/ui";
 import { loadDocumentBundle } from "@/lib/portal/documents";
 import { requireAdmin } from "@/lib/portal/guard";
@@ -22,18 +23,6 @@ const ERRORS: Record<string, string> = {
   mail: "The email could not be sent, so the document stays a draft. Check the Resend key.",
   migration: "Run supabase/portal/002_invoice_source.sql in the Supabase SQL Editor first — the invoice needs a link back to its quote.",
 };
-
-function StatusButton({ id, status, label }: { id: string; status: DocumentStatus; label: string }) {
-  return (
-    <form action={setDocumentStatusAction}>
-      <input type="hidden" name="id" value={id} />
-      <input type="hidden" name="status" value={status} />
-      <button type="submit" className={ghostButtonClass}>
-        {label}
-      </button>
-    </form>
-  );
-}
 
 export default async function DocumentDetailPage({
   params,
@@ -193,7 +182,10 @@ export default async function DocumentDetailPage({
           {open && document.kind === "contract" ? <StatusButton id={id} status="signed" label="Signed" /> : null}
           {open && document.kind === "invoice" ? <StatusButton id={id} status="paid" label="Paid" /> : null}
           {document.status === "sent" && document.kind === "invoice" ? <StatusButton id={id} status="overdue" label="Overdue" /> : null}
-          {document.status !== "cancelled" && document.status !== "paid" ? <StatusButton id={id} status="cancelled" label="Cancelled" /> : null}
+          {document.status !== "cancelled" && document.status !== "paid" ? (
+            <StatusButton id={id} status="cancelled" label="Cancelled" confirmText={`Cancel ${KIND_LABEL[document.kind].toLowerCase()} ${document.number ?? ""}? You can reopen it later.`} />
+          ) : null}
+          {document.status === "cancelled" ? <StatusButton id={id} status="sent" label="Reopen (back to sent)" /> : null}
         </section>
       ) : null}
 
