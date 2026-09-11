@@ -15,6 +15,19 @@ const text = (formData: FormData, key: string, max: number) =>
   String(formData.get(key) ?? "").trim().slice(0, max);
 
 /**
+ * The two spam shapes this form actually receives: senders on a
+ * look-alike of our own domain, and pitches to "list" or "index" the
+ * site. A real inquiry is about them; these are about us.
+ */
+const OWN_DOMAIN = site.domain.replace(/^www\./, "");
+const PITCH = /\b(search (index|register|engine listing)|google'?s? (search )?index|seo (services?|ranking|audit)|backlinks?|domain listing|web ?site (listing|submission)|page ?rank|guest post)\b/i;
+function looksLikeSpam(email: string, message: string): boolean {
+  const domain = email.split("@")[1]?.toLowerCase() ?? "";
+  const lookalike = domain !== OWN_DOMAIN && domain.includes(OWN_DOMAIN.split(".")[0]);
+  return lookalike || PITCH.test(message);
+}
+
+/**
  * Handles both contact variants. Bots are answered with a silent
  * "sent": a filled honeypot or a sub-2.5s submission never reaches
  * the inbox. Real failures return an error the form can show.
@@ -39,6 +52,8 @@ export async function sendContactMessage(_previous: ContactState, formData: Form
   if (payload.name.length < 2 || !EMAIL.test(payload.email) || payload.message.length < 2) {
     return { status: "error" };
   }
+  // Silent drop: the sender sees the normal thank-you and learns nothing.
+  if (looksLikeSpam(payload.email, payload.message)) return { status: "sent" };
 
   const resend = getResend();
   if (!resend) return { status: "error" };
