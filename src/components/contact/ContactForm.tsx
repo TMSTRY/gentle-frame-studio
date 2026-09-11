@@ -133,6 +133,12 @@ export default function ContactForm({ variant, lang, copy }: ContactFormProps) {
             {site.email}
           </a>
         </p>
+        <p className="text-[0.62rem] tracking-[0.2em] text-taupe/80 uppercase">
+          {copy.privacy.replace(/ (Privacy notice|Privacyverklaring)$/, "")}{" "}
+          <a href={copy.privacyHref} className="link-line text-taupe">
+            {copy.privacy.endsWith("Privacyverklaring") ? "Privacyverklaring" : "Privacy notice"}
+          </a>
+        </p>
       </div>
     </form>
   );

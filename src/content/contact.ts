@@ -20,6 +20,8 @@ export interface ContactFormCopy {
   success: { title: string; body: string };
   error: string;
   orWrite: string;
+  privacy: string;
+  privacyHref: string;
 }
 
 export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactFormCopy> = {
@@ -46,6 +48,8 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     },
     error: "Something went wrong on our side. Please try again, or write to us directly.",
     orWrite: "or write to",
+    privacy: "We only use this to answer you. Privacy notice",
+    privacyHref: "/privacy",
   },
   "studio-nl": {
     name: "Je naam",
@@ -70,6 +74,8 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     },
     error: "Er ging iets mis aan onze kant. Probeer het opnieuw, of schrijf ons rechtstreeks.",
     orWrite: "of schrijf naar",
+    privacy: "We gebruiken dit alleen om je te antwoorden. Privacyverklaring",
+    privacyHref: "/nl/privacy",
   },
   "memorial-en": {
     name: "Your name",
@@ -86,6 +92,8 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     },
     error: "Something went wrong on our side. Please try again, or write to us directly.",
     orWrite: "or write to",
+    privacy: "We only use this to answer you. Privacy notice",
+    privacyHref: "/privacy",
   },
   "memorial-nl": {
     name: "Je naam",
@@ -102,5 +110,7 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     },
     error: "Er ging iets mis aan onze kant. Probeer het opnieuw, of schrijf ons rechtstreeks.",
     orWrite: "of schrijf naar",
+    privacy: "We gebruiken dit alleen om je te antwoorden. Privacyverklaring",
+    privacyHref: "/nl/privacy",
   },
 };
