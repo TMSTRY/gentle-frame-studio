@@ -266,3 +266,12 @@ export async function invoiceFromQuoteAction(formData: FormData) {
   revalidatePath("/admin/documents");
   redirect(`/admin/documents/${data.id}?saved=1`);
 }
+
+/** Manual snapshot from the settings page. */
+export async function runBackupAction() {
+  await requireAdmin();
+  const { runBackup } = await import("@/lib/portal/backup");
+  const result = await runBackup(createAdminClient());
+  revalidatePath("/admin/settings");
+  redirect(`/admin/settings?${result.startsWith("Backup written") ? "backup=1" : "error=backup"}`);
+}

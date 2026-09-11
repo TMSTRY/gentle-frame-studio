@@ -4,6 +4,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 import { site } from "@/content/site";
 import { formatDate, formatMoney } from "@/lib/portal/labels";
+import { runBackup } from "@/lib/portal/backup";
 import { reminderMail } from "@/lib/portal/reminder-mail";
 import { getResend, MAIL_FROM } from "@/lib/resend";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -29,6 +30,7 @@ const daysSince = (date: string) => Math.floor((Date.now() - new Date(date).getT
  * Runs once a day (vercel.json). Invoices past due become "overdue"
  * and the client gets a gentle reminder (again after 7 and 14 days);
  * expired quotes and unsigned contracts are listed for the studio.
+ * On Mondays a full JSON backup lands in the private bucket.
  * One digest mail to the studio, and only when something happened.
  */
 export async function GET(request: Request) {
@@ -103,6 +105,12 @@ export async function GET(request: Request) {
     if (row.kind === "contract" && row.status === "sent" && row.sent_at && daysSince(row.sent_at) >= 7 && daysSince(row.sent_at) % 7 === 0) {
       digest.push(`Contract unsigned for ${daysSince(row.sent_at)}d: ${label}`);
     }
+  }
+
+  // Weekly snapshot on Mondays, or whenever ?backup=1 is passed.
+  const url = new URL(request.url);
+  if (new Date().getUTCDay() === 1 || url.searchParams.get("backup") === "1") {
+    digest.push(await runBackup(admin));
   }
 
   if (digest.length && resend) {
