@@ -41,7 +41,7 @@ export default function About() {
                   <div className="absolute -top-4 -left-4 h-full w-full rounded-xl border border-champagne/25" aria-hidden="true" />
 
                   {/* Portrait card - behind, fans left on hover */}
-                  <div className={`absolute inset-0 origin-bottom overflow-hidden rounded-xl border border-champagne/40 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-back"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:-translate-x-[44%] group-hover:-rotate-[8deg] group-focus-visible:-translate-x-[44%] group-focus-visible:-rotate-[8deg] group-data-[open=true]:-translate-x-[44%] group-data-[open=true]:-rotate-[8deg]`}>
+                  <div className={`absolute inset-0 origin-bottom overflow-hidden rounded-xl border border-champagne/40 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-back"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:-translate-x-[22%] md:group-hover:-translate-x-[30%] lg:group-hover:-translate-x-[44%] group-hover:-rotate-[8deg] group-focus-visible:-translate-x-[22%] md:group-focus-visible:-translate-x-[30%] lg:group-focus-visible:-translate-x-[44%] group-focus-visible:-rotate-[8deg] group-data-[open=true]:-translate-x-[22%] md:group-data-[open=true]:-translate-x-[30%] lg:group-data-[open=true]:-translate-x-[44%] group-data-[open=true]:-rotate-[8deg]`}>
                     <Image
                       src="/brand/artistiek.png"
                       alt={t.portraitAlt}
@@ -53,7 +53,7 @@ export default function About() {
                   </div>
 
                   {/* Monogram card - on top, fans right on hover */}
-                  <div className={`relative aspect-[4/5] origin-bottom overflow-hidden rounded-xl border border-champagne/50 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-top"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:translate-x-[44%] group-hover:rotate-[8deg] group-focus-visible:translate-x-[44%] group-focus-visible:rotate-[8deg] group-data-[open=true]:translate-x-[44%] group-data-[open=true]:rotate-[8deg]`}>
+                  <div className={`relative aspect-[4/5] origin-bottom overflow-hidden rounded-xl border border-champagne/50 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-top"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:translate-x-[22%] md:group-hover:translate-x-[30%] lg:group-hover:translate-x-[44%] group-hover:rotate-[8deg] group-focus-visible:translate-x-[22%] md:group-focus-visible:translate-x-[30%] lg:group-focus-visible:translate-x-[44%] group-focus-visible:rotate-[8deg] group-data-[open=true]:translate-x-[22%] md:group-data-[open=true]:translate-x-[30%] lg:group-data-[open=true]:translate-x-[44%] group-data-[open=true]:rotate-[8deg]`}>
                     <div
                       className="absolute inset-0"
                       style={{
