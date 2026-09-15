@@ -21,6 +21,13 @@ export default function SmoothScroll() {
     });
     setLenis(lenis);
 
+    // A fresh page (no hash) always opens at the top: the browser may
+    // carry the previous document's scroll position into this one.
+    if (!window.location.hash) {
+      window.history.scrollRestoration = "manual";
+      lenis.scrollTo(0, { immediate: true });
+    }
+
     // Honor hash deep-links. Anchoring must happen after the section
     // effects in this same commit have registered their pinned
     // ScrollTriggers (their spacers stretch the document), and again

@@ -96,9 +96,9 @@ export const cases: CaseStudy[] = [
   },
   {
     id: "shift-planning",
-    standfirst: "Scheduling software for night-shift teams in a Belgian prison, built by someone who works those nights.",
+    standfirst: "Staffing and scheduling software for a Belgian prison: more than two hundred officers across ten teams, built by someone who works those shifts.",
     facts: [
-      { label: "What", value: "Internal planning tool, used every night by the teams it serves" },
+      { label: "What", value: "Internal staffing tool, used daily by ten teams and their team leaders" },
       { label: "Made", value: "Concept, design, development, rollout" },
       { label: "Stack", value: "Next.js, Supabase, role-based access" },
       { label: "Status", value: "In daily use; a closed environment" },
@@ -107,20 +107,20 @@ export const cases: CaseStudy[] = [
       {
         title: "The problem",
         paragraphs: [
-          "Night rosters in a prison are a puzzle of posts, people, leave, illness and rules that live in the heads of a few experienced officers. Paper and spreadsheets did the job, barely, and every change meant phone calls. The tool had to fit an existing rhythm, not impose a new one.",
+          "Staffing a prison is a puzzle of posts, people, leave, illness and rules that live in the heads of a few experienced officers. It started with one night team; it now covers the whole workforce, more than two hundred officers in ten teams, each with its own rhythm. Paper and spreadsheets did the job, barely, and every change meant phone calls. The tool had to fit an existing rhythm, not impose a new one.",
         ],
       },
       {
         title: "What we built",
         paragraphs: [
-          "One screen per night: who is on which post, who is absent and why, and a pinned note for the things that matter tonight. The coming nights sit underneath as a strip, with understaffing flagged before it becomes a problem. Team leaders plan; officers see their own nights and can request swaps; everything is logged.",
-          "Because the tool lives inside the walls, the interface was designed for tired eyes at four in the morning: high contrast, large type, nothing that needs a manual.",
+          "One screen per shift: who is on which post, who is absent and why, and a pinned note for the things that matter today. The coming days sit underneath as a strip, with understaffing flagged before it becomes a problem. Team leaders plan their own team; officers see their own shifts and can request swaps; a coordinator sees all ten teams at once; everything is logged.",
+          "Because the tool lives inside the walls and is used around the clock, the interface was designed for tired eyes at four in the morning as much as for a busy office at noon: high contrast, large type, nothing that needs a manual.",
         ],
       },
       {
         title: "Why it matters to the studio",
         paragraphs: [
-          "This is where our software habits were formed: build for real people under real constraints, test on the night shift, and never ship anything that fails silently. Names and rosters in this case study are blurred; the environment is closed and the people in it deserve their privacy.",
+          "This is where our software habits were formed: build for real people under real constraints, test on the shift itself, and never ship anything that fails silently. Names and rosters in this case study are blurred; the environment is closed and the people in it deserve their privacy.",
         ],
       },
     ],

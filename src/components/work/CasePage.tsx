@@ -36,17 +36,15 @@ export default function CasePage({ project, study, prev, next, locale }: CasePag
   return (
     <main id="main" className="relative">
       {/* Cover */}
-      <section className="relative min-h-[88svh] overflow-hidden" style={{ backgroundColor: project.tone.base }}>
-        {project.image ? (
-          <Parallax speed={-0.1} className="absolute inset-0 scale-[1.06]">
-            <Image src={project.image} alt="" fill priority sizes="100vw" className="object-cover object-top opacity-45 saturate-[0.85]" />
-          </Parallax>
-        ) : null}
+      <section className="relative overflow-hidden" style={{ backgroundColor: project.tone.base }}>
+        {/* Ambient light in the project's own tone; the screenshot itself
+            is shown sharp and whole, as an object, never stretched. */}
         <div className="absolute inset-0" style={{ background: `radial-gradient(120% 90% at ${project.tone.light}, ${project.tone.glow}33, transparent 62%)` }} aria-hidden="true" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/20" aria-hidden="true" />
-        <FrameMark className="absolute -right-16 -bottom-16 w-[min(60vw,560px)] text-cream opacity-[0.05]" strokeWidth={1.5} />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" aria-hidden="true" />
+        <FrameMark className="absolute -left-20 -bottom-24 w-[min(60vw,560px)] text-cream opacity-[0.04]" strokeWidth={1.5} />
 
-        <div className="relative mx-auto flex min-h-[88svh] w-full max-w-[1680px] flex-col justify-end px-6 pt-44 pb-16 md:px-12 md:pb-24">
+        <div className="relative mx-auto grid w-full max-w-[1680px] gap-12 px-6 pt-40 pb-16 md:grid-cols-12 md:items-end md:px-12 md:pt-48 md:pb-24">
+          <div className="md:col-span-7">
           <Reveal>
             <div className="flex items-baseline gap-6 text-[0.62rem] tracking-[0.28em] text-cream/60 uppercase">
               <Link href={`${home}#work`} className="link-line transition-colors hover:text-cream">{t.back}</Link>
@@ -62,6 +60,33 @@ export default function CasePage({ project, study, prev, next, locale }: CasePag
           <Reveal delay={0.2}>
             <p className="font-display mt-10 max-w-3xl text-xl leading-snug text-champagne/90 italic md:text-2xl">{study.standfirst}</p>
           </Reveal>
+          </div>
+
+          {project.image ? (
+            <div className="md:col-span-5">
+              <Reveal delay={0.15}>
+                <Parallax speed={0.06}>
+                  <figure className="relative mx-auto max-w-[420px] md:ml-auto md:mr-0">
+                    <div className="absolute -top-4 -right-4 h-full w-full rounded-xl border border-champagne/20" aria-hidden="true" />
+                    <div
+                      className="relative overflow-hidden rounded-xl border border-champagne/40 shadow-[0_40px_120px_rgba(0,0,0,0.55)]"
+                      style={{ aspectRatio: project.imageB ? "3 / 4" : "3 / 4" }}
+                    >
+                      {project.imageB ? (
+                        <>
+                          <Image src={project.image} alt={project.title} fill priority sizes="(max-width: 768px) 90vw, 420px" className="object-cover object-top [clip-path:polygon(0_0,100%_0,100%_38%,0_62%)]" />
+                          <Image src={project.imageB} alt="" fill sizes="(max-width: 768px) 90vw, 420px" className="object-cover object-left [clip-path:polygon(0_62%,100%_38%,100%_100%,0_100%)]" />
+                          <div aria-hidden="true" className="absolute top-[50%] -left-[10%] h-[2px] w-[120%] -rotate-[17.7deg] bg-champagne/60 shadow-[0_0_18px_rgba(230,213,179,0.35)]" />
+                        </>
+                      ) : (
+                        <Image src={project.image} alt={project.title} fill priority sizes="(max-width: 768px) 90vw, 420px" className="object-cover object-top" />
+                      )}
+                    </div>
+                  </figure>
+                </Parallax>
+              </Reveal>
+            </div>
+          ) : null}
         </div>
       </section>
 
