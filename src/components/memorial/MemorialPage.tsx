@@ -179,8 +179,8 @@ export default function MemorialPage({ copy }: { copy: MemorialCopy }) {
             </h2>
           </Reveal>
           <div className="mt-16 grid gap-x-16 gap-y-14 md:mt-24 md:grid-cols-2">
-            {copy.promises.items.map((item, index) => (
-              <Reveal key={item.title} delay={index * 0.06}>
+            {copy.promises.items.map((item, index, all) => (
+              <Reveal key={item.title} delay={index * 0.06} className={index === all.length - 1 && all.length % 2 === 1 ? "md:col-span-2" : undefined}>
                 <div className="border-t border-line pt-7">
                   <h3 className="font-display text-2xl font-medium text-champagne italic">{item.title}</h3>
                   <p className="mt-4 max-w-md text-[0.95rem] leading-[1.9] font-light text-taupe">{item.body}</p>

@@ -115,6 +115,10 @@ const en: MemorialCopy = {
         title: "Unhurried, but on time",
         body: "Grief has no schedule; ceremonies do. If there is a date, we make it. The care stays the same.",
       },
+      {
+        title: "A quiet place of your own",
+        body: "You share what you have, watch the film together with us and say exactly where something should change, all in one private portal. Afterwards the film has its own room, on a link the family passes on.",
+      },
     ],
   },
   practical: {
@@ -249,6 +253,10 @@ const nl: MemorialCopy = {
       {
         title: "Zonder haast, maar op tijd",
         body: "Verdriet heeft geen agenda; een uitvaart wel. Is er een datum, dan halen we die. De zorg blijft dezelfde.",
+      },
+      {
+        title: "Een rustige plek van jezelf",
+        body: "Je deelt wat je hebt, kijkt de film samen met ons na en zegt precies waar iets anders moet, allemaal in één privéportaal. Nadien krijgt de film een eigen zaal, op een link die de familie zelf doorgeeft.",
       },
     ],
   },
