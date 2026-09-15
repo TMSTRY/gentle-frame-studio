@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { purgeFiles } from "@/lib/portal/files";
 import { requireAdmin } from "@/lib/portal/guard";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -72,6 +73,12 @@ export async function purgeAction(formData: FormData) {
   await requireAdmin();
   const { kind, id } = readTarget(formData);
   const admin = createAdminClient();
+  // Storage objects don't cascade: clear the files of the projects that go.
+  if (kind === "project") await purgeFiles(admin, [id]);
+  if (kind === "client") {
+    const { data: rows } = await admin.from("projects").select("id").eq("client_id", id);
+    await purgeFiles(admin, (rows ?? []).map((p) => p.id));
+  }
   await admin.from(TABLE[kind]).delete().eq("id", id).not("deleted_at", "is", null);
   revalidatePath("/admin");
   redirect("/admin/trash?purged=1");

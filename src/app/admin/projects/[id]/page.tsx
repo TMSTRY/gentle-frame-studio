@@ -4,11 +4,13 @@ import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 import { addProjectUpdateAction, deleteProjectUpdateAction } from "@/app/admin/actions";
+import FileVault from "@/components/portal/FileVault";
 import PortalShell from "@/components/portal/PortalShell";
 import TrashButton from "@/components/portal/TrashButton";
 import ProjectForm from "@/components/portal/ProjectForm";
 import { BackLink, buttonClass, EmptyRow, Field, ghostButtonClass, inputClass, Notice, PageHeader, StatusTrack } from "@/components/portal/ui";
 import { requireAdmin } from "@/lib/portal/guard";
+import { listProjectFiles } from "@/lib/portal/files";
 import { ADMIN_LINKS, DOC_STATUS_LABEL, KIND_LABEL, SERVICE_LABEL, STATUS_LABEL, formatMoney } from "@/lib/portal/labels";
 import type { DocumentRecord, Project, ProjectUpdate } from "@/lib/portal/types";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -30,11 +32,12 @@ export default async function ProjectDetailPage({
   const flags = await searchParams;
   const admin = createAdminClient();
 
-  const [{ data: project }, { data: updates }, { data: clients }, { data: docs }] = await Promise.all([
+  const [{ data: project }, { data: updates }, { data: clients }, { data: docs }, files] = await Promise.all([
     admin.from("projects").select("*, clients(id, name, email)").eq("id", id).maybeSingle(),
     admin.from("project_updates").select("*").eq("project_id", id).order("created_at", { ascending: false }),
     admin.from("clients").select("id, name, company").is("deleted_at", null).order("name"),
     admin.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).is("deleted_at", null).order("created_at", { ascending: false }),
+    listProjectFiles(admin, id),
   ]);
   const documents = (docs ?? []) as Pick<DocumentRecord, "id" | "kind" | "number" | "title" | "status" | "total_cents" | "currency">[];
   if (!project) notFound();
@@ -121,6 +124,32 @@ export default async function ProjectDetailPage({
       <section className="mt-20">
         <h2 className="text-eyebrow mb-8">Details &amp; status</h2>
         <ProjectForm project={typed} clients={clients ?? []} />
+      </section>
+
+      <section className="mt-20">
+        <h2 className="text-eyebrow mb-4">Files</h2>
+        <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">
+          What the client shared and what you deliver. Files you add here appear in the client’s portal under “From the studio”. Needs migration 004.
+        </p>
+        <FileVault
+          projectId={typed.id}
+          files={files}
+          mode="studio"
+          lang="en"
+          labels={{
+            fromStudio: "From the studio",
+            fromClient: "From the client",
+            empty: "Nothing here yet.",
+            drop: "Drop cuts, finals or anything for the client here.",
+            choose: "Choose files",
+            uploading: "Uploading…",
+            tooLarge: "too large for one upload (Supabase file limit)",
+            failed: "upload failed",
+            remove: "Remove",
+            download: "Download",
+            notify: "Mail the client that a new file is ready",
+          }}
+        />
       </section>
 
       <section className="mt-20">

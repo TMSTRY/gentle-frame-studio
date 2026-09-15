@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 import { site } from "@/content/site";
 import { formatDate, formatMoney } from "@/lib/portal/labels";
 import { runBackup } from "@/lib/portal/backup";
+import { purgeFiles } from "@/lib/portal/files";
 import { reminderMail } from "@/lib/portal/reminder-mail";
 import { getResend, MAIL_FROM } from "@/lib/resend";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -47,6 +48,16 @@ export async function GET(request: Request) {
 
   // Trash older than 30 days is purged for good (FKs cascade).
   const cutoff = new Date(Date.now() - 30 * DAY).toISOString();
+  // Storage first: files of projects about to be purged, and files trashed on their own.
+  const [{ data: oldProjects }, { data: oldClients }] = await Promise.all([
+    admin.from("projects").select("id").lt("deleted_at", cutoff),
+    admin.from("clients").select("id").lt("deleted_at", cutoff),
+  ]);
+  const clientIds = (oldClients ?? []).map((c) => c.id);
+  const { data: clientProjects } = clientIds.length ? await admin.from("projects").select("id").in("client_id", clientIds) : { data: [] };
+  const doomedProjects = Array.from(new Set([...(oldProjects ?? []), ...(clientProjects ?? [])].map((p) => p.id)));
+  const purgedFiles = await purgeFiles(admin, doomedProjects, cutoff);
+  if (purgedFiles) digest.push(`Purged ${purgedFiles} files from storage`);
   for (const table of ["documents", "projects", "clients"] as const) {
     const { count } = await admin.from(table).delete({ count: "exact" }).lt("deleted_at", cutoff);
     if (count) digest.push(`Purged ${count} ${table} from the trash`);

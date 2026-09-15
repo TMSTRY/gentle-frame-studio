@@ -118,3 +118,17 @@ export interface SignatureRecord {
   user_agent: string | null;
   signed_at: string;
 }
+
+export interface ProjectFile {
+  id: string;
+  project_id: string;
+  client_id: string;
+  uploaded_by: "client" | "studio";
+  path: string;
+  name: string;
+  size_bytes: number;
+  mime: string | null;
+  note: string | null;
+  created_at: string;
+  deleted_at?: string | null;
+}

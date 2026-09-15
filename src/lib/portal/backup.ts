@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-const TABLES = ["clients", "projects", "project_updates", "documents", "document_lines", "payments", "signatures", "settings", "document_counters"] as const;
+const TABLES = ["clients", "projects", "project_updates", "documents", "document_lines", "payments", "signatures", "settings", "document_counters", "project_files", "review_cuts", "review_notes"] as const;
 
 /**
  * Full JSON snapshot of the portal's data into the private `documents`
@@ -12,6 +12,8 @@ export async function runBackup(db: SupabaseClient): Promise<string> {
   let rows = 0;
   for (const table of TABLES) {
     const { data, error } = await db.from(table).select("*");
+    // A table whose migration hasn't run yet is skipped, not fatal.
+    if (error?.code === "42P01") continue;
     if (error) return `Backup FAILED reading ${table}: ${error.message}`;
     snapshot[table] = data ?? [];
     rows += data?.length ?? 0;

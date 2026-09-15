@@ -3,11 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
+import FileVault from "@/components/portal/FileVault";
 import PortalShell from "@/components/portal/PortalShell";
 import { approveProjectAction } from "@/app/portal/actions";
 import { BackLink, buttonClass, EmptyRow, Notice, PageHeader, StatusTrack } from "@/components/portal/ui";
 import { requireUser } from "@/lib/portal/guard";
 import { docStatusLabel, formatDateFor, kindLabel, portalLang, serviceLabel, statusLabel, ui } from "@/lib/portal/i18n";
+import { checklistFor, listProjectFiles } from "@/lib/portal/files";
 import { formatMoney } from "@/lib/portal/labels";
 import type { DocumentRecord, Project, ProjectUpdate } from "@/lib/portal/types";
 import { adminEmail } from "@/lib/supabase/env";
@@ -26,11 +28,12 @@ export default async function PortalProjectPage({
   const flags = await searchParams;
 
   // Runs as the signed-in client: RLS returns nothing for projects that aren't theirs.
-  const [lang, { data: project }, { data: updates }, { data: docs }] = await Promise.all([
+  const [lang, { data: project }, { data: updates }, { data: docs }, files] = await Promise.all([
     portalLang(supabase),
     supabase.from("projects").select("*").eq("id", id).maybeSingle(),
     supabase.from("project_updates").select("*").eq("project_id", id).order("created_at", { ascending: false }),
     supabase.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).order("created_at", { ascending: false }),
+    listProjectFiles(supabase, id),
   ]);
   const t = ui(lang);
   const documents = (docs ?? []) as Pick<DocumentRecord, "id" | "kind" | "number" | "title" | "status" | "total_cents" | "currency">[];
@@ -103,6 +106,20 @@ export default async function PortalProjectPage({
           )}
         </div>
       </div>
+
+      <section className="mt-20">
+        <h2 className="text-eyebrow mb-4">{t.files.title}</h2>
+        <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">{t.files.lede}</p>
+        <FileVault
+          projectId={typed.id}
+          files={files}
+          mode="client"
+          lang={lang}
+          labels={t.files}
+          checklist={files.some((f) => f.uploaded_by === "client") ? undefined : checklistFor(lang, typed.service)}
+          readOnly={typed.status === "cancelled"}
+        />
+      </section>
 
       <section className="mt-20">
         <h2 className="text-eyebrow mb-6">{t.documents}</h2>
