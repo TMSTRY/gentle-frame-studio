@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 import PortalShell from "@/components/portal/PortalShell";
-import { BackLink, EmptyRow, PageHeader, StatusTrack } from "@/components/portal/ui";
+import { approveProjectAction } from "@/app/portal/actions";
+import { BackLink, buttonClass, EmptyRow, Notice, PageHeader, StatusTrack } from "@/components/portal/ui";
 import { requireUser } from "@/lib/portal/guard";
 import { docStatusLabel, formatDateFor, kindLabel, portalLang, serviceLabel, statusLabel, ui } from "@/lib/portal/i18n";
 import { formatMoney } from "@/lib/portal/labels";
@@ -13,9 +14,16 @@ import { adminEmail } from "@/lib/supabase/env";
 
 export const metadata: Metadata = { title: "Your project", robots: { index: false, follow: false } };
 
-export default async function PortalProjectPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PortalProjectPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ approved?: string; error?: string }>;
+}) {
   const { supabase, user } = await requireUser();
   const { id } = await params;
+  const flags = await searchParams;
 
   // Runs as the signed-in client: RLS returns nothing for projects that aren't theirs.
   const [lang, { data: project }, { data: updates }, { data: docs }] = await Promise.all([
@@ -38,9 +46,27 @@ export default async function PortalProjectPage({ params }: { params: Promise<{ 
         <PageHeader eyebrow={`${serviceLabel(lang, typed.service)} · ${statusLabel(lang, typed.status)}`} title={typed.title} />
       </div>
 
+      {flags.approved ? <Notice tone="warm">{t.approve.done}</Notice> : null}
+      {flags.error === "approve" ? <Notice tone="alert">{t.approve.error}</Notice> : null}
+
       <div className="mt-12">
         <StatusTrack status={typed.status} lang={lang} ariaLabel={t.progress} />
       </div>
+
+      {typed.status === "review" ? (
+        <section className="mt-16 max-w-xl border-t border-line pt-8">
+          <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{t.approve.eyebrow}</p>
+          <p className="mt-3 text-sm leading-relaxed text-cream/80">{t.approve.lede}</p>
+          <form action={approveProjectAction} className="mt-6">
+            <input type="hidden" name="id" value={typed.id} />
+            <label className="flex items-start gap-3 text-sm leading-relaxed text-cream/80">
+              <input type="checkbox" name="final" required className="mt-1 h-4 w-4 accent-[#e6d5b3]" />
+              <span>{t.approve.check}</span>
+            </label>
+            <button type="submit" className={`${buttonClass} mt-8`}>{t.approve.button}</button>
+          </form>
+        </section>
+      ) : null}
 
       <div className="mt-16 grid gap-12 md:grid-cols-12">
         <div className="md:col-span-5">

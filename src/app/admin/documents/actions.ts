@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { site } from "@/content/site";
 import { computeTotals, loadDocumentBundle } from "@/lib/portal/documents";
+import { createInvoiceFromQuote, type InvoiceMode } from "@/lib/portal/invoices";
 import { documentMail } from "@/lib/portal/document-mail";
 import { requireAdmin } from "@/lib/portal/guard";
 import { DOCUMENT_KINDS, LINE_SLOTS, formatMoney, parseMoney, type DocumentKind, type DocumentStatus } from "@/lib/portal/labels";
@@ -197,74 +198,17 @@ export async function saveSettingsAction(formData: FormData) {
   redirect("/admin/settings?saved=1");
 }
 
-/**
- * One click from an accepted quote to a draft invoice. "full" copies the
- * lines; "deposit" bills a percentage as a single line; "balance" copies
- * the lines and deducts what earlier deposit invoices from this quote
- * already billed. Needs migration 002 (documents.source_document_id).
- */
+/** One click from an accepted quote to a draft invoice (see lib/portal/invoices). */
 export async function invoiceFromQuoteAction(formData: FormData) {
   await requireAdmin();
   const quoteId = text(formData, "id", 60);
-  const mode = text(formData, "mode", 10) as "full" | "deposit" | "balance";
+  const modeRaw = text(formData, "mode", 10);
+  const mode: InvoiceMode = modeRaw === "deposit" || modeRaw === "balance" ? modeRaw : "full";
   const pct = Math.max(1, Math.min(100, Number(text(formData, "pct", 5)) || 30));
-  const admin = createAdminClient();
-  const bundle = await loadDocumentBundle(admin, quoteId);
-  if (!bundle || bundle.document.kind !== "quote") redirect(`/admin/documents/${quoteId}`);
-  const { document: quote, lines, studio } = bundle;
-  const ref = quote.number ?? quote.title;
-
-  let invoiceLines: { description: string; quantity: number; unit_price_cents: number }[] = [];
-  let title = quote.title;
-  if (mode === "deposit") {
-    const amount = Math.round((quote.subtotal_cents * pct) / 100);
-    invoiceLines = [{ description: `Deposit ${pct}% · ${ref}`, quantity: 1, unit_price_cents: amount }];
-    title = `${quote.title}, deposit ${pct}%`;
-  } else {
-    invoiceLines = lines.map((line) => ({ description: line.description, quantity: Number(line.quantity), unit_price_cents: line.unit_price_cents }));
-    if (mode === "balance") {
-      const { data: deposits } = await admin
-        .from("documents")
-        .select("number, subtotal_cents")
-        .eq("source_document_id", quoteId)
-        .eq("kind", "invoice")
-        .neq("status", "cancelled")
-        .ilike("title", "%deposit%");
-      const billed = (deposits ?? []).reduce((sum, d) => sum + (d.subtotal_cents ?? 0), 0);
-      if (billed > 0) {
-        const numbers = (deposits ?? []).map((d) => d.number).filter(Boolean).join(", ");
-        invoiceLines.push({ description: `Less: deposit already invoiced${numbers ? ` (${numbers})` : ""}`, quantity: 1, unit_price_cents: -billed });
-      }
-      title = `${quote.title}, balance`;
-    }
-  }
-
-  const vatRate = Number(quote.vat_rate);
-  const due = new Date(Date.now() + studio.payment_terms_days * 86400000).toISOString().slice(0, 10);
-  const { data, error } = await admin
-    .from("documents")
-    .insert({
-      kind: "invoice",
-      status: "draft",
-      client_id: quote.client_id,
-      project_id: quote.project_id,
-      source_document_id: quoteId,
-      title,
-      issue_date: new Date().toISOString().slice(0, 10),
-      due_date: due,
-      vat_rate: vatRate,
-      body: quote.body,
-      notes: `Created from quote ${ref}.`,
-      ...computeTotals(invoiceLines, vatRate),
-    })
-    .select("id")
-    .single();
-  if (error || !data) redirect(`/admin/documents/${quoteId}?error=${error?.code === "42703" ? "migration" : "save"}`);
-  await admin.from("document_lines").insert(
-    invoiceLines.map((line, position) => ({ ...line, position, document_id: data.id, line_total_cents: Math.round(line.quantity * line.unit_price_cents) })),
-  );
+  const result = await createInvoiceFromQuote(createAdminClient(), quoteId, mode, pct);
+  if ("error" in result) redirect(`/admin/documents/${quoteId}${result.error === "notfound" ? "" : `?error=${result.error}`}`);
   revalidatePath("/admin/documents");
-  redirect(`/admin/documents/${data.id}?saved=1`);
+  redirect(`/admin/documents/${result.id}?saved=1`);
 }
 
 /** Manual snapshot from the settings page. */

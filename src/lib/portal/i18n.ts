@@ -73,6 +73,14 @@ const UI = {
     docsAppear: "Quotes, invoices and contracts will appear here.",
     progress: "Project progress",
     downloadPdf: "Download PDF",
+    approve: {
+      eyebrow: "Your approval",
+      lede: "Watched the final version and happy with it? Approve it here. The project is then delivered, and the balance invoice (if any) will follow in your portal.",
+      check: "This is the final version. I approve it.",
+      button: "Approve this version",
+      done: "Approved, thank you. This project is now delivered, and you have a confirmation by email.",
+      error: "Please tick the box to confirm this is the final version.",
+    },
     login: {
       title: "Welcome back.",
       lede: "Your projects, documents and payments, in one quiet place.",
@@ -108,6 +116,14 @@ const UI = {
     docsAppear: "Offertes, facturen en contracten verschijnen hier.",
     progress: "Voortgang van het project",
     downloadPdf: "Download PDF",
+    approve: {
+      eyebrow: "Jouw goedkeuring",
+      lede: "De definitieve versie bekeken en tevreden? Keur ze hier goed. Het project staat dan op opgeleverd, en de saldofactuur (als die er is) volgt in je portaal.",
+      check: "Dit is de definitieve versie. Ik keur ze goed.",
+      button: "Deze versie goedkeuren",
+      done: "Goedgekeurd, dank je. Dit project is nu opgeleverd, en je hebt een bevestiging per mail.",
+      error: "Vink het vakje aan om te bevestigen dat dit de definitieve versie is.",
+    },
     login: {
       title: "Welkom terug.",
       lede: "Je projecten, documenten en betalingen, op één rustige plek.",

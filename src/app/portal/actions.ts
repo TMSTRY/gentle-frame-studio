@@ -154,3 +154,80 @@ export async function signContractAction(formData: FormData) {
   }
   redirect(`/portal/documents/${id}?signed=1`);
 }
+
+/**
+ * The client approves the final version. One click does three things:
+ * the project becomes "delivered", the balance (or full) invoice is
+ * drafted from the accepted quote for the studio to check and send,
+ * and both sides get a mail. Only possible while the project is in review.
+ */
+export async function approveProjectAction(formData: FormData) {
+  const id = String(formData.get("id") ?? "").slice(0, 60);
+  const confirmed = formData.get("final") === "on";
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user?.email) redirect("/portal/login");
+  if (!confirmed) redirect(`/portal/projects/${id}?error=approve`);
+
+  // As the signed-in client: RLS proves the project is theirs.
+  const { data: project } = await supabase.from("projects").select("id, title, status, client_id").eq("id", id).maybeSingle();
+  if (!project || project.status !== "review") redirect(`/portal/projects/${id}`);
+
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  const admin = createAdminClient();
+  const { data: client } = await admin.from("clients").select("name, email, language").eq("id", project.client_id).maybeSingle();
+  const nl = client?.language === "nl";
+
+  await admin.from("projects").update({ status: "delivered" }).eq("id", id).eq("status", "review");
+  await admin.from("project_updates").insert({
+    project_id: id,
+    visible_to_client: true,
+    message: nl ? `Definitieve versie goedgekeurd door ${client?.name ?? user.email}.` : `Final version approved by ${client?.name ?? user.email}.`,
+  });
+
+  // The invoice that is still owed on the accepted quote, as a draft for the studio.
+  const { data: quote } = await admin
+    .from("documents")
+    .select("id, number")
+    .eq("project_id", id)
+    .eq("kind", "quote")
+    .eq("status", "accepted")
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  let invoiceId: string | null = null;
+  let invoiceNote = "No accepted quote on this project, so no invoice was drafted.";
+  if (quote) {
+    const { createInvoiceFromQuote, remainingInvoiceMode } = await import("@/lib/portal/invoices");
+    const mode = await remainingInvoiceMode(admin, quote.id);
+    if (!mode) invoiceNote = `Quote ${quote.number ?? ""} is already fully invoiced.`;
+    else {
+      const result = await createInvoiceFromQuote(admin, quote.id, mode);
+      if ("id" in result) {
+        invoiceId = result.id;
+        invoiceNote = `A draft ${mode} invoice was created from quote ${quote.number ?? ""}. Check it and send it: ${site.url}/admin/documents/${result.id}`;
+      } else invoiceNote = `Drafting the invoice failed (${result.error}). Make it by hand from quote ${quote.number ?? ""}.`;
+    }
+  }
+
+  const { getResend, MAIL_FROM } = await import("@/lib/resend");
+  const { adminEmail } = await import("@/lib/supabase/env");
+  const resend = getResend();
+  if (resend && client) {
+    const { approvedMail } = await import("@/lib/portal/project-mail");
+    const mail = approvedMail({ language: nl ? "nl" : "en", clientName: client.name, projectTitle: project.title, url: `${site.url}/portal/projects/${id}`, invoiceFollows: Boolean(invoiceId) });
+    await Promise.all([
+      resend.emails.send({ from: MAIL_FROM, to: client.email, replyTo: site.email, subject: mail.subject, html: mail.html, text: mail.text }),
+      resend.emails.send({
+        from: MAIL_FROM,
+        to: adminEmail() || site.email,
+        subject: `Approved · ${project.title}`,
+        text: `${client.name} (${user.email}) approved the final version of "${project.title}". The project is now delivered.\n\n${invoiceNote}\n\n${site.url}/admin/projects/${id}`,
+      }),
+    ]);
+  }
+  redirect(`/portal/projects/${id}?approved=1`);
+}
