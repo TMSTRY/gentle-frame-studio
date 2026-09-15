@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { STATUS_LABEL, STATUS_TRACK, type ProjectStatus } from "@/lib/portal/labels";
+import { statusLabel, type PortalLang } from "@/lib/portal/i18n";
 
 export const inputClass =
   "w-full border-b border-line bg-transparent py-3 text-[0.95rem] font-light text-cream placeholder:text-taupe/60 transition-colors duration-500 focus:border-champagne focus:outline-none";
@@ -49,18 +50,18 @@ export function Notice({ tone = "quiet", children }: { tone?: "quiet" | "warm" |
   );
 }
 
-export function StatusBadge({ status }: { status: ProjectStatus }) {
+export function StatusBadge({ status, lang = "en" }: { status: ProjectStatus; lang?: PortalLang }) {
   const tone =
     status === "cancelled" ? "text-taupe/70" : status === "delivered" || status === "closed" ? "text-cream/70" : "text-champagne";
-  return <span className={`text-[0.66rem] tracking-[0.26em] uppercase ${tone}`}>{STATUS_LABEL[status]}</span>;
+  return <span className={`text-[0.66rem] tracking-[0.26em] uppercase ${tone}`}>{statusLabel(lang, status)}</span>;
 }
 
 /** Six frames on a filmstrip; the lit ones are behind us. */
-export function StatusTrack({ status }: { status: ProjectStatus }) {
+export function StatusTrack({ status, lang = "en", ariaLabel = "Project progress" }: { status: ProjectStatus; lang?: PortalLang; ariaLabel?: string }) {
   const index = STATUS_TRACK.indexOf(status);
   const sidelined = index === -1;
   return (
-    <ol className="grid grid-cols-3 gap-px border border-line bg-line md:grid-cols-6" aria-label="Project progress">
+    <ol className="grid grid-cols-3 gap-px border border-line bg-line md:grid-cols-6" aria-label={ariaLabel}>
       {STATUS_TRACK.map((step, i) => {
         const reached = !sidelined && i <= index;
         const current = !sidelined && i === index;
@@ -68,7 +69,7 @@ export function StatusTrack({ status }: { status: ProjectStatus }) {
           <li key={step} className={`bg-ink p-4 ${reached ? "" : "opacity-45"}`} aria-current={current ? "step" : undefined}>
             <span className="font-display block text-2xl leading-none text-outline">{String(i + 1).padStart(2, "0")}</span>
             <span className={`mt-3 block text-[0.6rem] tracking-[0.24em] uppercase ${current ? "text-champagne" : "text-cream/70"}`}>
-              {STATUS_LABEL[step]}
+              {statusLabel(lang, step)}
             </span>
           </li>
         );

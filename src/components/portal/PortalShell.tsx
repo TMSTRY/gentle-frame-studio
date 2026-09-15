@@ -11,13 +11,15 @@ interface PortalShellProps {
   email?: string | null;
   /** Extra links for the top bar */
   links?: { href: string; label: string }[];
+  /** Sign-out label, defaults to English */
+  signOutLabel?: string;
 }
 
 /**
  * The quiet frame around the private zones: mark, zone label, a few
  * links and sign-out. No preloader, no marketing header.
  */
-export default function PortalShell({ children, zone, email, links = [] }: PortalShellProps) {
+export default function PortalShell({ children, zone, email, links = [], signOutLabel = "Sign out" }: PortalShellProps) {
   return (
     <div className="min-h-[100svh] bg-ink">
       <header className="border-b border-line">
@@ -48,7 +50,7 @@ export default function PortalShell({ children, zone, email, links = [] }: Porta
                   type="submit"
                   className="link-line text-[0.66rem] tracking-[0.28em] text-champagne uppercase"
                 >
-                  Sign out
+                  {signOutLabel}
                 </button>
               </form>
             ) : null}

@@ -18,8 +18,9 @@ export interface LoginState {
 export async function sendMagicLink(_previous: LoginState, formData: FormData): Promise<LoginState> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const next = String(formData.get("next") ?? "/portal");
+  const nl = String(formData.get("lang") ?? "") === "nl";
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { status: "error", message: "That doesn’t look like an email address.", email };
+    return { status: "error", message: nl ? "Dat ziet er niet uit als een e-mailadres." : "That doesn’t look like an email address.", email };
   }
 
   const headerList = await headers();
@@ -36,7 +37,7 @@ export async function sendMagicLink(_previous: LoginState, formData: FormData): 
 
   // "Signups not allowed" means an unknown address: answer as if sent, reveal nothing.
   if (error && !/signup|not allowed|user not found/i.test(error.message)) {
-    return { status: "error", message: "We couldn’t send the link just now. Please try again in a minute.", email };
+    return { status: "error", message: nl ? "De link kon nu niet verstuurd worden. Probeer het over een minuut opnieuw." : "We couldn’t send the link just now. Please try again in a minute.", email };
   }
   return { status: "sent", email };
 }

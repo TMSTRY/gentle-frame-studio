@@ -7,7 +7,8 @@ import PortalShell from "@/components/portal/PortalShell";
 import { BackLink, buttonClass, ghostButtonClass, inputClass, labelClass, Notice, PageHeader } from "@/components/portal/ui";
 import { loadDocumentBundle } from "@/lib/portal/documents";
 import { requireUser } from "@/lib/portal/guard";
-import { DOC_STATUS_LABEL, KIND_LABEL, KIND_LABEL_NL, formatDate, formatMoney } from "@/lib/portal/labels";
+import { docStatusLabel, formatDateFor, kindLabel as kindLabelFor, ui } from "@/lib/portal/i18n";
+import { formatMoney } from "@/lib/portal/labels";
 import { adminEmail } from "@/lib/supabase/env";
 
 export const metadata: Metadata = { title: "Document", robots: { index: false, follow: false } };
@@ -27,20 +28,22 @@ export default async function PortalDocumentPage({
   if (!bundle) notFound();
   const { document, lines, client, studio, project, signatures } = bundle;
   const nl = client.language === "nl";
-  const kindLabel = (nl ? KIND_LABEL_NL : KIND_LABEL)[document.kind];
+  const lang = nl ? "nl" : "en";
+  const t = ui(lang);
+  const kindLabel = kindLabelFor(lang, document.kind);
   const isMoney = document.kind === "quote" || document.kind === "invoice";
   const isAdmin = Boolean(user.email && user.email.toLowerCase() === adminEmail());
 
   return (
-    <PortalShell zone="Client portal" email={user.email} links={isAdmin ? [{ href: `/admin/documents/${id}`, label: "Open in admin" }] : []}>
-      <BackLink href={project ? `/portal/projects/${project.id}` : "/portal"} label={project ? project.title : nl ? "Je portaal" : "Your portal"} />
+    <PortalShell zone={t.zone} email={user.email} signOutLabel={t.signOut} links={isAdmin ? [{ href: `/admin/documents/${id}`, label: t.openInAdmin }] : []}>
+      <BackLink href={project ? `/portal/projects/${project.id}` : "/portal"} label={project ? project.title : t.yourPortal} />
       <div className="mt-8">
         <PageHeader
-          eyebrow={`${kindLabel} ${document.number ?? ""} · ${DOC_STATUS_LABEL[document.status]}`}
+          eyebrow={`${kindLabel} ${document.number ?? ""} · ${docStatusLabel(lang, document.status)}`}
           title={document.title}
           aside={
             <a href={`/portal/documents/${id}/pdf`} target="_blank" rel="noopener" className={ghostButtonClass}>
-              {nl ? "Download PDF" : "Download PDF"}
+              {t.downloadPdf}
             </a>
           }
         />
@@ -59,13 +62,13 @@ export default async function PortalDocumentPage({
       <div className="mt-10 grid gap-8 border-t border-line pt-8 md:grid-cols-3">
         <div>
           <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{nl ? "Datum" : "Issued"}</p>
-          <p className="mt-2 text-sm text-cream/85">{formatDate(document.issue_date)}</p>
+          <p className="mt-2 text-sm text-cream/85">{formatDateFor(lang, document.issue_date)}</p>
         </div>
         <div>
           <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">
             {document.kind === "quote" ? (nl ? "Geldig tot" : "Valid until") : nl ? "Vervaldatum" : "Due"}
           </p>
-          <p className="mt-2 text-sm text-cream/85">{formatDate(document.due_date)}</p>
+          <p className="mt-2 text-sm text-cream/85">{formatDateFor(lang, document.due_date)}</p>
         </div>
         {isMoney ? (
           <div>
@@ -153,7 +156,7 @@ export default async function PortalDocumentPage({
           <div className="text-sm leading-relaxed text-cream/80">
             <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{nl ? "Getekend" : "Signed"}</p>
             <p className="font-display mt-3 text-2xl text-cream italic">{signatures[signatures.length - 1].signer_name}</p>
-            <p className="mt-2 text-taupe">{formatDate(signatures[signatures.length - 1].signed_at)} · {signatures[signatures.length - 1].signer_email}</p>
+            <p className="mt-2 text-taupe">{formatDateFor(lang, signatures[signatures.length - 1].signed_at)} · {signatures[signatures.length - 1].signer_email}</p>
           </div>
         ) : null}
       </section>
