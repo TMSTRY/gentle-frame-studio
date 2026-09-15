@@ -148,6 +148,18 @@ html[data-motion="off"] .reveal-word {
   to { opacity: 1; transform: none; }
 }
 
+/* The founder's cards peek open now and then, hinting at the hand behind them */
+@keyframes peek-top {
+  0%, 68%, 100% { transform: none; }
+  76%, 88% { transform: translateX(9%) rotate(2.5deg); }
+}
+@keyframes peek-back {
+  0%, 68%, 100% { transform: none; }
+  76%, 88% { transform: translateX(-9%) rotate(-2.5deg); }
+}
+.animate-peek-top { animation: peek-top 7s var(--ease-gentle) infinite; }
+.animate-peek-back { animation: peek-back 7s var(--ease-gentle) infinite; }
+
 @keyframes spin-slow {
   to { transform: rotate(360deg); }
 }
@@ -247,6 +259,8 @@ html[data-motion="off"] .reveal-word {
   .grain,
   .animate-spin-slow,
   .animate-breathe,
+  .animate-peek-top,
+  .animate-peek-back,
   .animate-rec,
   .animate-caret,
   .animate-sheen,

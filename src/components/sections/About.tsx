@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import Parallax from "@/components/fx/Parallax";
 import Reveal from "@/components/fx/Reveal";
 import { useLocale } from "@/lib/i18n/locale";
@@ -12,6 +13,7 @@ import { siteUi } from "@/lib/i18n/site-ui";
  */
 export default function About() {
   const t = siteUi(useLocale()).about;
+  const [open, setOpen] = useState(false);
   return (
     <section id="studio" className="scroll-mt-24" aria-label={t.ariaLabel}>
       <div className="mx-auto max-w-[1680px] px-6 py-36 md:px-12 md:py-56">
@@ -23,15 +25,23 @@ export default function About() {
             <Reveal>
               <Parallax speed={0.08}>
                 <figure
-                  className="group relative mx-auto max-w-[420px] outline-none"
+                  className="group relative mx-auto max-w-[420px] cursor-pointer outline-none"
                   tabIndex={0}
                   data-cursor="Meet"
+                  data-open={open}
                   aria-label={t.portraitLabel}
+                  onClick={() => setOpen((value) => !value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setOpen((value) => !value);
+                    }
+                  }}
                 >
                   <div className="absolute -top-4 -left-4 h-full w-full rounded-xl border border-champagne/25" aria-hidden="true" />
 
                   {/* Portrait card - behind, fans left on hover */}
-                  <div className="absolute inset-0 origin-bottom overflow-hidden rounded-xl border border-champagne/40 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-x-[44%] group-hover:-rotate-[8deg] group-focus-visible:-translate-x-[44%] group-focus-visible:-rotate-[8deg]">
+                  <div className={`absolute inset-0 origin-bottom overflow-hidden rounded-xl border border-champagne/40 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-back"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:-translate-x-[44%] group-hover:-rotate-[8deg] group-focus-visible:-translate-x-[44%] group-focus-visible:-rotate-[8deg] group-data-[open=true]:-translate-x-[44%] group-data-[open=true]:-rotate-[8deg]`}>
                     <Image
                       src="/brand/artistiek.png"
                       alt={t.portraitAlt}
@@ -43,7 +53,7 @@ export default function About() {
                   </div>
 
                   {/* Monogram card - on top, fans right on hover */}
-                  <div className="relative aspect-[4/5] origin-bottom overflow-hidden rounded-xl border border-champagne/50 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[44%] group-hover:rotate-[8deg] group-focus-visible:translate-x-[44%] group-focus-visible:rotate-[8deg]">
+                  <div className={`relative aspect-[4/5] origin-bottom overflow-hidden rounded-xl border border-champagne/50 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-top"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:translate-x-[44%] group-hover:rotate-[8deg] group-focus-visible:translate-x-[44%] group-focus-visible:rotate-[8deg] group-data-[open=true]:translate-x-[44%] group-data-[open=true]:rotate-[8deg]`}>
                     <div
                       className="absolute inset-0"
                       style={{
@@ -63,6 +73,19 @@ export default function About() {
                       <span>Tim Mostrey</span>
                     </figcaption>
                   </div>
+
+                  {/* The cue: two little cards that fan the same way, and a word */}
+                  <p
+                    className="pointer-events-none absolute inset-x-0 -bottom-12 flex items-center justify-center gap-3 text-[0.6rem] tracking-[0.28em] text-taupe uppercase transition-opacity duration-500 group-hover:opacity-0 group-focus-visible:opacity-0 group-data-[open=true]:opacity-0"
+                    aria-hidden="true"
+                  >
+                    <span className="relative block h-5 w-8">
+                      <span className="absolute inset-y-0 left-1 w-4 origin-bottom rounded-[3px] border border-champagne/50 bg-ink animate-peek-back" />
+                      <span className="absolute inset-y-0 left-2.5 w-4 origin-bottom rounded-[3px] border border-champagne bg-ink-soft animate-peek-top" />
+                    </span>
+                    <span className="[@media(hover:none)]:hidden">{t.portraitHint}</span>
+                    <span className="hidden [@media(hover:none)]:inline">{t.portraitTap}</span>
+                  </p>
                 </figure>
               </Parallax>
             </Reveal>
