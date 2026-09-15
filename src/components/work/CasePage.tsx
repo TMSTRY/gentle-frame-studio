@@ -1,9 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import FrameMark from "@/components/brand/FrameMark";
-import Parallax from "@/components/fx/Parallax";
 import Reveal from "@/components/fx/Reveal";
+import ScrollToTop from "@/components/fx/ScrollToTop";
 import CaseFilm from "@/components/work/CaseFilm";
+import FilmStill from "@/components/work/FilmStill";
 import type { CaseStudy } from "@/content/cases";
 import type { Project } from "@/content/projects";
 import { projects } from "@/content/projects";
@@ -35,6 +35,7 @@ export default function CasePage({ project, study, prev, next, locale }: CasePag
 
   return (
     <main id="main" className="relative">
+      <ScrollToTop />
       {/* Cover */}
       <section className="relative overflow-hidden" style={{ backgroundColor: project.tone.base }}>
         {/* Ambient light in the project's own tone; the screenshot itself
@@ -65,25 +66,7 @@ export default function CasePage({ project, study, prev, next, locale }: CasePag
           {project.image ? (
             <div className="md:col-span-5">
               <Reveal delay={0.15}>
-                <Parallax speed={0.06}>
-                  <figure className="relative mx-auto max-w-[420px] md:ml-auto md:mr-0">
-                    <div className="absolute -top-4 -right-4 h-full w-full rounded-xl border border-champagne/20" aria-hidden="true" />
-                    <div
-                      className="relative overflow-hidden rounded-xl border border-champagne/40 shadow-[0_40px_120px_rgba(0,0,0,0.55)]"
-                      style={{ aspectRatio: project.imageB ? "3 / 4" : "3 / 4" }}
-                    >
-                      {project.imageB ? (
-                        <>
-                          <Image src={project.image} alt={project.title} fill priority sizes="(max-width: 768px) 90vw, 420px" className="object-cover object-top [clip-path:polygon(0_0,100%_0,100%_38%,0_62%)]" />
-                          <Image src={project.imageB} alt="" fill sizes="(max-width: 768px) 90vw, 420px" className="object-cover object-left [clip-path:polygon(0_62%,100%_38%,100%_100%,0_100%)]" />
-                          <div aria-hidden="true" className="absolute top-[50%] -left-[10%] h-[2px] w-[120%] -rotate-[17.7deg] bg-champagne/60 shadow-[0_0_18px_rgba(230,213,179,0.35)]" />
-                        </>
-                      ) : (
-                        <Image src={project.image} alt={project.title} fill priority sizes="(max-width: 768px) 90vw, 420px" className="object-cover object-top" />
-                      )}
-                    </div>
-                  </figure>
-                </Parallax>
+                <FilmStill project={project} number={number(project)} />
               </Reveal>
             </div>
           ) : null}
