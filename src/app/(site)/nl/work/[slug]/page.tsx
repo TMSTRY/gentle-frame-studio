@@ -5,7 +5,7 @@ import { cases, getCase, neighbours } from "@/content/cases";
 import { site } from "@/content/site";
 import { localePath, type Locale } from "@/lib/i18n/locale";
 
-const LOCALE: Locale = "en";
+const LOCALE: Locale = "nl";
 const PREFIX = localePath(LOCALE, "/").replace(/\/$/, "");
 
 export function generateStaticParams() {

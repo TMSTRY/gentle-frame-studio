@@ -24,6 +24,8 @@ export interface CaseStudy {
   closing: string;
   /** Label for the outbound button; the URL comes from the project */
   visitLabel?: string;
+  /** Dutch version of the story; falls back to English when absent */
+  nl?: { standfirst: string; facts: { label: string; value: string }[]; sections: CaseSection[]; closing: string; visitLabel?: string };
 }
 
 export const cases: CaseStudy[] = [
@@ -232,11 +234,13 @@ export const cases: CaseStudy[] = [
 
 export const caseIndex = new Map(cases.map((c) => [c.id, c]));
 
-/** Project plus its case, or null when either is missing. */
-export function getCase(slug: string): { project: Project; study: CaseStudy } | null {
+/** Project plus its case (in the requested language), or null when either is missing. */
+export function getCase(slug: string, locale: "en" | "nl" = "en"): { project: Project; study: CaseStudy } | null {
   const project = projects.find((p) => p.id === slug);
-  const study = caseIndex.get(slug);
-  return project && study ? { project, study } : null;
+  const base = caseIndex.get(slug);
+  if (!project || !base) return null;
+  const study = locale === "nl" && base.nl ? { ...base, ...base.nl } : base;
+  return { project, study };
 }
 
 /** Neighbouring cases for prev/next navigation, in archive order. */

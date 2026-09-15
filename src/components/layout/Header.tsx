@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import FrameMark from "@/components/brand/FrameMark";
 import Wordmark from "@/components/brand/Wordmark";
-import { navLinks, site } from "@/content/site";
+import { site } from "@/content/site";
+import { alternatePath, localePath, useLocale } from "@/lib/i18n/locale";
+import { siteUi } from "@/lib/i18n/site-ui";
 import { gsap } from "@/lib/gsap";
 import { scrollToTarget } from "@/lib/scroll";
 import { onIntroDone, prefersReducedMotion } from "@/lib/motion";
@@ -18,6 +20,10 @@ export default function Header() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const locale = useLocale();
+  const t = siteUi(locale);
+  const navLinks = t.nav;
+  const home = localePath(locale, "/");
 
   // Entrance after the intro card lifts.
   useEffect(() => {
@@ -69,13 +75,13 @@ export default function Header() {
     setMenuOpen(false);
     // Section anchors live on the home page; from any other route,
     // hand over to a full navigation and let SmoothScroll anchor.
-    if (window.location.pathname !== "/") {
-      window.location.href = `/${href}`;
+    if (window.location.pathname !== home) {
+      window.location.href = `${home}${href}`;
       return;
     }
     // Wait a beat so the overlay releases the scroll lock first.
     requestAnimationFrame(() => scrollToTarget(href));
-  }, []);
+  }, [home]);
 
   return (
     <>
@@ -96,7 +102,7 @@ export default function Header() {
               goTo("#top");
             }}
             className="flex items-center gap-4"
-            aria-label="Gentle Frame Studio, back to top"
+            aria-label={t.header.backToTop}
           >
             <FrameMark className="w-9 text-champagne" strokeWidth={5} />
             <Wordmark className="hidden sm:flex" />
@@ -116,13 +122,14 @@ export default function Header() {
                 {link.label}
               </a>
             ))}
+            <LanguageSwitch />
           </nav>
 
           <button
             type="button"
             className="flex h-11 w-11 flex-col items-center justify-center gap-[7px] md:hidden"
             aria-expanded={menuOpen}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? t.header.closeMenu : t.header.openMenu}
             onClick={() => setMenuOpen((open) => !open)}
           >
             <span
@@ -168,13 +175,37 @@ export default function Header() {
             ))}
           </nav>
           <div className="flex items-end justify-between">
-            <a href={`mailto:${site.email}`} className="text-sm tracking-wide text-taupe">
-              {site.email}
-            </a>
+            <div className="flex flex-col gap-4">
+              <LanguageSwitch />
+              <a href={`mailto:${site.email}`} className="text-sm tracking-wide text-taupe">
+                {site.email}
+              </a>
+            </div>
             <FrameMark className="w-10 text-champagne/60" strokeWidth={5} />
           </div>
         </div>
       ) : null}
     </>
+  );
+}
+
+/** EN / NL toggle that keeps you on the same page in the other language. */
+function LanguageSwitch() {
+  const locale = useLocale();
+  const t = siteUi(locale).header;
+  const [href, setHref] = useState(alternatePath(locale, locale === "en" ? "/" : "/nl"));
+  useEffect(() => {
+    setHref(alternatePath(locale, window.location.pathname) + window.location.hash);
+  }, [locale]);
+  return (
+    <a
+      href={href}
+      hrefLang={locale === "en" ? "nl" : "en"}
+      lang={locale === "en" ? "nl" : "en"}
+      aria-label={t.switchLabel}
+      className="link-line text-[0.7rem] font-normal tracking-[0.28em] text-cream/60 uppercase transition-colors hover:text-cream"
+    >
+      {t.switchTo}
+    </a>
   );
 }

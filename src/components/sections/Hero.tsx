@@ -3,13 +3,11 @@
 import { useEffect, useRef } from "react";
 import Timecode from "@/components/fx/Timecode";
 import { site } from "@/content/site";
+import { useLocale } from "@/lib/i18n/locale";
+import { siteUi } from "@/lib/i18n/site-ui";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { onIntroDone, prefersReducedMotion } from "@/lib/motion";
 
-const HEADLINE = [
-  { words: ["Where", "memories"], italic: false },
-  { words: ["meet"], italic: false, tail: { word: "imagination.", italic: true } },
-];
 
 /**
  * The opening scene. Two brand frames draw themselves around the
@@ -22,6 +20,9 @@ const HEADLINE = [
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const locale = useLocale();
+  const t = siteUi(locale).hero;
+  const HEADLINE = t.headline.map((line) => ({ words: [...line.words], tail: "tail" in line ? { word: line.tail as string } : undefined }));
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -118,7 +119,7 @@ export default function Hero() {
       ref={sectionRef}
       id="top"
       className="relative flex h-[100svh] items-center justify-center overflow-hidden"
-      aria-label="Gentle Frame Studio, where memories meet imagination"
+      aria-label={t.ariaLabel}
     >
       <div ref={stageRef} className="relative flex h-full w-full items-center justify-center">
         {/*
@@ -199,7 +200,7 @@ export default function Hero() {
                   "radial-gradient(closest-side, rgba(10,9,8,0.9), rgba(10,9,8,0.5) 55%, transparent 78%)",
               }}
             />
-            A cinematic creative studio · {site.location}, working worldwide
+            {t.eyebrow(site.location)}
           </p>
           <h1 className="font-display text-[clamp(3rem,9vw,8.25rem)] leading-[1.02] font-medium tracking-[-0.01em] text-cream">
             {HEADLINE.map((line, lineIndex) => (
@@ -248,8 +249,9 @@ export default function Hero() {
                   "radial-gradient(closest-side, rgba(10,9,8,0.92), rgba(10,9,8,0.55) 55%, transparent 78%)",
               }}
             />
-            We craft memorial films, luxury visuals and quiet software.
-            With new tools and an old-fashioned heart.
+            {t.lede1}
+            <br />
+            {t.lede2}
           </p>
         </div>
       </div>
@@ -267,7 +269,7 @@ export default function Hero() {
           <span className="block h-12 w-px overflow-hidden bg-line">
             <span className="block h-full w-full origin-top animate-pulse bg-champagne/70" />
           </span>
-          <span>Scroll</span>
+          <span>{t.scroll}</span>
         </div>
         <div className="hidden md:block">{site.coordinates} · {site.location}</div>
       </div>

@@ -43,6 +43,8 @@ export interface Project {
   caption?: string;
   /** Replaces the hover cue when the project can't be visited */
   note?: string;
+  /** Dutch category, year label and blurb */
+  nl?: { category: string; year?: string; blurb: string; note?: string };
 }
 
 export const projects: Project[] = [
@@ -53,6 +55,7 @@ export const projects: Project[] = [
     year: "2026",
     blurb: "A space-themed learning universe where children practice math and French between the stars.",
     tone: { base: "#0b0d16", glow: "#8b9dc9", light: "72% 18%" },
+    nl: { category: "Leerplatform", blurb: "Een ruimte-leeruniversum waar kinderen rekenen en Frans oefenen tussen de sterren.", },
     image: "/work/ruimteschool.jpg",
     url: "https://ruimteschool.com/",
   },
@@ -63,6 +66,7 @@ export const projects: Project[] = [
     year: "2026",
     blurb: "A pocket companion for slow walks: presence, breath and attention, nothing else.",
     tone: { base: "#0d120d", glow: "#a8bd9a", light: "30% 24%" },
+    nl: { category: "Welzijnsapp", blurb: "Een zakmaatje voor trage wandelingen: aanwezigheid, adem en aandacht, meer niet.", },
     image: "/work/quietwalk.jpg",
     url: "https://quietwalk.app/",
   },
@@ -73,6 +77,7 @@ export const projects: Project[] = [
     year: "2026",
     blurb: "Scheduling software for night-shift teams, built inside the walls it serves.",
     tone: { base: "#0e1014", glow: "#7f96b8", light: "50% 85%" },
+    nl: { category: "Maatsoftware", blurb: "Planningssoftware voor nachtploegen, gebouwd binnen de muren die ze dient.", note: "Privé · een gesloten, beveiligde omgeving", },
     image: "/work/shift-planning.jpg",
     note: "Private · a closed, secured environment",
   },
@@ -83,6 +88,7 @@ export const projects: Project[] = [
     year: "Ongoing",
     blurb: "Tributes in light. Films that give families a place to return to.",
     tone: { base: "#141009", glow: "#e3c893", light: "50% 30%" },
+    nl: { category: "Herinneringsfilms", year: "Doorlopend", blurb: "Eerbetonen in licht. Films die families een plek geven om naar terug te keren.", },
     image: "/work/memorial-films.jpg",
     video: "/work/memorial-rudy.mp4",
     caption: "Shared with the family’s blessing",
@@ -94,6 +100,7 @@ export const projects: Project[] = [
     year: "Ongoing",
     blurb: "Cinematic worlds for original music, written, produced and framed in-house.",
     tone: { base: "#120b10", glow: "#c98ba4", light: "20% 70%" },
+    nl: { category: "Artiestenbeelden", year: "Doorlopend", blurb: "Filmische werelden voor originele muziek, in huis geschreven, geproduceerd en in beeld gevat.", },
     image: "/work/music-videos.jpg",
     youtube: "pFtzxu9FHRo",
   },
@@ -104,6 +111,7 @@ export const projects: Project[] = [
     year: "2025",
     blurb: "Five on-chain drops: collectible artifacts excavated from a fictional mining world.",
     tone: { base: "#100e0a", glow: "#c9a96a", light: "80% 60%" },
+    nl: { category: "Digitale artefacten", blurb: "Vijf on-chain drops: verzamelbare artefacten, opgegraven uit een fictieve mijnwereld.", },
     image: "/work/excavara-a.jpg",
     imageB: "/work/excavara-b.jpg",
     url: "https://excavara.com/",
@@ -115,6 +123,7 @@ export const projects: Project[] = [
     year: "Ongoing",
     blurb: "Human // signal // AI. An artist site built as a living transmission: music, videos and a signal to tune into.",
     tone: { base: "#0b0e14", glow: "#9db4c9", light: "40% 12%" },
+    nl: { category: "AI-muziekartiest", year: "Doorlopend", blurb: "Human // signal // AI. Een artiestensite gebouwd als een levende uitzending: muziek, video’s en een signaal om op af te stemmen.", },
     image: "/work/tmstry.jpg",
     url: "https://www.tmstry.com",
   },
@@ -125,5 +134,6 @@ export const projects: Project[] = [
     year: "Soon",
     blurb: "Quiet tools and new rituals, currently taking shape in the studio.",
     tone: { base: "#0f0c12", glow: "#a795c9", light: "60% 40%" },
+    nl: { category: "In ontwikkeling", year: "Binnenkort", blurb: "Stille tools en nieuwe rituelen, nu vorm aan het krijgen in de studio.", },
   },
 ];

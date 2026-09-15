@@ -6,7 +6,7 @@ import WorkLightbox from "@/components/sections/WorkLightbox";
 import type { Project } from "@/content/projects";
 
 /** Poster with a single play control; opens the archive's screening room. */
-export default function CaseFilm({ project, poster }: { project: Project; poster: string }) {
+export default function CaseFilm({ project, poster, label = "Play the film" }: { project: Project; poster: string; label?: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -22,7 +22,7 @@ export default function CaseFilm({ project, poster }: { project: Project; poster
         <span className="absolute top-1/2 left-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-champagne/70 bg-ink/40 backdrop-blur-sm transition-transform duration-700 ease-out group-hover:scale-110 md:h-24 md:w-24">
           <span className="ml-1 text-lg text-champagne">▶</span>
         </span>
-        <span className="absolute bottom-5 left-6 text-[0.64rem] tracking-[0.3em] text-cream/80 uppercase md:bottom-6">Play the film</span>
+        <span className="absolute bottom-5 left-6 text-[0.64rem] tracking-[0.3em] text-cream/80 uppercase md:bottom-6">{label}</span>
         {project.caption ? (
           <span className="absolute right-6 bottom-5 hidden text-[0.64rem] tracking-[0.3em] text-cream/60 uppercase md:bottom-6 md:block">{project.caption}</span>
         ) : null}

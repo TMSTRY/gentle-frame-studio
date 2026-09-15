@@ -7,6 +7,7 @@ export interface Testimonial {
   quote: string;
   author: string;
   context: string;
+  nl: { quote: string; author: string; context: string };
 }
 
 export const testimonials: Testimonial[] = [
@@ -14,15 +15,18 @@ export const testimonials: Testimonial[] = [
     quote: "It felt like they understood before we could explain. The film still makes us cry, in the best possible way.",
     author: "A family",
     context: "Memorial Film",
+    nl: { quote: "Het voelde alsof ze het begrepen voor we het konden uitleggen. De film maakt ons nog altijd aan het huilen, op de best mogelijke manier.", author: "Een familie", context: "Herinneringsfilm" },
   },
   {
     quote: "The rare studio fluent in both languages: emotion and engineering.",
     author: "Founder",
     context: "Platform Client",
+    nl: { quote: "De zeldzame studio die beide talen spreekt: emotie en engineering.", author: "Oprichter", context: "Platformklant" },
   },
   {
     quote: "Our product has never looked this alive. Frames you want to live inside.",
     author: "Brand Director",
     context: "Product Film",
+    nl: { quote: "Ons product heeft er nog nooit zo levend uitgezien. Beelden waar je in wil wonen.", author: "Brand director", context: "Productfilm" },
   },
 ];

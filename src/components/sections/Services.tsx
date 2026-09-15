@@ -1,6 +1,10 @@
+"use client";
+
 import FrameMark from "@/components/brand/FrameMark";
 import Reveal from "@/components/fx/Reveal";
 import { services, type Service, type ServiceMotif } from "@/content/services";
+import { useLocale } from "@/lib/i18n/locale";
+import { siteUi } from "@/lib/i18n/site-ui";
 
 /**
  * Seven services, treated as editorial chapters - each with its
@@ -8,26 +12,28 @@ import { services, type Service, type ServiceMotif } from "@/content/services";
  * of interchangeable cards.
  */
 export default function Services() {
+  const locale = useLocale();
+  const t = siteUi(locale).services;
   return (
     <section id="services" className="relative scroll-mt-24" aria-label="Services">
       <div className="mx-auto max-w-[1680px] px-6 md:px-12">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6 pb-20">
             <div>
-              <p className="text-eyebrow mb-6">Services · seven ways in</p>
+              <p className="text-eyebrow mb-6">{t.eyebrow}</p>
               <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
-                What we make
+                {t.title}
               </h2>
             </div>
             <p className="max-w-xs pb-2 text-sm leading-relaxed text-taupe">
-              Every discipline shares one brief: make someone feel something true.
+              {t.lede}
             </p>
           </div>
         </Reveal>
 
         <div>
           {services.map((service) => (
-            <ServiceChapter key={service.id} service={service} />
+            <ServiceChapter key={service.id} service={locale === "nl" && service.nl ? { ...service, ...service.nl } : service} readMore={t.readMore} />
           ))}
         </div>
       </div>
@@ -35,7 +41,7 @@ export default function Services() {
   );
 }
 
-function ServiceChapter({ service }: { service: Service }) {
+function ServiceChapter({ service, readMore }: { service: Service; readMore: string }) {
   return (
     <article
       id={service.id}
@@ -71,7 +77,7 @@ function ServiceChapter({ service }: { service: Service }) {
               href={service.href}
               className="link-line mt-8 inline-block text-[0.68rem] tracking-[0.3em] text-champagne uppercase"
             >
-              {service.linkLabel ?? "Read more"} →
+              {service.linkLabel ?? readMore} →
             </a>
           ) : null}
         </Reveal>

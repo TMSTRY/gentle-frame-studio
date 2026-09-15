@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import Reveal from "@/components/fx/Reveal";
 import { processPhases } from "@/content/process";
+import { useLocale } from "@/lib/i18n/locale";
+import { siteUi } from "@/lib/i18n/site-ui";
 import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 
@@ -12,6 +14,8 @@ import { prefersReducedMotion } from "@/lib/motion";
  */
 export default function Process() {
   const stripRef = useRef<HTMLDivElement>(null);
+  const locale = useLocale();
+  const t = siteUi(locale).process;
 
   useEffect(() => {
     const strip = stripRef.current;
@@ -50,18 +54,18 @@ export default function Process() {
   }, []);
 
   return (
-    <section id="process" className="scroll-mt-24 border-t border-line" aria-label="How we work">
+    <section id="process" className="scroll-mt-24 border-t border-line" aria-label={t.ariaLabel}>
       <div className="mx-auto max-w-[1680px] px-6 py-36 md:px-12 md:py-56">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6 pb-24">
             <div>
-              <p className="text-eyebrow mb-6">How we work, the quiet method</p>
+              <p className="text-eyebrow mb-6">{t.eyebrow}</p>
               <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
-                Five frames, one film
+                {t.title}
               </h2>
             </div>
             <p className="max-w-xs pb-2 text-sm leading-relaxed text-taupe">
-              No tickets, no black box. You talk to the person making the work, at every phase.
+              {t.lede}
             </p>
           </div>
         </Reveal>
@@ -85,9 +89,9 @@ export default function Process() {
                   {phase.index}
                 </div>
                 <div className="pt-2 lg:pt-0">
-                  <h3 className="font-display text-2xl font-medium text-cream">{phase.title}</h3>
+                  <h3 className="font-display text-2xl font-medium text-cream">{locale === "nl" ? phase.nl.title : phase.title}</h3>
                   <p className="mt-4 max-w-[240px] text-sm leading-relaxed font-light text-taupe">
-                    {phase.line}
+                    {locale === "nl" ? phase.nl.line : phase.line}
                   </p>
                 </div>
               </li>

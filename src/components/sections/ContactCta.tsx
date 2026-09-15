@@ -1,8 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import FrameMark from "@/components/brand/FrameMark";
 import ContactForm from "@/components/contact/ContactForm";
 import Reveal from "@/components/fx/Reveal";
 import { contactCopy } from "@/content/contact";
+import { useLocale } from "@/lib/i18n/locale";
+import { siteUi } from "@/lib/i18n/site-ui";
 
 /**
  * The closing invitation - a glowing frame around a single
@@ -10,6 +14,8 @@ import { contactCopy } from "@/content/contact";
  * reel in the corner.
  */
 export default function ContactCta() {
+  const locale = useLocale();
+  const t = siteUi(locale).contact;
   return (
     <section
       id="contact"
@@ -43,22 +49,21 @@ export default function ContactCta() {
 
       <div className="relative z-10 px-6 text-center">
         <Reveal>
-          <p className="text-eyebrow mb-10">Start something gentle</p>
+          <p className="text-eyebrow mb-10">{t.eyebrow}</p>
         </Reveal>
         <Reveal delay={0.1}>
           <h2 className="font-display mx-auto max-w-4xl text-[clamp(2.6rem,7vw,6.4rem)] leading-[1.05] font-medium text-cream">
-            Let&rsquo;s create something
+            {t.title1}
             <br />
-            <span className="text-gold italic">worth remembering.</span>
+            <span className="text-gold italic">{t.title2}</span>
           </h2>
         </Reveal>
         <Reveal delay={0.25}>
           <p className="mx-auto mt-10 max-w-md text-sm leading-relaxed text-taupe">
-            A memory, a product, a song, an idea that needs a frame,
-            write to us and we&rsquo;ll listen first.
+            {t.lede}
           </p>
           <div className="mt-14">
-            <ContactForm variant="studio" lang="en" copy={contactCopy["studio-en"]} />
+            <ContactForm variant="studio" lang={locale} copy={contactCopy[`studio-${locale}`]} />
           </div>
         </Reveal>
       </div>

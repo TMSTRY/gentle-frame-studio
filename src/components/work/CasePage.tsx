@@ -7,12 +7,15 @@ import CaseFilm from "@/components/work/CaseFilm";
 import type { CaseStudy } from "@/content/cases";
 import type { Project } from "@/content/projects";
 import { projects } from "@/content/projects";
+import { localePath, type Locale } from "@/lib/i18n/locale";
+import { siteUi } from "@/lib/i18n/site-ui";
 
 interface CasePageProps {
   project: Project;
   study: CaseStudy;
   prev: Project | null;
   next: Project | null;
+  locale: Locale;
 }
 
 const number = (project: Project) => String(projects.findIndex((p) => p.id === project.id) + 1).padStart(2, "0");
@@ -22,9 +25,13 @@ const number = (project: Project) => String(projects.findIndex((p) => p.id === p
  * tone, a standfirst, facts in the margin, the story in a single
  * column, the film where there is one, and the way to the next case.
  */
-export default function CasePage({ project, study, prev, next }: CasePageProps) {
+export default function CasePage({ project, study, prev, next, locale }: CasePageProps) {
   const external = project.url;
   const isMemorial = project.id === "memorial-films";
+  const t = siteUi(locale).caseUi;
+  const nl = locale === "nl" ? project.nl : undefined;
+  const home = localePath(locale, "/");
+  const memorialHref = locale === "nl" ? "/nl/herinneringsfilms" : "/memorial-films";
 
   return (
     <main id="main" className="relative">
@@ -42,13 +49,13 @@ export default function CasePage({ project, study, prev, next }: CasePageProps) 
         <div className="relative mx-auto flex min-h-[88svh] w-full max-w-[1680px] flex-col justify-end px-6 pt-44 pb-16 md:px-12 md:pb-24">
           <Reveal>
             <div className="flex items-baseline gap-6 text-[0.62rem] tracking-[0.28em] text-cream/60 uppercase">
-              <Link href="/#work" className="link-line transition-colors hover:text-cream">← Selected work</Link>
+              <Link href={`${home}#work`} className="link-line transition-colors hover:text-cream">{t.back}</Link>
               <span className="tabular">N°{number(project)}</span>
             </div>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-eyebrow mt-10 mb-6" style={{ color: project.tone.glow }}>
-              {project.category} · {project.year}
+              {nl?.category ?? project.category} · {nl?.year ?? project.year}
             </p>
             <h1 className="font-display max-w-5xl text-[clamp(3rem,8vw,7.5rem)] leading-[0.98] font-medium text-cream">{project.title}</h1>
           </Reveal>
@@ -78,13 +85,13 @@ export default function CasePage({ project, study, prev, next }: CasePageProps) 
                     data-cursor="Visit"
                     className="inline-block rounded-full border border-champagne/50 px-7 py-4 text-[0.66rem] tracking-[0.3em] text-champagne uppercase transition-colors duration-500 hover:bg-champagne hover:text-ink"
                   >
-                    {study.visitLabel ?? "Open project"} ↗
+                    {study.visitLabel ?? t.openProject} ↗
                   </a>
                 </div>
               ) : isMemorial ? (
                 <div className="border-t border-line pt-8">
-                  <Link href="/memorial-films" className="inline-block rounded-full border border-champagne/50 px-7 py-4 text-[0.66rem] tracking-[0.3em] text-champagne uppercase transition-colors duration-500 hover:bg-champagne hover:text-ink">
-                    {study.visitLabel ?? "Read more"}
+                  <Link href={memorialHref} className="inline-block rounded-full border border-champagne/50 px-7 py-4 text-[0.66rem] tracking-[0.3em] text-champagne uppercase transition-colors duration-500 hover:bg-champagne hover:text-ink">
+                    {study.visitLabel ?? t.readMore}
                   </Link>
                 </div>
               ) : null}
@@ -96,7 +103,7 @@ export default function CasePage({ project, study, prev, next }: CasePageProps) 
           {(project.video || project.youtube) && project.image ? (
             <Reveal>
               <div className="mb-16">
-                <CaseFilm project={project} poster={project.image} />
+                <CaseFilm project={project} poster={project.image} label={t.playFilm} />
               </div>
             </Reveal>
           ) : null}
@@ -125,17 +132,17 @@ export default function CasePage({ project, study, prev, next }: CasePageProps) 
             neighbour ? (
               <Link
                 key={neighbour.id}
-                href={`/work/${neighbour.id}`}
+                href={localePath(locale, `/work/${neighbour.id}`)}
                 className={`group flex flex-col gap-3 px-6 py-14 transition-colors hover:bg-ink-soft md:px-12 md:py-20 ${i === 1 ? "md:items-end md:text-right md:border-l md:border-line" : ""}`}
               >
-                <span className="text-[0.62rem] tracking-[0.28em] text-taupe uppercase">{i === 0 ? "← Previous" : "Next →"}</span>
+                <span className="text-[0.62rem] tracking-[0.28em] text-taupe uppercase">{i === 0 ? t.previous : t.next}</span>
                 <span className="font-display text-3xl font-medium text-cream md:text-4xl">{neighbour.title}</span>
                 <span className="text-[0.66rem] tracking-[0.26em] uppercase" style={{ color: neighbour.tone.glow }}>{neighbour.category}</span>
               </Link>
             ) : (
-              <Link key={`archive-${i}`} href="/#work" className={`flex flex-col gap-3 px-6 py-14 transition-colors hover:bg-ink-soft md:px-12 md:py-20 ${i === 1 ? "md:items-end md:text-right md:border-l md:border-line" : ""}`}>
-                <span className="text-[0.62rem] tracking-[0.28em] text-taupe uppercase">{i === 0 ? "← Back to" : "Back to →"}</span>
-                <span className="font-display text-3xl font-medium text-cream md:text-4xl">The archive</span>
+              <Link key={`archive-${i}`} href={`${home}#work`} className={`flex flex-col gap-3 px-6 py-14 transition-colors hover:bg-ink-soft md:px-12 md:py-20 ${i === 1 ? "md:items-end md:text-right md:border-l md:border-line" : ""}`}>
+                <span className="text-[0.62rem] tracking-[0.28em] text-taupe uppercase">{i === 0 ? t.backTo : t.backToNext}</span>
+                <span className="font-display text-3xl font-medium text-cream md:text-4xl">{t.archive}</span>
               </Link>
             ),
           )}

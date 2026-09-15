@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import FrameMark from "@/components/brand/FrameMark";
 import { gsap } from "@/lib/gsap";
 import { dispatchIntroDone, INTRO_SEEN_KEY, prefersReducedMotion } from "@/lib/motion";
+import { useLocale } from "@/lib/i18n/locale";
+import { siteUi } from "@/lib/i18n/site-ui";
 
 /**
  * Opening title card: the mark draws itself stroke by stroke,
@@ -13,6 +15,7 @@ import { dispatchIntroDone, INTRO_SEEN_KEY, prefersReducedMotion } from "@/lib/m
 export default function Preloader() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [finished, setFinished] = useState(false);
+  const t = siteUi(useLocale()).preloader;
 
   useEffect(() => {
     const seen = sessionStorage.getItem(INTRO_SEEN_KEY) === "true";
@@ -80,10 +83,10 @@ export default function Preloader() {
           data-intro-name
           className="font-display mt-10 text-xl font-medium tracking-[0.22em] text-cream opacity-0 md:text-2xl"
         >
-          GENTLE FRAMES
+          {t.name}
         </p>
         <p data-intro-tag className="text-eyebrow mt-4 opacity-0">
-          Memories. Reimagined. Forever.
+          {t.tagline}
         </p>
       </div>
     </div>

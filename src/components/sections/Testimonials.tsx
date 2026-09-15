@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import Reveal from "@/components/fx/Reveal";
 import { testimonials } from "@/content/testimonials";
+import { useLocale } from "@/lib/i18n/locale";
+import { siteUi } from "@/lib/i18n/site-ui";
 
 const ROTATION_MS = 7000;
 
@@ -12,6 +14,9 @@ const ROTATION_MS = 7000;
  */
 export default function Testimonials() {
   const [active, setActive] = useState(0);
+  const locale = useLocale();
+  const t = siteUi(locale).testimonials;
+  const pick = (x: (typeof testimonials)[number]) => (locale === "nl" ? x.nl : x);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -23,10 +28,10 @@ export default function Testimonials() {
   const select = useCallback((index: number) => setActive(index), []);
 
   return (
-    <section className="border-t border-line" aria-label="Testimonials">
+    <section className="border-t border-line" aria-label={t.ariaLabel}>
       <div className="mx-auto max-w-[1680px] px-6 py-36 md:px-12 md:py-56">
         <Reveal>
-          <p className="text-eyebrow mb-20 text-center">Kind words</p>
+          <p className="text-eyebrow mb-20 text-center">{t.eyebrow}</p>
         </Reveal>
 
         <Reveal>
@@ -42,10 +47,10 @@ export default function Testimonials() {
                 aria-hidden={index !== active}
               >
                 <p className="font-display text-[clamp(1.6rem,3.6vw,2.9rem)] leading-[1.3] font-medium text-cream italic">
-                  &ldquo;{testimonial.quote}&rdquo;
+                  &ldquo;{pick(testimonial).quote}&rdquo;
                 </p>
                 <footer className="mt-10 text-[0.65rem] tracking-[0.3em] text-taupe uppercase">
-                  {testimonial.author} · {testimonial.context}
+                  {pick(testimonial).author} · {pick(testimonial).context}
                 </footer>
               </blockquote>
             ))}
@@ -58,7 +63,7 @@ export default function Testimonials() {
               key={testimonial.author}
               type="button"
               onClick={() => select(index)}
-              aria-label={`Show quote ${index + 1}`}
+              aria-label={t.showQuote(index + 1)}
               className={`h-px w-10 transition-all duration-500 ${
                 index === active ? "bg-champagne" : "bg-line hover:bg-champagne/40"
               }`}

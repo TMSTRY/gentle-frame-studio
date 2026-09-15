@@ -8,6 +8,8 @@ import WorkLightbox from "@/components/sections/WorkLightbox";
 import Link from "next/link";
 import { caseIndex } from "@/content/cases";
 import { projects, type Project } from "@/content/projects";
+import { localePath, useLocale, type Locale } from "@/lib/i18n/locale";
+import { siteUi } from "@/lib/i18n/site-ui";
 import { gsap } from "@/lib/gsap";
 
 /**
@@ -20,6 +22,8 @@ export default function Work() {
   const pinRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [screening, setScreening] = useState<Project | null>(null);
+  const locale = useLocale();
+  const t = siteUi(locale).work;
 
   useEffect(() => {
     const pinArea = pinRef.current;
@@ -59,21 +63,21 @@ export default function Work() {
   }, []);
 
   return (
-    <section id="work" className="scroll-mt-24" aria-label="Selected work">
+    <section id="work" className="scroll-mt-24" aria-label={t.ariaLabel}>
       <div className="mx-auto max-w-[1680px] px-6 pt-36 pb-16 md:px-12 md:pt-56">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <p className="text-eyebrow mb-6">Selected work · the archive</p>
+              <p className="text-eyebrow mb-6">{t.eyebrow}</p>
               <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
-                Frames we&rsquo;ve kept
+                {t.title}
                 <span className="text-taupe align-super text-[0.3em] tracking-[0.2em]">
                   {"  "}( {String(projects.length).padStart(2, "0")} )
                 </span>
               </h2>
             </div>
             <p className="max-w-xs pb-2 text-sm leading-relaxed text-taupe">
-              Films, platforms and experiments. The archive grows slowly, on purpose.
+              {t.lede}
             </p>
           </div>
         </Reveal>
@@ -89,6 +93,7 @@ export default function Work() {
               key={project.id}
               project={project}
               index={index}
+              locale={locale}
               onPlay={() => setScreening(project)}
             />
           ))}
@@ -97,13 +102,13 @@ export default function Work() {
           <div className="flex w-[70vw] max-w-[420px] snap-center flex-col items-center justify-center gap-8 text-center md:w-[420px]">
             <FrameMark className="w-14 text-champagne/50" strokeWidth={3.5} />
             <p className="font-display max-w-[240px] text-2xl leading-snug text-cream/80 italic">
-              Yours could be the next frame.
+              {t.slate}
             </p>
             <a
               href="#contact"
               className="link-line text-[0.68rem] tracking-[0.3em] text-champagne uppercase"
             >
-              Start a project
+              {t.start}
             </a>
           </div>
         </div>
@@ -119,12 +124,16 @@ export default function Work() {
 function CoverCard({
   project,
   index,
+  locale,
   onPlay,
 }: {
   project: Project;
   index: number;
+  locale: Locale;
   onPlay: () => void;
 }) {
+  const t = siteUi(locale).work;
+  const nl = locale === "nl" ? project.nl : undefined;
   const number = String(index + 1).padStart(2, "0");
   const playable = Boolean(project.video || project.youtube);
   const hasCase = caseIndex.has(project.id);
@@ -139,7 +148,7 @@ function CoverCard({
               champagne seam that drifts up as you hover */}
           <Image
             src={project.image}
-            alt={`${project.title}, screenshot`}
+            alt={t.screenshot(project.title)}
             fill
             sizes="(max-width: 900px) 78vw, 440px"
             className="object-cover object-top saturate-[0.88] transition-[transform,clip-path] duration-700 ease-out group-hover:scale-[1.03] [clip-path:polygon(0_0,100%_0,100%_38%,0_62%)] group-hover:[clip-path:polygon(0_0,100%_0,100%_34%,0_58%)]"
@@ -159,7 +168,7 @@ function CoverCard({
       ) : (
         <Image
           src={project.image}
-          alt={`${project.title}, screenshot`}
+          alt={t.screenshot(project.title)}
           fill
           sizes="(max-width: 900px) 78vw, 440px"
           className="object-cover object-top saturate-[0.88] transition-transform duration-700 ease-out group-hover:scale-[1.04]"
@@ -197,13 +206,13 @@ function CoverCard({
   const content = (
     <div className="relative flex h-full flex-col justify-between p-7 md:p-9">
       <div className="flex items-start justify-between text-[0.6rem] tracking-[0.28em] text-cream/60 uppercase">
-        <span>Gentle Frames · Case</span>
+        <span>{t.caseTag}</span>
         <span className="tabular">N°{number}</span>
       </div>
 
       <div>
         <p className="text-eyebrow mb-4" style={{ color: project.tone.glow }}>
-          {project.category} · {project.year}
+          {nl?.category ?? project.category} · {nl?.year ?? project.year}
         </p>
         <h3 className="font-display text-[clamp(2rem,3.2vw,2.9rem)] leading-[1.05] font-medium text-cream">
           {project.title}
@@ -215,23 +224,23 @@ function CoverCard({
               : ""
           }`}
         >
-          {project.blurb}
+          {nl?.blurb ?? project.blurb}
         </p>
         {hasCase ? (
           <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-champagne uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-            Read the case →
+            {t.readCase}
           </p>
         ) : project.url ? (
           <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-champagne uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-            Open project ↗
+            {t.openProject}
           </p>
         ) : playable ? (
           <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-champagne uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-            Play the film ▶
+            {t.playFilm}
           </p>
         ) : project.note ? (
           <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-taupe uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-            {project.note}
+            {nl?.note ?? project.note}
           </p>
         ) : null}
       </div>
@@ -241,7 +250,7 @@ function CoverCard({
   if (hasCase) {
     return (
       <Link
-        href={`/work/${project.id}`}
+        href={localePath(locale, `/work/${project.id}`)}
         data-cursor="Read"
         aria-label={`${project.title}, read the case`}
         className={cardClass}
