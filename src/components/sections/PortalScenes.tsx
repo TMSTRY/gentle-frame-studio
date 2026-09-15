@@ -14,7 +14,7 @@ const hair = "border-t border-champagne/15";
  */
 export function SceneFollow({ t }: { t: Scenes }) {
   return (
-    <div className="flex h-full flex-col p-5">
+    <div className="flex h-full flex-col px-5 pt-5 pb-14">
       <p className={eyebrow}>{t.service}</p>
       <p className="font-display mt-2 text-[1.35rem] leading-tight text-cream">{t.project}</p>
       <ol className="mt-5 grid grid-cols-3 gap-px border border-champagne/20 bg-champagne/20">
@@ -43,7 +43,7 @@ export function SceneFollow({ t }: { t: Scenes }) {
 
 export function SceneShare({ t }: { t: Scenes }) {
   return (
-    <div className="flex h-full flex-col p-5">
+    <div className="flex h-full flex-col px-5 pt-5 pb-14">
       <p className={eyebrow}>{t.filesTitle}</p>
       <ul className="mt-3">
         {t.files.map(([name, size], i) => (
@@ -64,7 +64,7 @@ export function SceneShare({ t }: { t: Scenes }) {
 
 export function SceneReview({ t }: { t: Scenes }) {
   return (
-    <div className="flex h-full flex-col p-5">
+    <div className="flex h-full flex-col px-5 pt-5 pb-14">
       <p className={eyebrow}>{t.cut}</p>
       <div className="relative mt-3 aspect-video w-full overflow-hidden border border-champagne/25 bg-black">
         <div className="absolute inset-0" style={{ background: "radial-gradient(60% 80% at 50% 45%, rgba(194,161,101,0.35), transparent 70%)" }} />
@@ -104,7 +104,7 @@ export function SceneReview({ t }: { t: Scenes }) {
 
 export function SceneApprove({ t }: { t: Scenes }) {
   return (
-    <div className="flex h-full flex-col p-5">
+    <div className="flex h-full flex-col px-5 pt-5 pb-14">
       <p className={eyebrow}>{t.service}</p>
       <p className="font-display mt-2 text-[1.35rem] leading-tight text-cream">{t.project}</p>
       <div className={`${hair} mt-6 pt-5`}>
@@ -124,7 +124,7 @@ export function SceneApprove({ t }: { t: Scenes }) {
 
 export function SceneRoom({ t }: { t: Scenes }) {
   return (
-    <div className="flex h-full flex-col items-center bg-ink-deep p-5 text-center">
+    <div className="flex h-full flex-col items-center bg-ink-deep px-5 pt-5 pb-14 text-center">
       <span className="mt-1 block h-4 w-4 rounded-[2px] border border-champagne/60" aria-hidden="true" />
       <p className="font-display mt-6 text-[1.9rem] leading-none text-cream">{t.roomTitle}</p>
       <p className="mt-2 text-[0.46rem] tracking-[0.34em] text-champagne/80 uppercase">{t.roomDates}</p>

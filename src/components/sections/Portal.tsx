@@ -35,17 +35,24 @@ export default function Portal() {
     const mm = gsap.matchMedia();
     mm.add("(min-width: 1024px)", () => {
       const items = Array.from(list.querySelectorAll<HTMLElement>("[data-moment]"));
-      const triggers = items.map((el, i) =>
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top 62%",
-          end: "bottom 62%",
-          onToggle: (self) => {
-            if (self.isActive) setActive(i);
-          },
-        }),
-      );
-      return () => triggers.forEach((tr) => tr.kill());
+      // One measurement per scroll tick: the moment whose middle sits nearest the
+      // reading line lights the frame. Deterministic, whatever order events arrive in.
+      const pick = () => {
+        const line = window.innerHeight * 0.58;
+        let best = 0;
+        let distance = Infinity;
+        items.forEach((el, i) => {
+          const r = el.getBoundingClientRect();
+          const d = Math.abs(r.top + r.height / 2 - line);
+          if (d < distance) {
+            distance = d;
+            best = i;
+          }
+        });
+        setActive((current) => (current === best ? current : best));
+      };
+      const trigger = ScrollTrigger.create({ trigger: list, start: "top bottom", end: "bottom top", onUpdate: pick, onEnter: pick, onEnterBack: pick });
+      return () => trigger.kill();
     });
     return () => mm.revert();
   }, []);
