@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import FrameMark from "@/components/brand/FrameMark";
 import Reveal from "@/components/fx/Reveal";
 import WorkLightbox from "@/components/sections/WorkLightbox";
+import Link from "next/link";
+import { caseIndex } from "@/content/cases";
 import { projects, type Project } from "@/content/projects";
 import { gsap } from "@/lib/gsap";
 
@@ -125,6 +127,7 @@ function CoverCard({
 }) {
   const number = String(index + 1).padStart(2, "0");
   const playable = Boolean(project.video || project.youtube);
+  const hasCase = caseIndex.has(project.id);
   const cardClass =
     "group relative block aspect-[3/4] w-[78vw] max-w-[460px] shrink-0 snap-center overflow-hidden rounded-md border border-line text-left transition-transform duration-700 ease-out hover:-translate-y-2 md:w-[440px]";
 
@@ -214,7 +217,11 @@ function CoverCard({
         >
           {project.blurb}
         </p>
-        {project.url ? (
+        {hasCase ? (
+          <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-champagne uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+            Read the case →
+          </p>
+        ) : project.url ? (
           <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-champagne uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
             Open project ↗
           </p>
@@ -230,6 +237,21 @@ function CoverCard({
       </div>
     </div>
   );
+
+  if (hasCase) {
+    return (
+      <Link
+        href={`/work/${project.id}`}
+        data-cursor="Read"
+        aria-label={`${project.title}, read the case`}
+        className={cardClass}
+        style={{ backgroundColor: project.tone.base }}
+      >
+        {cover}
+        {content}
+      </Link>
+    );
+  }
 
   if (project.url) {
     return (
