@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n/locale";
+import type { Locale } from "@/lib/i18n/paths";
 
 /**
  * Every piece of interface text on the marketing site, in both

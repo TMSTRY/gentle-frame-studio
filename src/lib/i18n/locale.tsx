@@ -1,8 +1,9 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
+import type { Locale } from "@/lib/i18n/paths";
 
-export type Locale = "en" | "nl";
+export { alternatePath, localePath, type Locale } from "@/lib/i18n/paths";
 
 const LocaleContext = createContext<Locale>("en");
 
@@ -13,25 +14,4 @@ export function LocaleProvider({ locale, children }: { locale: Locale; children:
 
 export function useLocale(): Locale {
   return useContext(LocaleContext);
-}
-
-/** Prefix a site path for the given locale: "/" -> "/nl", "/work/x" -> "/nl/work/x". */
-export function localePath(locale: Locale, path: string): string {
-  if (locale === "en") return path;
-  if (path === "/") return "/nl";
-  if (path.startsWith("#")) return `/nl${path}`;
-  return `/nl${path}`;
-}
-
-/** Same page in the other language; memorial and privacy have their own slugs. */
-export function alternatePath(locale: Locale, pathname: string): string {
-  const special: Record<string, string> = {
-    "/memorial-films": "/nl/herinneringsfilms",
-    "/nl/herinneringsfilms": "/memorial-films",
-    "/privacy": "/nl/privacy",
-    "/nl/privacy": "/privacy",
-  };
-  if (special[pathname]) return special[pathname];
-  if (locale === "en") return pathname === "/" ? "/nl" : `/nl${pathname}`;
-  return pathname === "/nl" ? "/" : pathname.replace(/^\/nl/, "") || "/";
 }

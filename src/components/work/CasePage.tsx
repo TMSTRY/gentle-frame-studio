@@ -7,7 +7,7 @@ import CaseFilm from "@/components/work/CaseFilm";
 import type { CaseStudy } from "@/content/cases";
 import type { Project } from "@/content/projects";
 import { projects } from "@/content/projects";
-import { localePath, type Locale } from "@/lib/i18n/locale";
+import { localePath, type Locale } from "@/lib/i18n/paths";
 import { siteUi } from "@/lib/i18n/site-ui";
 
 interface CasePageProps {

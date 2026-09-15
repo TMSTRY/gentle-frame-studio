@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import CasePage from "@/components/work/CasePage";
 import { cases, getCase, neighbours } from "@/content/cases";
 import { site } from "@/content/site";
-import { localePath, type Locale } from "@/lib/i18n/locale";
+import { localePath, type Locale } from "@/lib/i18n/paths";
 
 const LOCALE: Locale = "en";
 const PREFIX = localePath(LOCALE, "/").replace(/\/$/, "");
