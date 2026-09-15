@@ -61,6 +61,38 @@ export const cases: CaseStudy[] = [
     ],
     closing: "The best compliment so far came from a nine-year-old: “Can I do one more planet?”",
     visitLabel: "Visit Ruimteschool",
+    nl: {
+      standfirst: "Een leeruniversum voor kinderen: rekenen en Frans, geoefend tussen de planeten, met een badge voor elke kleine overwinning.",
+      facts: [
+        { label: "Wat", value: "Leerplatform voor kinderen van de lagere school" },
+        { label: "Gemaakt", value: "Concept, ontwerp, illustratieregie, ontwikkeling" },
+        { label: "Stack", value: "Next.js, Supabase, generatieve illustratie" },
+        { label: "Status", value: "Live op ruimteschool.com" }
+      ],
+      sections: [
+        {
+          title: "De opdracht die we onszelf gaven",
+          paragraphs: [
+            "Oefenapps voor kinderen zien er vaak uit als werkbladen met een mascotte erop geplakt. Wij wilden het omgekeerde: een wereld waar een kind naar wil terugkeren, waar de oefeningen de reis zijn en niet de tol. Twee vakken om mee te starten (rekenen en Franse woordenschat), want daar voelen Belgische ouders de druk het eerst."
+          ]
+        },
+        {
+          title: "Hoe het werkt",
+          paragraphs: [
+            "Elk kind krijgt een pilootnaam, een niveau en een XP-balk. Een sessie is een korte ronde op een planeet: de Rekenplaneet voor getallen, de Franse Maan voor woorden. Foute antwoorden worden nooit afgestraft; ze voeden een ronde “oefen je zwakke plekken” die zich aanpast aan wat het kind moeilijk vindt. Badges markeren mijlpalen (eerste juiste antwoord, tien sommen, een foutloze ronde) en een klein stickeralbum houdt het verzamelinstinct bezig.",
+            "Kinderen kunnen spelen als gast, met alles opgeslagen op het toestel, of met een account dat ouders een rustig dashboard geeft: wat er geoefend werd, waar het goed ging en waar niet."
+          ]
+        },
+        {
+          title: "Het vakmanschap",
+          paragraphs: [
+            "De visuele wereld werd gebouwd met generatieve beeldtools onder strakke art direction: één palet, één licht, één cast van personages, zodat een raket op het startscherm en een raket op een badge zichtbaar familie zijn. De interface zelf is bewust rustig te midden van al die kleur: grote knoppen, weinig woorden, geen timers die een zevenjarige nerveus maken."
+          ]
+        }
+      ],
+      closing: "Het mooiste compliment tot nu toe kwam van een negenjarige: “Mag ik nog één planeet doen?”",
+      visitLabel: "Bezoek Ruimteschool"
+    },
   },
   {
     id: "quietwalk",
@@ -93,6 +125,37 @@ export const cases: CaseStudy[] = [
     ],
     closing: "Walk yourself quiet.",
     visitLabel: "Visit quietwalk.app",
+    nl: {
+      standfirst: "Een metgezel in je broekzak die een gewone wandeling omzet in een bewegende meditatie: trage en stevige intervallen, zachte trilsignalen, eigen Japans geïnspireerde klanklandschappen.",
+      facts: [
+        { label: "Wat", value: "iPhone- en Apple Watch-app, met een landingssite" },
+        { label: "Gemaakt", value: "Concept, sounddesign, interface, ontwikkeling" },
+        { label: "Status", value: "Komt naar de App Store; site live op quietwalk.app" }
+      ],
+      sections: [
+        {
+          title: "Waarom",
+          paragraphs: [
+            "De meeste wandelapps tellen. Stappen, kilometers, calorieën. QuietWalk telt niets waarmee je kunt uitpakken. Het vraagt je om drie minuten traag te wandelen en dan iets sneller, en het verschil op te merken. Het idee kwam uit nachtdiensten en de wandelingen erna: het lichaam moet tot rust komen, en een scherm vol cijfers helpt daar niet bij."
+          ]
+        },
+        {
+          title: "Wat het doet",
+          paragraphs: [
+            "Je kiest een klanklandschap (“Echoes of Kyoto”, “Dreams of Nara”, “Beyond the Torii Gate”), drukt op Begin en steekt je telefoon weg. Het horloge tikt je aan wanneer het tempo verandert. De muziek is in huis gecomponeerd: lange, onhaastige stukken die niet hoorbaar herhalen en geen aandacht opeisen.",
+            "Er is geen feed, geen reeksenteller, geen deelknop. Een wandeling eindigt met één zin en een zachte klank."
+          ]
+        },
+        {
+          title: "De look",
+          paragraphs: [
+            "Warm papierwit, één vermiljoenrode cirkel, schreefletters. De landingssite leent dezelfde terughoudendheid: één zin, één telefoon, één knop. Alles wat decoratie kon zijn, werd weggehaald tot enkel de wandeling overbleef."
+          ]
+        }
+      ],
+      closing: "Wandel jezelf stil.",
+      visitLabel: "Bezoek quietwalk.app"
+    },
   },
   {
     id: "shift-planning",
@@ -125,6 +188,37 @@ export const cases: CaseStudy[] = [
       },
     ],
     closing: "Een team is als een fiets: als iemand niet trapt, voelt iedereen het.",
+    nl: {
+      standfirst: "Personeelsplanning voor een Belgische gevangenis: meer dan tweehonderd beambten in tien teams, gebouwd door iemand die die diensten zelf draait.",
+      facts: [
+        { label: "Wat", value: "Interne personeelstool, dagelijks gebruikt door tien teams en hun teamleiders" },
+        { label: "Gemaakt", value: "Concept, ontwerp, ontwikkeling, uitrol" },
+        { label: "Stack", value: "Next.js, Supabase, toegang per rol" },
+        { label: "Status", value: "Dagelijks in gebruik; een gesloten omgeving" }
+      ],
+      sections: [
+        {
+          title: "Het probleem",
+          paragraphs: [
+            "Een gevangenis bemannen is een puzzel van posten, mensen, verlof, ziekte en regels die in het hoofd van een paar ervaren beambten leven. Het begon met één nachtteam; vandaag dekt het de hele personeelsbezetting, meer dan tweehonderd beambten in tien teams, elk met een eigen ritme. Papier en rekenbladen deden het werk, nét, en elke wijziging betekende telefoontjes. De tool moest in een bestaand ritme passen, niet een nieuw ritme opleggen."
+          ]
+        },
+        {
+          title: "Wat we bouwden",
+          paragraphs: [
+            "Eén scherm per dienst: wie staat op welke post, wie is afwezig en waarom, en een vastgepinde nota voor wat vandaag telt. De komende dagen liggen eronder als een strook, met onderbezetting gemarkeerd vóór het een probleem wordt. Teamleiders plannen hun eigen team; beambten zien hun eigen diensten en kunnen wissels aanvragen; een coördinator ziet alle tien de teams tegelijk; alles wordt gelogd.",
+            "Omdat de tool binnen de muren leeft en de klok rond gebruikt wordt, is de interface evengoed ontworpen voor vermoeide ogen om vier uur ’s nachts als voor een druk bureau om twaalf uur ’s middags: hoog contrast, grote letters, niets dat een handleiding nodig heeft."
+          ]
+        },
+        {
+          title: "Waarom het telt voor de studio",
+          paragraphs: [
+            "Hier zijn onze softwaregewoonten gevormd: bouwen voor echte mensen onder echte beperkingen, testen tijdens de dienst zelf, en nooit iets uitbrengen dat stil faalt. Namen en roosters in deze case zijn vervaagd; de omgeving is gesloten en de mensen erin verdienen hun privacy."
+          ]
+        }
+      ],
+      closing: "Een team is als een fiets: als iemand niet trapt, voelt iedereen het."
+    },
   },
   {
     id: "memorial-films",
@@ -151,6 +245,31 @@ export const cases: CaseStudy[] = [
     ],
     closing: "A place to return to, for as long as you need.",
     visitLabel: "Read about memorial films",
+    nl: {
+      standfirst: "Eerbetoon in licht. Korte films uit foto’s, stemmen en fragmenten van een leven, zodat een familie een plek heeft om naar terug te keren.",
+      facts: [
+        { label: "Wat", value: "Herinneringsfilms, van 30 seconden tot ongeveer drie minuten" },
+        { label: "Gemaakt", value: "Gesprek, restauratie, montage, geluid, aflevering voor de plechtigheid" },
+        { label: "Status", value: "Doorlopend; films blijven privé tenzij een familie anders kiest" }
+      ],
+      sections: [
+        {
+          title: "Rudy",
+          paragraphs: [
+            "Een echtgenoot, een vader, een man die zijn eigen muren schilderde en zijn eigen Harley poetste. Zijn familie vroeg iets dat ze op de dienst konden afspelen en daarna konden bewaren. We werkten vanuit een handvol clips en foto’s, herstelden wat hersteld moest worden, en lieten het gouden avondlicht het meeste vertellen. De familie gaf haar zegen om deze ene film te delen, zodat andere families kunnen zien wat een herinneringsfilm is vóór ze ons schrijven."
+          ]
+        },
+        {
+          title: "Hoe we werken",
+          paragraphs: [
+            "Het begint met een gesprek, nooit met een formulier. Dan deelt de familie wat ze heeft: afdrukken, filmpjes van de telefoon, spraakberichten, een lievelingslied. We bouwen de film traag op en tonen vroeg een eerste versie. Niets wordt verzonnen: de nieuwe tools dienen om te herstellen, te stabiliseren, een foto zachtjes tot leven te brengen, nooit om iemand woorden in de mond te leggen.",
+            "De aflevering is een privélink en een bestand om te bewaren, plus een versie klaargemaakt voor het scherm op de plechtigheid als die er is. En we blijven nadien bereikbaar."
+          ]
+        }
+      ],
+      closing: "Een plek om naar terug te keren, zolang je het nodig hebt.",
+      visitLabel: "Lees over herinneringsfilms"
+    },
   },
   {
     id: "music-videos",
@@ -177,6 +296,31 @@ export const cases: CaseStudy[] = [
     ],
     closing: "Sound, framed.",
     visitLabel: "Watch on YouTube",
+    nl: {
+      standfirst: "Cinematografische werelden voor originele muziek, in huis geschreven, geproduceerd en in beeld gebracht.",
+      facts: [
+        { label: "Wat", value: "Muziekvideo’s en visualisers voor de eigen releases van de studio en voor artiesten" },
+        { label: "Gemaakt", value: "Creatieve regie, generatieve beelden, montage, kleurcorrectie" },
+        { label: "Status", value: "Doorlopend" }
+      ],
+      sections: [
+        {
+          title: "Calibrated Smile",
+          paragraphs: [
+            "Een nummer over je gezicht in de plooi houden terwijl alles eronder verschuift. De video neemt dat letterlijk: een portret dat een puzzel is, stukken die opwippen en zich weer neerleggen, versplinterd glas dat nooit helemaal valt. Opgebouwd als een reeks gegenereerde sequenties onder één visuele regel (koud licht, witte kledij, één rood accent) en gemonteerd op de ademhaling van het nummer."
+          ]
+        },
+        {
+          title: "Hoe we een nummer aanpakken",
+          paragraphs: [
+            "We luisteren eerst, vele keren, vóór er één beeld gemaakt wordt. De vraag is nooit “wat zou er cool uitzien” maar “hoe ziet dit nummer er nu al uit”. Daaruit volgt een visuele identiteit: palet, kledij, één terugkerend motief. Dan de productie: gegenereerd beeld waar het het idee dient, echt beeld waar het het gevoel dient, en een montage die de muziek volgt in plaats van omgekeerd.",
+            "Omdat we zelf muziek uitbrengen, weten we waar een artiest bang voor is: dat de video het nummer versiert in plaats van het te verlengen."
+          ]
+        }
+      ],
+      closing: "Klank, in beeld gevat.",
+      visitLabel: "Bekijk op YouTube"
+    },
   },
   {
     id: "nft-collections",
@@ -203,6 +347,31 @@ export const cases: CaseStudy[] = [
     ],
     closing: "Dig the track out of the earth.",
     visitLabel: "Visit EXCAVARA",
+    nl: {
+      standfirst: "EXCAVARA: een muziekmijnwereld waarin je een verloren opname uit de grond graaft, stem per stem, tot de volledige mix speelt in de kern.",
+      facts: [
+        { label: "Wat", value: "Webplatform, pixelart-game, on-chain collectibles op Base" },
+        { label: "Gemaakt", value: "Concept, wereldopbouw, game-engine, smart contracts, platform" },
+        { label: "Status", value: "Live op excavara.com; meer dan twintig drops van zeven artiesten" }
+      ],
+      sections: [
+        {
+          title: "Het idee",
+          paragraphs: [
+            "Een opname ligt 650 meter diep begraven. Aan de oppervlakte hoor je een gedempt signaal. Elke laag die je doorgraaft ontgrendelt een nieuwe stem (drums, bas, keys, gitaar, zang) tot de hele mix speelt op de bodem. Luisteren wordt iets wat je met je handen doet. Elke drop is één nummer, één wereld, één beperkte oplage verzamelbare artefacten voor de eerste gravers."
+          ]
+        },
+        {
+          title: "Wat er gebouwd werd",
+          paragraphs: [
+            "Een dropspagina waar artiesten releases publiceren; een pixelart-graafengine van nul geschreven (een run gaat alleen maar naar beneden, terugklimmen bestaat niet); stems die infaden terwijl je afdaalt; en NFT-claims op Base voor verzamelaars. Artwork, sprites en stem splitting gebeuren in huis, zodat elke drop hetzelfde handschrift houdt.",
+            "Het platform host intussen drops van zeven artiesten, met een intake voor nieuwe, en groeit één zorgvuldig voorbereide release per keer."
+          ]
+        }
+      ],
+      closing: "Graaf het nummer uit de grond.",
+      visitLabel: "Bezoek EXCAVARA"
+    },
   },
   {
     id: "tmstry",
@@ -229,6 +398,31 @@ export const cases: CaseStudy[] = [
     ],
     closing: "Connection is the mission.",
     visitLabel: "Visit tmstry.com",
+    nl: {
+      standfirst: "Human // signal // AI. De artiestensite van TMSTRY, gebouwd als een levende uitzending in plaats van een perspagina.",
+      facts: [
+        { label: "Wat", value: "Artiestenwebsite met een globale audiospeler, video en een verborgen Signal Room" },
+        { label: "Gemaakt", value: "Identiteit, ontwerp, geluidsintegratie, ontwikkeling" },
+        { label: "Stack", value: "Next.js, Sanity" },
+        { label: "Status", value: "Live op tmstry.com" }
+      ],
+      sections: [
+        {
+          title: "Een site die zich gedraagt als de muziek",
+          paragraphs: [
+            "TMSTRY maakt muziek over de naad tussen mens en machine, dus moest de site ook op die naad leven. Een hero die ademt, een transmissiefeed die tikt, een speler die blijft spelen terwijl je door de pagina’s beweegt. Golfvormen en een portret in hetzelfde kader: de mens en het signaal."
+          ]
+        },
+        {
+          title: "De Signal Room",
+          paragraphs: [
+            "Achter het oppervlak zit een kamer met CCTV-kanalen, zelfgefilmde clips en kleine vreemde uitzendingen. Ze beloont de bezoeker die blijft hangen. Ze leerde ons ook iets wat we nu meenemen naar klantenwerk: een site mag een achterkamer hebben, en mensen vinden het heerlijk om die te ontdekken."
+          ]
+        }
+      ],
+      closing: "Verbinding is de missie.",
+      visitLabel: "Bezoek tmstry.com"
+    },
   },
 ];
 
