@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-const TABLES = ["clients", "projects", "project_updates", "documents", "document_lines", "payments", "signatures", "settings", "document_counters", "project_files", "review_cuts", "review_notes"] as const;
+const TABLES = ["clients", "projects", "project_updates", "documents", "document_lines", "payments", "signatures", "settings", "document_counters", "project_files", "review_cuts", "review_notes", "screenings"] as const;
 
 /**
  * Full JSON snapshot of the portal's data into the private `documents`

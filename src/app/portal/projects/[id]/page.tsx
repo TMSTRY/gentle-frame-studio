@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
+import CopyButton from "@/components/portal/CopyButton";
 import FileVault from "@/components/portal/FileVault";
 import PortalShell from "@/components/portal/PortalShell";
 import ReviewPanel from "@/components/portal/ReviewPanel";
@@ -13,6 +14,7 @@ import { docStatusLabel, formatDateFor, kindLabel, portalLang, serviceLabel, sta
 import { checklistFor, listProjectFiles } from "@/lib/portal/files";
 import { formatMoney } from "@/lib/portal/labels";
 import { loadReview } from "@/lib/portal/review";
+import { listScreenings, screeningState, screeningUrl } from "@/lib/portal/screenings";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { DocumentRecord, Project, ProjectUpdate } from "@/lib/portal/types";
 import { adminEmail } from "@/lib/supabase/env";
@@ -38,7 +40,8 @@ export default async function PortalProjectPage({
     supabase.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).order("created_at", { ascending: false }),
     listProjectFiles(supabase, id),
   ]);
-  const review = await loadReview(supabase, createAdminClient(), id);
+  const [review, screenings] = await Promise.all([loadReview(supabase, createAdminClient(), id), listScreenings(supabase, id)]);
+  const openRooms = screenings.filter((room) => screeningState(room) === "open");
   const currentCut = review.cuts.find((c) => c.id === flags.cut) ?? review.cuts[0] ?? null;
   const t = ui(lang);
   const documents = (docs ?? []) as Pick<DocumentRecord, "id" | "kind" | "number" | "title" | "status" | "total_cents" | "currency">[];
@@ -139,6 +142,36 @@ export default async function PortalProjectPage({
           )}
         </div>
       </div>
+
+      {openRooms.length ? (
+        <section id="screening" className="mt-20">
+          <h2 className="text-eyebrow mb-4">{t.screening.title}</h2>
+          <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">{t.screening.lede}</p>
+          <ul>
+            {openRooms.map((room) => (
+              <li key={room.id} className="grid gap-4 border-t border-line py-6 md:grid-cols-[1fr_auto] md:items-center">
+                <div>
+                  <p className="font-display text-xl text-cream">{room.title}{room.subtitle ? <span className="ml-3 text-sm tracking-[0.2em] text-taupe uppercase">{room.subtitle}</span> : null}</p>
+                  <p className="mt-3 text-sm text-cream/80 break-all">
+                    <span className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{t.screening.link}</span>{" "}
+                    <a href={screeningUrl(room.token)} target="_blank" rel="noopener" className="link-line">{screeningUrl(room.token)}</a>
+                  </p>
+                  <p className="mt-2 text-sm text-cream/80">
+                    <span className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{t.screening.code}</span>{" "}
+                    {room.passcode ? <span className="tracking-[0.2em] text-champagne">{room.passcode}</span> : <span className="text-taupe">{t.screening.noCode}</span>}
+                    <span className="ml-4 text-taupe">· {room.view_count} {t.screening.views}</span>
+                    {room.allow_download ? <span className="ml-4 text-taupe">· {t.screening.download}</span> : null}
+                  </p>
+                </div>
+                <div className="flex gap-6">
+                  <CopyButton value={room.passcode ? `${screeningUrl(room.token)}\n${t.screening.code}: ${room.passcode}` : screeningUrl(room.token)} label={t.screening.copy} doneLabel={t.screening.copied} />
+                  <a href={screeningUrl(room.token)} target="_blank" rel="noopener" className="link-line text-[0.62rem] tracking-[0.26em] text-cream/70 uppercase">{t.screening.open} ↗</a>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="mt-20">
         <h2 className="text-eyebrow mb-4">{t.files.title}</h2>

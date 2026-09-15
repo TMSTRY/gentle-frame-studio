@@ -4,7 +4,10 @@ import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 import { addProjectUpdateAction, deleteProjectUpdateAction } from "@/app/admin/actions";
+import CopyButton from "@/components/portal/CopyButton";
 import FileVault from "@/components/portal/FileVault";
+import ScreeningForm from "@/components/portal/ScreeningForm";
+import { deleteScreeningAction, toggleScreeningAction } from "@/app/admin/screenings/actions";
 import PortalShell from "@/components/portal/PortalShell";
 import ReviewPanel from "@/components/portal/ReviewPanel";
 import { createCutAction, deleteCutAction } from "@/app/portal/review/actions";
@@ -14,6 +17,7 @@ import { BackLink, buttonClass, EmptyRow, Field, ghostButtonClass, inputClass, N
 import { requireAdmin } from "@/lib/portal/guard";
 import { listProjectFiles } from "@/lib/portal/files";
 import { loadReview } from "@/lib/portal/review";
+import { listScreenings, screeningState, screeningUrl } from "@/lib/portal/screenings";
 import { ADMIN_LINKS, DOC_STATUS_LABEL, KIND_LABEL, SERVICE_LABEL, STATUS_LABEL, formatMoney } from "@/lib/portal/labels";
 import type { DocumentRecord, Project, ProjectUpdate } from "@/lib/portal/types";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -42,7 +46,8 @@ export default async function ProjectDetailPage({
     admin.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).is("deleted_at", null).order("created_at", { ascending: false }),
     listProjectFiles(admin, id),
   ]);
-  const review = await loadReview(admin, admin, id);
+  const [review, screenings] = await Promise.all([loadReview(admin, admin, id), listScreenings(admin, id)]);
+  const imageFiles = files.filter((f) => f.uploaded_by === "studio" && (f.mime?.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(f.name)));
   const currentCut = review.cuts.find((c) => c.id === flags.cut) ?? review.cuts[0] ?? null;
   const videoFiles = files.filter((f) => f.uploaded_by === "studio" && (f.mime?.startsWith("video/") || /\.(mp4|webm|mov|m4v)$/i.test(f.name)));
   const documents = (docs ?? []) as Pick<DocumentRecord, "id" | "kind" | "number" | "title" | "status" | "total_cents" | "currency">[];
@@ -227,6 +232,57 @@ export default async function ProjectDetailPage({
             </div>
           </div>
         ) : null}
+      </section>
+
+      <section id="screening" className="mt-20">
+        <h2 className="text-eyebrow mb-4">Screening room</h2>
+        <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">
+          A private page for the finished film, on an unguessable link the family can pass around, optionally behind a viewing code. Upload the final film under Files first. The client sees the link and code in their portal. Needs migration 006.
+        </p>
+        {screenings.length ? (
+          <ul className="mb-12">
+            {screenings.map((room) => {
+              const state = screeningState(room);
+              return (
+                <li key={room.id} className="border-t border-line py-6">
+                  <div className="flex flex-wrap items-baseline justify-between gap-4">
+                    <p className="font-display text-xl text-cream">
+                      {room.title}
+                      <span className={`ml-4 text-[0.62rem] tracking-[0.26em] uppercase ${state === "open" ? "text-champagne" : "text-taupe"}`}>{state}</span>
+                    </p>
+                    <span className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">
+                      {room.view_count} views{room.last_viewed_at ? ` · last ${formatMoment(room.last_viewed_at)}` : ""}
+                    </span>
+                  </div>
+                  <p className="mt-3 text-sm text-cream/80 break-all">
+                    <a href={screeningUrl(room.token)} target="_blank" rel="noopener" className="link-line">{screeningUrl(room.token)}</a>
+                    {room.passcode ? <span className="ml-4 text-taupe">code <span className="tracking-[0.2em] text-champagne">{room.passcode}</span></span> : <span className="ml-4 text-taupe">no code</span>}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-6 text-[0.62rem] tracking-[0.26em] uppercase">
+                    <CopyButton value={room.passcode ? `${screeningUrl(room.token)}\nCode: ${room.passcode}` : screeningUrl(room.token)} label="Copy link" doneLabel="Copied" />
+                    <form action={toggleScreeningAction}>
+                      <input type="hidden" name="id" value={room.id} />
+                      <input type="hidden" name="project_id" value={typed.id} />
+                      <button type="submit" className="text-taupe hover:text-champagne">{room.revoked_at ? "Reopen" : "Close room"}</button>
+                    </form>
+                    <form action={deleteScreeningAction}>
+                      <input type="hidden" name="id" value={room.id} />
+                      <input type="hidden" name="project_id" value={typed.id} />
+                      <button type="submit" className="text-taupe/70 hover:text-gold">Delete</button>
+                    </form>
+                  </div>
+                  <details className="mt-4">
+                    <summary className="cursor-pointer text-[0.62rem] tracking-[0.26em] text-taupe uppercase hover:text-cream">Edit</summary>
+                    <div className="mt-4">
+                      <ScreeningForm projectId={typed.id} screening={room} defaultTitle={typed.title} videos={videoFiles} images={imageFiles} />
+                    </div>
+                  </details>
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
+        <ScreeningForm projectId={typed.id} defaultTitle={typed.title} videos={videoFiles} images={imageFiles} />
       </section>
 
       <section className="mt-20">

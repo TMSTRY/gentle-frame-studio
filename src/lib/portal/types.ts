@@ -156,3 +156,24 @@ export interface ReviewNote {
   resolved_at: string | null;
   created_at: string;
 }
+
+export interface Screening {
+  id: string;
+  project_id: string;
+  client_id: string;
+  token: string;
+  file_id: string | null;
+  external_url: string | null;
+  poster_file_id: string | null;
+  title: string;
+  subtitle: string | null;
+  dedication: string | null;
+  passcode: string | null;
+  allow_download: boolean;
+  expires_at: string | null;
+  view_count: number;
+  last_viewed_at: string | null;
+  revoked_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
