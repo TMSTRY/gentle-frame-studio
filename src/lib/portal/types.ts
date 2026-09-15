@@ -132,3 +132,27 @@ export interface ProjectFile {
   created_at: string;
   deleted_at?: string | null;
 }
+
+export interface ReviewCut {
+  id: string;
+  project_id: string;
+  version: number;
+  title: string | null;
+  file_id: string | null;
+  external_url: string | null;
+  note: string | null;
+  created_at: string;
+  deleted_at?: string | null;
+}
+
+export interface ReviewNote {
+  id: string;
+  cut_id: string;
+  project_id: string;
+  author: "client" | "studio";
+  author_name: string;
+  timecode: number | null;
+  body: string;
+  resolved_at: string | null;
+  created_at: string;
+}

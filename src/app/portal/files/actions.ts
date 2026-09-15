@@ -7,30 +7,13 @@ import { getResend, MAIL_FROM } from "@/lib/resend";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { adminEmail } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
-
-type Who = { userEmail: string; isStudio: boolean; project: { id: string; title: string; client_id: string; status: string } };
-
-/**
- * Who is asking, and may they touch this project? Reading the project
- * as the signed-in user lets RLS answer: a client only sees their own,
- * the studio sees all. Cancelled projects are read-only.
- */
-async function whoFor(projectId: string): Promise<Who | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user?.email) return null;
-  const { data: project } = await supabase.from("projects").select("id, title, client_id, status").eq("id", projectId).maybeSingle();
-  if (!project) return null;
-  return { userEmail: user.email, isStudio: user.email.toLowerCase() === adminEmail(), project };
-}
+import { whoForProject } from "@/lib/portal/who";
 
 export type PrepareResult = { ok: true; path: string; token: string } | { ok: false; error: "auth" | "size" | "closed" | "storage" };
 
 /** Step 1 of an upload: a one-time signed URL for exactly this file. */
 export async function prepareUploadAction(input: { projectId: string; name: string; size: number }): Promise<PrepareResult> {
-  const who = await whoFor(String(input.projectId).slice(0, 60));
+  const who = await whoForProject(String(input.projectId).slice(0, 60));
   if (!who) return { ok: false, error: "auth" };
   if (who.project.status === "cancelled") return { ok: false, error: "closed" };
   if (!Number.isFinite(input.size) || input.size <= 0 || input.size > MAX_UPLOAD_BYTES) return { ok: false, error: "size" };
@@ -46,7 +29,7 @@ export type CompleteResult = { ok: true; id: string } | { ok: false; error: "aut
 /** Step 2: the bytes are in the bucket; record the file and, for studio deliveries, tell the client. */
 export async function completeUploadAction(input: { projectId: string; path: string; name: string; size: number; mime: string; notify?: boolean }): Promise<CompleteResult> {
   const projectId = String(input.projectId).slice(0, 60);
-  const who = await whoFor(projectId);
+  const who = await whoForProject(projectId);
   if (!who) return { ok: false, error: "auth" };
   const path = String(input.path);
   if (!path.startsWith(`uploads/${projectId}/`)) return { ok: false, error: "auth" };

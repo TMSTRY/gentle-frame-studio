@@ -5,12 +5,15 @@ import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
 import FileVault from "@/components/portal/FileVault";
 import PortalShell from "@/components/portal/PortalShell";
+import ReviewPanel from "@/components/portal/ReviewPanel";
 import { approveProjectAction } from "@/app/portal/actions";
 import { BackLink, buttonClass, EmptyRow, Notice, PageHeader, StatusTrack } from "@/components/portal/ui";
 import { requireUser } from "@/lib/portal/guard";
 import { docStatusLabel, formatDateFor, kindLabel, portalLang, serviceLabel, statusLabel, ui } from "@/lib/portal/i18n";
 import { checklistFor, listProjectFiles } from "@/lib/portal/files";
 import { formatMoney } from "@/lib/portal/labels";
+import { loadReview } from "@/lib/portal/review";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { DocumentRecord, Project, ProjectUpdate } from "@/lib/portal/types";
 import { adminEmail } from "@/lib/supabase/env";
 
@@ -21,7 +24,7 @@ export default async function PortalProjectPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ approved?: string; error?: string }>;
+  searchParams: Promise<{ approved?: string; error?: string; cut?: string }>;
 }) {
   const { supabase, user } = await requireUser();
   const { id } = await params;
@@ -35,6 +38,8 @@ export default async function PortalProjectPage({
     supabase.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).order("created_at", { ascending: false }),
     listProjectFiles(supabase, id),
   ]);
+  const review = await loadReview(supabase, createAdminClient(), id);
+  const currentCut = review.cuts.find((c) => c.id === flags.cut) ?? review.cuts[0] ?? null;
   const t = ui(lang);
   const documents = (docs ?? []) as Pick<DocumentRecord, "id" | "kind" | "number" | "title" | "status" | "total_cents" | "currency">[];
   if (!project) notFound();
@@ -55,6 +60,34 @@ export default async function PortalProjectPage({
       <div className="mt-12">
         <StatusTrack status={typed.status} lang={lang} ariaLabel={t.progress} />
       </div>
+
+      {currentCut ? (
+        <section id="review" className="mt-20">
+          <h2 className="text-eyebrow mb-4">{t.review.title}</h2>
+          <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">{t.review.lede}</p>
+          <ReviewPanel
+            cut={currentCut}
+            source={review.sources.get(currentCut.id) ?? null}
+            notes={review.notes.filter((n) => n.cut_id === currentCut.id)}
+            mode="client"
+            lang={lang}
+            labels={t.review}
+            readOnly={["cancelled", "closed"].includes(typed.status)}
+          />
+          {review.cuts.length > 1 ? (
+            <p className="mt-8 text-[0.66rem] tracking-[0.26em] text-taupe uppercase">
+              {t.review.earlier}:{" "}
+              {review.cuts
+                .filter((c) => c.id !== currentCut.id)
+                .map((c) => (
+                  <Link key={c.id} href={`/portal/projects/${id}?cut=${c.id}#review`} className="link-line ml-3 text-cream/70">
+                    {t.review.version} {c.version}
+                  </Link>
+                ))}
+            </p>
+          ) : null}
+        </section>
+      ) : null}
 
       {typed.status === "review" ? (
         <section className="mt-16 max-w-xl border-t border-line pt-8">
