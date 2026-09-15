@@ -21,11 +21,11 @@ export default function About() {
           {/* Portrait - two cards held like a hand of playing cards.
               The monogram card sits on top; hovering fans it right
               while the portrait behind it fans left into view. */}
-          <div className="md:col-span-5">
+          <div className="mb-8 md:col-span-5 md:mb-0">
             <Reveal>
               <Parallax speed={0.08}>
                 <figure
-                  className="group relative mx-auto max-w-[420px] cursor-pointer outline-none"
+                  className="group relative mx-auto max-w-[420px] cursor-pointer outline-none transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] max-md:data-[open=true]:scale-[0.8]"
                   tabIndex={0}
                   data-cursor="Meet"
                   data-open={open}
@@ -41,7 +41,7 @@ export default function About() {
                   <div className="absolute -top-4 -left-4 h-full w-full rounded-xl border border-champagne/25" aria-hidden="true" />
 
                   {/* Portrait card - behind, fans left on hover */}
-                  <div className={`absolute inset-0 origin-bottom overflow-hidden rounded-xl border border-champagne/40 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-back"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:-translate-x-[22%] md:group-hover:-translate-x-[30%] lg:group-hover:-translate-x-[44%] group-hover:-rotate-[8deg] group-focus-visible:-translate-x-[22%] md:group-focus-visible:-translate-x-[30%] lg:group-focus-visible:-translate-x-[44%] group-focus-visible:-rotate-[8deg] group-data-[open=true]:-translate-x-[22%] md:group-data-[open=true]:-translate-x-[30%] lg:group-data-[open=true]:-translate-x-[44%] group-data-[open=true]:-rotate-[8deg]`}>
+                  <div className={`absolute inset-0 origin-bottom overflow-hidden rounded-xl border border-champagne/40 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-back"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:-translate-x-[18%] md:group-hover:-translate-x-[30%] lg:group-hover:-translate-x-[34%] xl:group-hover:-translate-x-[44%] group-hover:-rotate-[8deg] group-focus-visible:-translate-x-[18%] md:group-focus-visible:-translate-x-[30%] lg:group-focus-visible:-translate-x-[34%] xl:group-focus-visible:-translate-x-[44%] group-focus-visible:-rotate-[8deg] group-data-[open=true]:-translate-x-[18%] md:group-data-[open=true]:-translate-x-[30%] lg:group-data-[open=true]:-translate-x-[34%] xl:group-data-[open=true]:-translate-x-[44%] group-data-[open=true]:-rotate-[8deg]`}>
                     <Image
                       src="/brand/artistiek.png"
                       alt={t.portraitAlt}
@@ -53,7 +53,7 @@ export default function About() {
                   </div>
 
                   {/* Monogram card - on top, fans right on hover */}
-                  <div className={`relative aspect-[4/5] origin-bottom overflow-hidden rounded-xl border border-champagne/50 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-top"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:translate-x-[22%] md:group-hover:translate-x-[30%] lg:group-hover:translate-x-[44%] group-hover:rotate-[8deg] group-focus-visible:translate-x-[22%] md:group-focus-visible:translate-x-[30%] lg:group-focus-visible:translate-x-[44%] group-focus-visible:rotate-[8deg] group-data-[open=true]:translate-x-[22%] md:group-data-[open=true]:translate-x-[30%] lg:group-data-[open=true]:translate-x-[44%] group-data-[open=true]:rotate-[8deg]`}>
+                  <div className={`relative aspect-[4/5] origin-bottom overflow-hidden rounded-xl border border-champagne/50 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "" : "animate-peek-top"} group-hover:[animation:none] group-focus-visible:[animation:none] group-hover:translate-x-[18%] md:group-hover:translate-x-[30%] lg:group-hover:translate-x-[34%] xl:group-hover:translate-x-[44%] group-hover:rotate-[8deg] group-focus-visible:translate-x-[18%] md:group-focus-visible:translate-x-[30%] lg:group-focus-visible:translate-x-[34%] xl:group-focus-visible:translate-x-[44%] group-focus-visible:rotate-[8deg] group-data-[open=true]:translate-x-[18%] md:group-data-[open=true]:translate-x-[30%] lg:group-data-[open=true]:translate-x-[34%] xl:group-data-[open=true]:translate-x-[44%] group-data-[open=true]:rotate-[8deg]`}>
                     <div
                       className="absolute inset-0"
                       style={{
