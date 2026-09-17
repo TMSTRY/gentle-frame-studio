@@ -70,13 +70,12 @@ Zie `supabase/portal/001_schema.sql` voor kolommen, enums, RLS en grants.
 | `PORTAL_ADMIN_EMAIL` | `timmostrey@gmail.com` (zelfde als in tabel `admins`) |
 | `CRON_SECRET` | willekeurige lange string; Vercel stuurt hem als Bearer-token mee naar de cron-route |
 
-SEO en portfolio (17 sep): naam Tim Mostrey ingebakken (metadata authors/creator/keywords, JSON-LD Organization + Person met sameAs naar tmstry.com, strafwetboek.vercel.app, excavara.com; handtekening "Tim Mostrey, oprichter"; footer "© jaar Gentle Frame Studio · Tim Mostrey"; site.ts heeft `founder`). Strafwetboek 2026 als eerste kaart + case (EN/NL) in het archief; cover public/work/strafwetboek.jpg gemaakt via headless Chrome + DevTools-protocol (scratch-script zet de localStorage-sleutel van de eenmalige melding vóór de screenshot). De Balie Gent deelde de site met haar leden. Aanbeveling, nog niet gedaan: op strafwetboek.vercel.app zelf een credit "Gemaakt door Tim Mostrey · Gentle Frame Studio" met link, want dat is de link die de Balie doorgeeft.
+SEO en portfolio (17 sep): naam Tim Mostrey ingebakken (metadata authors/creator/keywords, JSON-LD Organization + Person met sameAs naar tmstry.com, strafwetboek.vercel.app, excavara.com; handtekening "Tim Mostrey, oprichter"; footer "© jaar Gentle Frame Studio · Tim Mostrey"; site.ts heeft `founder`). Strafwetboek 2026 als eerste kaart + case (EN/NL) in het archief; cover public/work/strafwetboek.jpg gemaakt via headless Chrome + DevTools-protocol (scratch-script zet de localStorage-sleutel van de eenmalige melding vóór de screenshot). De Balie Gent deelde de site met haar leden. Bewust GEEN link of credit op strafwetboek.vercel.app zelf (beslissing uit het Strafwetboek-project: de tool blijft neutraal, gedeeld door de Balie Gent als gratis hulpmiddel; een commerciële link zou de geur veranderen en de nevenactiviteit-vraag bij Justitie vervroegen). De verwijzing loopt in één richting: studio → tool, via de case en de sameAs in de Person-schema.
 
 ## Openstaand (17 sep 2026)
 
 - Migraties 004, 005 en 006 zijn gedraaid (15 sep).
 - Tim: casetekst Strafwetboek nalezen (EN+NL), vooral de claim over de Balie Gent ("gedeeld met haar leden en zet ze op haar website").
-- Tim: zeggen of ik op strafwetboek.vercel.app een credit met link naar gentleframestudio.com mag zetten (eigen repo TMSTRY/strafwetboek).
 - Tim: de portaalsectie op de homepage bekijken (desktop + telefoon) en zeggen of de fictieve namen (Marie, Els, tante Rita) goed zitten.
 - Tim: de vier nieuwe functies testen met een testklant: bestand uploaden (klant en studio), versie publiceren, opmerking met tijdcode, goedkeuren → factuurontwerp controleren, bioscoopzaal openen en de link op een telefoon zonder login proberen (met en zonder kijkcode).
 - Later, niet gevraagd: blijvend archief-belofte (tekst in offerte), herinneringsdatum-mail, fysiek aandenken, spoedoptie.
