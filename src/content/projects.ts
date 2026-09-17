@@ -49,6 +49,17 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "strafwetboek",
+    title: "Strafwetboek 2026",
+    category: "Legal Platform",
+    year: "2026",
+    blurb: "Belgium’s new Criminal Code as a living dataset: 741 articles to search, compare and question, every amendment a readable diff.",
+    tone: { base: "#140c0b", glow: "#b25a52", light: "50% 18%" },
+    nl: { category: "Juridisch platform", blurb: "Het nieuwe Belgische Strafwetboek als levende dataset: 741 artikelen om te doorzoeken, te vergelijken en te bevragen, elke wijziging een leesbare diff.", },
+    image: "/work/strafwetboek.jpg",
+    url: "https://strafwetboek.vercel.app/",
+  },
+  {
     id: "ruimteschool",
     title: "Ruimteschool",
     category: "Learning Platform",

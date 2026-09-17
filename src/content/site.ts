@@ -15,6 +15,13 @@ export const site = {
   location: "Belgium",
   coordinates: "50.85°N · 4.35°E",
   founded: "2025",
+  founder: {
+    name: "Tim Mostrey",
+    role: "Founder, creative director and developer",
+    url: "https://www.tmstry.com",
+    /** Other places the same person is visibly behind; feeds the Person schema. */
+    sameAs: ["https://www.tmstry.com", "https://strafwetboek.vercel.app", "https://excavara.com"],
+  },
 } as const;
 
 export interface NavLink {

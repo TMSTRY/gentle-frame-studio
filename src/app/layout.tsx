@@ -28,7 +28,12 @@ export const metadata: Metadata = {
     template: `%s · ${site.legalName}`,
   },
   description: site.description,
+  authors: [{ name: site.founder.name, url: `${site.url}/#studio` }],
+  creator: site.founder.name,
+  publisher: site.legalName,
   keywords: [
+    "Tim Mostrey",
+    "Gentle Frame Studio",
     "memorial films",
     "AI film studio",
     "product films",
@@ -62,17 +67,35 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
+const founderSchema = {
+  "@type": "Person",
+  "@id": `${site.url}/#founder`,
+  name: site.founder.name,
+  jobTitle: site.founder.role,
+  url: `${site.url}/#studio`,
+  worksFor: { "@id": `${site.url}/#organization` },
+  sameAs: site.founder.sameAs,
+};
+
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: site.legalName,
-  alternateName: site.name,
-  url: site.url,
-  email: site.email,
-  slogan: site.tagline,
-  foundingDate: site.founded,
-  address: { "@type": "PostalAddress", addressCountry: "BE" },
-  description: site.description,
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${site.url}/#organization`,
+      name: site.legalName,
+      alternateName: site.name,
+      url: site.url,
+      email: site.email,
+      slogan: site.tagline,
+      foundingDate: site.founded,
+      founder: { "@id": `${site.url}/#founder` },
+      employee: { "@id": `${site.url}/#founder` },
+      address: { "@type": "PostalAddress", addressCountry: "BE" },
+      description: site.description,
+    },
+    founderSchema,
+  ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

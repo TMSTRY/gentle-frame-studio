@@ -30,6 +30,71 @@ export interface CaseStudy {
 
 export const cases: CaseStudy[] = [
   {
+    id: "strafwetboek",
+    standfirst: "Belgium’s new Criminal Code, in force since 1 September 2026, as a living dataset: 741 articles you can search, compare with the 1867 code and question, with every amendment kept as a readable diff.",
+    facts: [
+      { label: "What", value: "Public legal reference site, in Dutch" },
+      { label: "Made", value: "Data pipeline, parser, old-to-new mapping, search, interface, Claude layer" },
+      { label: "Stack", value: "Python, GitHub Actions, Supabase, Next.js, Claude" },
+      { label: "Status", value: "Live at strafwetboek.vercel.app; shared by the Ghent Bar with its members" },
+    ],
+    sections: [
+      {
+        title: "Why it exists",
+        paragraphs: [
+          "On 1 September 2026 Belgium replaced its Criminal Code of 1867. The official database, Justel, only ever shows the current text; what changed between two versions is left to whoever has the patience to lay printouts side by side. We wanted the opposite: every article as one record with a stable number, regenerated at every amendment, so that the history of Belgian criminal law becomes something you can read.",
+        ],
+      },
+      {
+        title: "What it does",
+        paragraphs: [
+          "Browse all 741 articles of Book I, Book II and the law on the security measure, search them by word or number, and see every offence sorted into the eight new penalty levels in one atlas. Compare the old 1867 articles with the ones that replaced them: for each of the 884 old articles the mapping names its successor with an honest certainty score, and anything below the threshold is marked as still to be checked. Ask a question and get an answer with the exact articles beside it, or practise with cases.",
+          "Nothing runs on a laptop. A push to the repository parses the source, validates it, commits the JSON and reloads the database; the site reads from there.",
+        ],
+      },
+      {
+        title: "Trust, earned slowly",
+        paragraphs: [
+          "This is a tool, not the law, and the site says so on every page. Its text was compared article by article with Justel on 17 September 2026 and all 741 matched; a reporting form lets a reader flag anything that looks off. When a repair law turned out to be missing from the source, the site said so in a notice instead of quietly fixing it. Lawyers noticed: the Ghent Bar shared the site with its members and is adding it to its website.",
+        ],
+      },
+    ],
+    closing: "The diff of Belgian criminal law, finally readable.",
+    visitLabel: "Visit Strafwetboek 2026",
+    nl: {
+      standfirst: "Het nieuwe Belgische Strafwetboek, in werking sinds 1 september 2026, als levende dataset: 741 artikelen die je doorzoekt, vergelijkt met het wetboek van 1867 en bevraagt, met elke wetswijziging bewaard als leesbare diff.",
+      facts: [
+        { label: "Wat", value: "Publieke juridische referentiesite, in het Nederlands" },
+        { label: "Gemaakt", value: "Datapijplijn, parser, mapping oud naar nieuw, zoekfunctie, interface, Claude-laag" },
+        { label: "Stack", value: "Python, GitHub Actions, Supabase, Next.js, Claude" },
+        { label: "Status", value: "Live op strafwetboek.vercel.app; door de Balie Gent gedeeld met haar leden" },
+      ],
+      sections: [
+        {
+          title: "Waarom het bestaat",
+          paragraphs: [
+            "Op 1 september 2026 verving België zijn Strafwetboek van 1867. De officiële databank, Justel, toont altijd alleen de huidige tekst; wat er tussen twee versies veranderde, is voor wie het geduld heeft om afdrukken naast elkaar te leggen. Wij wilden het omgekeerde: elk artikel als één record met een vast nummer, opnieuw gegenereerd bij elke wijziging, zodat de geschiedenis van het Belgische strafrecht iets wordt dat je kunt lezen.",
+          ],
+        },
+        {
+          title: "Wat het doet",
+          paragraphs: [
+            "Blader door alle 741 artikelen van boek I, boek II en de wet op de beveiligingsmaatregel, zoek op woord of artikelnummer, en zie elk misdrijf ingedeeld in de acht nieuwe strafniveaus in één atlas. Vergelijk de oude artikelen van 1867 met hun opvolgers: voor elk van de 884 oude artikelen noemt de mapping de nieuwe tegenhanger met een eerlijke zekerheidsscore, en alles onder de drempel staat gemarkeerd als nog te controleren. Stel een vraag en krijg een antwoord met de exacte artikelen ernaast, of oefen met casussen.",
+            "Er draait niets op een laptop. Een push naar de repository leest de bron, valideert ze, commit de JSON en herlaadt de databank; de site leest daaruit.",
+          ],
+        },
+        {
+          title: "Vertrouwen, traag verdiend",
+          paragraphs: [
+            "Dit is een hulpmiddel, niet de wet, en de site zegt dat op elke pagina. De tekst werd op 17 september 2026 artikel per artikel vergeleken met Justel en alle 741 kwamen overeen; via een meldingsformulier kan een lezer signaleren wat niet klopt. Toen bleek dat een reparatiewet in de bron ontbrak, zei de site dat in een melding in plaats van het stil te herstellen. Advocaten merkten het op: de Balie Gent deelde de site met haar leden en zet ze op haar website.",
+          ],
+        },
+      ],
+      closing: "De diff van het Belgische strafrecht, eindelijk leesbaar.",
+      visitLabel: "Bezoek Strafwetboek 2026",
+    },
+  },
+  {
     id: "ruimteschool",
     standfirst: "A learning universe for children: maths and French, practised between planets, with a badge for every small victory.",
     facts: [
