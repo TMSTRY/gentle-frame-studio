@@ -21,6 +21,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: project.title,
     description: study.standfirst,
+    authors: [{ name: site.founder.name, url: `${site.url}/#studio` }],
+    creator: site.founder.name,
     alternates: {
       canonical: path,
       languages: { en: `/work/${project.id}`, nl: `/nl/work/${project.id}`, "x-default": `/work/${project.id}` },
@@ -33,6 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: study.standfirst,
       locale: ({ en: "en_US", nl: "nl_BE" } as Record<Locale, string>)[LOCALE],
       images: project.image ? [{ url: project.image, width: 1200, height: 1600, alt: project.title }] : [{ url: "/og.jpg", width: 1200, height: 630 }],
+      authors: [`${site.url}/#studio`],
     },
   };
 }
