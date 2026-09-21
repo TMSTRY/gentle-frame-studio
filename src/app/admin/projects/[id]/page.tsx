@@ -237,7 +237,7 @@ export default async function ProjectDetailPage({
       <section id="screening" className="mt-20">
         <h2 className="text-eyebrow mb-4">Screening room</h2>
         <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">
-          A private page for the finished film, on an unguessable link the family can pass around, optionally behind a viewing code. Upload the final film under Files first. The client sees the link and code in their portal. Needs migration 006.
+          A private page for the finished film, on an unguessable link the family can pass around, optionally behind a viewing code. Upload the final film under Files first. The client sees the link and code in their portal. “Keepsake card” opens a print-ready A6 card with a QR for the memorial print or the USB box.
         </p>
         {screenings.length ? (
           <ul className="mb-12">
@@ -260,6 +260,8 @@ export default async function ProjectDetailPage({
                   </p>
                   <div className="mt-4 flex flex-wrap gap-6 text-[0.62rem] tracking-[0.26em] uppercase">
                     <CopyButton value={room.passcode ? `${screeningUrl(room.token)}\nCode: ${room.passcode}` : screeningUrl(room.token)} label="Copy link" doneLabel="Copied" />
+                    <a href={`/admin/screenings/${room.id}/card`} target="_blank" rel="noopener" className="text-champagne/80 hover:text-champagne">Keepsake card</a>
+                    <a href={`/admin/screenings/${room.id}/qr`} className="text-champagne/80 hover:text-champagne">QR</a>
                     <form action={toggleScreeningAction}>
                       <input type="hidden" name="id" value={room.id} />
                       <input type="hidden" name="project_id" value={typed.id} />

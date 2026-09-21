@@ -73,6 +73,18 @@ const UI = {
     docsAppear: "Quotes, invoices and contracts will appear here.",
     progress: "Project progress",
     downloadPdf: "Download PDF",
+    archivePromise: (years: number) => `What we deliver stays available in your portal for at least ${years} years, in the formats you need.`,
+    filesKept: (years: number) => `Your files and the finished work stay here for at least ${years} years.`,
+    remembrance: {
+      eyebrow: "Once a year",
+      lede: (date: string) => `Would you like a quiet note from us on ${date} each year, with the film? One sentence and a link, nothing else. You can stop it any time.`,
+      on: "Yes, once a year",
+      off: "No, thank you",
+      active: (date: string) => `You’ll hear from us on ${date} each year. One sentence and the film.`,
+      stop: "Stop these notes",
+      savedOn: "Noted. We’ll write once a year, gently.",
+      savedOff: "Understood. No yearly notes.",
+    },
     approve: {
       eyebrow: "Your approval",
       lede: "Watched the final version and happy with it? Approve it here. The project is then delivered, and the balance invoice (if any) will follow in your portal.",
@@ -116,7 +128,7 @@ const UI = {
     },
     files: {
       title: "Files",
-      lede: "Everything for this project in one place: what you share with us, and what we deliver to you. Files stay here for as long as the project exists.",
+      lede: "Everything for this project in one place: what you share with us, and what we deliver to you.",
       fromStudio: "From the studio",
       fromClient: "Your files",
       empty: "Nothing here yet.",
@@ -164,6 +176,18 @@ const UI = {
     docsAppear: "Offertes, facturen en contracten verschijnen hier.",
     progress: "Voortgang van het project",
     downloadPdf: "Download PDF",
+    archivePromise: (years: number) => `Wat we opleveren blijft minstens ${years} jaar beschikbaar in je portaal, in de formaten die je nodig hebt.`,
+    filesKept: (years: number) => `Je bestanden en het afgewerkte werk blijven hier minstens ${years} jaar staan.`,
+    remembrance: {
+      eyebrow: "Eén keer per jaar",
+      lede: (date: string) => `Wil je elk jaar op ${date} een stil berichtje van ons, met de film? Eén zin en een link, meer niet. Je kunt het altijd stopzetten.`,
+      on: "Ja, één keer per jaar",
+      off: "Nee, dank je",
+      active: (date: string) => `Je hoort elk jaar op ${date} van ons. Eén zin en de film.`,
+      stop: "Deze berichtjes stopzetten",
+      savedOn: "Genoteerd. We schrijven één keer per jaar, zachtjes.",
+      savedOff: "Begrepen. Geen jaarlijkse berichtjes.",
+    },
     approve: {
       eyebrow: "Jouw goedkeuring",
       lede: "De definitieve versie bekeken en tevreden? Keur ze hier goed. Het project staat dan op opgeleverd, en de saldofactuur (als die er is) volgt in je portaal.",
@@ -207,7 +231,7 @@ const UI = {
     },
     files: {
       title: "Bestanden",
-      lede: "Alles voor dit project op één plek: wat jij met ons deelt, en wat wij aan jou opleveren. Bestanden blijven hier staan zolang het project bestaat.",
+      lede: "Alles voor dit project op één plek: wat jij met ons deelt, en wat wij aan jou opleveren.",
       fromStudio: "Van de studio",
       fromClient: "Jouw bestanden",
       empty: "Nog niets hier.",
@@ -246,6 +270,11 @@ export const statusLabel = (lang: PortalLang, s: ProjectStatus) => (lang === "nl
 export const serviceLabel = (lang: PortalLang, s: ServiceKind) => (lang === "nl" ? SERVICE_NL : SERVICE_LABEL)[s];
 export const docStatusLabel = (lang: PortalLang, s: DocumentStatus) => (lang === "nl" ? DOC_STATUS_NL : DOC_STATUS_LABEL)[s];
 export const kindLabel = (lang: PortalLang, k: DocumentKind) => (lang === "nl" ? KIND_LABEL_NL : KIND_LABEL)[k];
+
+/** "14 March" / "14 maart": the date that comes back every year. */
+export function formatDayMonth(lang: PortalLang, value: string): string {
+  return new Date(value).toLocaleDateString(lang === "nl" ? "nl-BE" : "en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+}
 
 export function formatDateFor(lang: PortalLang, value: string | null | undefined): string {
   if (!value) return "·";

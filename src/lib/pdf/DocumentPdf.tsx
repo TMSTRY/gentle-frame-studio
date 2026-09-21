@@ -94,6 +94,10 @@ const words = (nl: boolean) => ({
   signedBy: nl ? "Elektronisch getekend door" : "Electronically signed by",
   signedOn: nl ? "op" : "on",
   hash: nl ? "Documentvingerafdruk" : "Document fingerprint",
+  archive: (years: number) =>
+    nl
+      ? `Wat we opleveren blijft minstens ${years} jaar beschikbaar in je portaal, in de formaten die je nodig hebt.`
+      : `What we deliver stays available in your portal for at least ${years} years, in the formats you need.`,
 });
 
 const formatMoment = (value: string, nl: boolean) =>
@@ -210,6 +214,12 @@ export default function DocumentPdf({ document, lines, client, studio, project, 
             {document.due_date ? <Text>{`${t.payBy} ${formatDate(document.due_date)}.`}</Text> : null}
             {studio.iban ? <Text>{`${t.iban} ${studio.iban}`}</Text> : null}
             {document.number ? <Text>{`${t.reference} ${document.number}`}</Text> : null}
+          </View>
+        ) : null}
+
+        {document.kind === "quote" && studio.archive_years > 0 ? (
+          <View style={[styles.body, { marginTop: 18 }]}>
+            <Text>{t.archive(studio.archive_years)}</Text>
           </View>
         ) : null}
 

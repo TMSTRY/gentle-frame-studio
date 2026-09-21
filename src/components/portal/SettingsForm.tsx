@@ -45,6 +45,9 @@ export default function SettingsForm({ studio }: { studio: StudioSettings }) {
         <Field label="Payment terms (days)" htmlFor="payment_terms_days">
           <input id="payment_terms_days" name="payment_terms_days" inputMode="numeric" defaultValue={String(studio.payment_terms_days)} className={inputClass} />
         </Field>
+        <Field label="Archive promise (years; 0 = don’t mention)" htmlFor="archive_years">
+          <input id="archive_years" name="archive_years" inputMode="numeric" defaultValue={String(studio.archive_years)} className={inputClass} />
+        </Field>
         <div className="md:col-span-2">
           <Field label="Closing line on every document" htmlFor="invoice_footer">
             <input id="invoice_footer" name="invoice_footer" defaultValue={studio.invoice_footer} className={inputClass} />

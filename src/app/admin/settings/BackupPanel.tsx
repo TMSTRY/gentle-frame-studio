@@ -21,15 +21,18 @@ export default function BackupPanel({ files }: { files: BackupFile[] }) {
       </div>
       <p className="max-w-xl text-sm leading-relaxed text-taupe">
         Every Monday the nightly job writes a full snapshot (clients, projects, documents, payments, signatures) to the
-        private storage bucket. The last twelve are kept.
+        private storage bucket. The last twelve are kept. Download one now and then to keep a copy outside Supabase.
       </p>
       {files.length ? (
         <ul className="mt-6">
           {files.map((file) => (
-            <li key={file.name} className="grid gap-2 border-t border-line py-3 text-sm md:grid-cols-[1fr_120px_160px]">
+            <li key={file.name} className="grid gap-2 border-t border-line py-3 text-sm md:grid-cols-[1fr_120px_160px_auto]">
               <span className="font-mono text-[0.8rem] text-cream/80">{file.name}</span>
               <span className="text-taupe">{Math.round(file.size / 1024)} KB</span>
               <span className="text-taupe">{new Date(file.created).toLocaleString("en-GB", { timeZone: "Europe/Brussels" })}</span>
+              <a href={`/admin/settings/backup/${encodeURIComponent(file.name)}`} className="text-[0.62rem] tracking-[0.26em] text-champagne/80 uppercase hover:text-champagne">
+                Download
+              </a>
             </li>
           ))}
         </ul>

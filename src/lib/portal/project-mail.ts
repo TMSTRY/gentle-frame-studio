@@ -74,3 +74,28 @@ export function fileDeliveredMail({ language, clientName, projectTitle, fileName
   );
   return { subject, html, text: `Hello ${clientName.split(" ")[0]},\n\nNew file in ${projectTitle}: ${fileName}\n${url}\n\nWarmly, Tim` };
 }
+
+/** One sentence, once a year, on the family's date. No news, no offers. */
+export function remembranceMail({ language, clientName, projectTitle, url }: { language: Lang; clientName: string; projectTitle: string; url: string }) {
+  const title = escapeHtml(projectTitle);
+  if (language === "nl") {
+    const subject = `Vandaag denken we aan jullie · ${projectTitle}`;
+    const html = wrapMail(
+      `Dag ${first(clientName)},`,
+      mailParagraph(`Vandaag denken we even aan jullie. De film <strong>${title}</strong> staat er nog altijd, voor wie hem wil zien.`) +
+        mailButton(url, "Bekijk de film") +
+        mailParagraph("Warm,<br/>Tim · Gentle Frame Studio") +
+        `<p style="margin:28px 0 0;font-size:12px;color:#978c78;">Je vroeg ons dit berichtje één keer per jaar te sturen. Liever niet meer? Zet het uit in je portaal, of antwoord gewoon op deze mail.</p>`,
+    );
+    return { subject, html, text: `Dag ${clientName.split(" ")[0]},\n\nVandaag denken we even aan jullie. De film ${projectTitle} staat er nog altijd: ${url}\n\nWarm, Tim\n\nLiever geen jaarlijks berichtje meer? Zet het uit in je portaal of antwoord op deze mail.` };
+  }
+  const subject = `Thinking of you today · ${projectTitle}`;
+  const html = wrapMail(
+    `Hello ${first(clientName)},`,
+    mailParagraph(`We’re thinking of you today. The film <strong>${title}</strong> is still there, for whoever wants to see it.`) +
+      mailButton(url, "Watch the film") +
+      mailParagraph("Warmly,<br/>Tim · Gentle Frame Studio") +
+      `<p style="margin:28px 0 0;font-size:12px;color:#978c78;">You asked us to send this note once a year. Rather not? Switch it off in your portal, or simply reply to this email.</p>`,
+  );
+  return { subject, html, text: `Hello ${clientName.split(" ")[0]},\n\nWe’re thinking of you today. The film ${projectTitle} is still there: ${url}\n\nWarmly, Tim\n\nRather no yearly note? Switch it off in your portal or reply to this email.` };
+}

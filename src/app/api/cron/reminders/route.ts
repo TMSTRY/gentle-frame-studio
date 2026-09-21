@@ -6,6 +6,7 @@ import { site } from "@/content/site";
 import { formatDate, formatMoney } from "@/lib/portal/labels";
 import { runBackup } from "@/lib/portal/backup";
 import { purgeFiles } from "@/lib/portal/files";
+import { remembranceMail } from "@/lib/portal/project-mail";
 import { reminderMail } from "@/lib/portal/reminder-mail";
 import { getResend, MAIL_FROM } from "@/lib/resend";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -24,11 +25,20 @@ interface DueRow {
   clients: { name: string; email: string; language: "nl" | "en" } | null;
 }
 
+interface RememberRow {
+  id: string;
+  title: string;
+  remembrance_date: string | null;
+  remembrance_last_year: number | null;
+  clients: { name: string; email: string; language: "nl" | "en" } | null;
+}
+
 const DAY = 86_400_000;
 const daysSince = (date: string) => Math.floor((Date.now() - new Date(date).getTime()) / DAY);
 
 /**
- * Runs once a day (vercel.json). Invoices past due become "overdue"
+ * Runs once a day (vercel.json). Families who asked get their yearly
+ * remembrance note on their date. Invoices past due become "overdue"
  * and the client gets a gentle reminder (again after 7 and 14 days);
  * expired quotes and unsigned contracts are listed for the studio.
  * On Mondays a full JSON backup lands in the private bucket.
@@ -61,6 +71,27 @@ export async function GET(request: Request) {
   for (const table of ["documents", "projects", "clients"] as const) {
     const { count } = await admin.from(table).delete({ count: "exact" }).lt("deleted_at", cutoff);
     if (count) digest.push(`Purged ${count} ${table} from the trash`);
+  }
+
+  // Remembrance: one quiet note a year, only to families who asked (migration 007).
+  const thisYear = Number(today.slice(0, 4));
+  const { data: remembering, error: remErr } = await admin
+    .from("projects")
+    .select("id, title, remembrance_date, remembrance_last_year, clients(name, email, language)")
+    .eq("remembrance_optin", true)
+    .not("remembrance_date", "is", null)
+    .is("deleted_at", null);
+  if (!remErr && resend) {
+    for (const row of (remembering ?? []) as unknown as RememberRow[]) {
+      if (!row.clients || !row.remembrance_date) continue;
+      if (row.remembrance_date.slice(5) !== today.slice(5) || row.remembrance_last_year === thisYear) continue;
+      const { data: room } = await admin.from("screenings").select("token").eq("project_id", row.id).is("revoked_at", null).order("created_at", { ascending: false }).limit(1).maybeSingle();
+      const url = room ? `${site.url}/screening/${room.token}` : `${site.url}/portal/projects/${row.id}`;
+      const mail = remembranceMail({ language: row.clients.language, clientName: row.clients.name, projectTitle: row.title, url });
+      const { error } = await resend.emails.send({ from: MAIL_FROM, to: row.clients.email, replyTo: site.email, subject: mail.subject, html: mail.html, text: mail.text });
+      if (!error) await admin.from("projects").update({ remembrance_last_year: thisYear }).eq("id", row.id);
+      digest.push(error ? `Remembrance note FAILED: ${row.title} · ${row.clients.name}` : `Remembrance note sent: ${row.title} · ${row.clients.name}`);
+    }
   }
 
   const { data } = await admin

@@ -27,6 +27,10 @@ export interface Project {
   description: string | null;
   start_date: string | null;
   due_date: string | null;
+  /** Migration 007: the date a family may receive one quiet note a year, and whether they asked for it. */
+  remembrance_date?: string | null;
+  remembrance_optin?: boolean;
+  remembrance_last_year?: number | null;
   deleted_at?: string | null;
   created_at: string;
   updated_at: string;
@@ -89,6 +93,8 @@ export interface StudioSettings {
   default_vat_rate: number;
   payment_terms_days: number;
   invoice_footer: string;
+  /** Promise printed on quotes and shown in the portal: deliverables stay available this many years (0 = say nothing). */
+  archive_years: number;
 }
 
 export const DEFAULT_STUDIO: StudioSettings = {
@@ -105,6 +111,7 @@ export const DEFAULT_STUDIO: StudioSettings = {
   default_vat_rate: 0,
   payment_terms_days: 14,
   invoice_footer: "Thank you for trusting us with your story.",
+  archive_years: 10,
 };
 
 export interface SignatureRecord {

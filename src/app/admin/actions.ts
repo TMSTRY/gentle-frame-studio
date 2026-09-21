@@ -107,7 +107,15 @@ function readProject(fd: FormData) {
     description: orNull(text(fd, "description", 4000)),
     start_date: orNull(text(fd, "start_date", 10)),
     due_date: orNull(text(fd, "due_date", 10)),
+    remembrance_date: orNull(text(fd, "remembrance_date", 10)),
   };
+}
+
+/** Before migration 007 the column doesn't exist; then the project saves without it. */
+function withoutRemembrance<T extends { remembrance_date?: string | null }>(values: T) {
+  const { remembrance_date: _dropped, ...rest } = values;
+  void _dropped;
+  return rest;
 }
 
 export async function createProjectAction(formData: FormData) {
@@ -117,7 +125,8 @@ export async function createProjectAction(formData: FormData) {
     redirect(`/admin/projects/new?client=${values.client_id}&error=invalid`);
   }
   const admin = createAdminClient();
-  const { data, error } = await admin.from("projects").insert(values).select("id").single();
+  let { data, error } = await admin.from("projects").insert(values).select("id").single();
+  if (error?.code === "42703") ({ data, error } = await admin.from("projects").insert(withoutRemembrance(values)).select("id").single());
   if (error || !data) redirect(`/admin/projects/new?client=${values.client_id}&error=save`);
   revalidatePath("/admin/projects");
   revalidatePath(`/admin/clients/${values.client_id}`);
@@ -131,7 +140,8 @@ export async function updateProjectAction(formData: FormData) {
   if (!id || values.title.length < 2) redirect(`/admin/projects/${id}?error=invalid`);
 
   const admin = createAdminClient();
-  const { error } = await admin.from("projects").update(values).eq("id", id);
+  let { error } = await admin.from("projects").update(values).eq("id", id);
+  if (error?.code === "42703") ({ error } = await admin.from("projects").update(withoutRemembrance(values)).eq("id", id));
   if (error) redirect(`/admin/projects/${id}?error=save`);
   revalidatePath(`/admin/projects/${id}`);
   revalidatePath("/admin/projects");

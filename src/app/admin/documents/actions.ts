@@ -190,6 +190,7 @@ export async function saveSettingsAction(formData: FormData) {
     default_vat_rate: Math.max(0, Math.min(100, Number(text(formData, "default_vat_rate", 6).replace(",", ".")) || 0)),
     payment_terms_days: Math.max(0, Number(text(formData, "payment_terms_days", 4)) || 14),
     invoice_footer: text(formData, "invoice_footer", 300) || "Thank you for trusting us with your story.",
+    archive_years: Math.max(0, Math.min(99, Number(text(formData, "archive_years", 3)) || 0)),
   };
   const admin = createAdminClient();
   const { error } = await admin.from("settings").upsert({ key: "studio", value, updated_at: new Date().toISOString() });

@@ -1,4 +1,5 @@
 import { saveDocumentAction } from "@/app/admin/documents/actions";
+import LinePresets from "@/components/portal/LinePresets";
 import { buttonClass, Field, inputClass } from "@/components/portal/ui";
 import { DOCUMENT_KINDS, KIND_LABEL, LINE_SLOTS, type DocumentKind } from "@/lib/portal/labels";
 import type { DocumentLine, DocumentRecord, StudioSettings } from "@/lib/portal/types";
@@ -78,6 +79,7 @@ export default function DocumentForm({ document, lines = [], clients, projects, 
 
       <div className="mt-12">
         <p className="text-eyebrow mb-4">Lines (quotes &amp; invoices)</p>
+        <LinePresets />
         <div className="hidden grid-cols-[1fr_80px_130px] gap-4 border-b border-line pb-2 text-[0.6rem] tracking-[0.26em] text-taupe uppercase md:grid">
           <span>Description</span>
           <span className="text-right">Qty</span>

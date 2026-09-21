@@ -126,7 +126,7 @@ const en: MemorialCopy = {
     title: "The details, plainly.",
     items: [
       { label: "Length", value: "From thirty seconds to about three minutes, depending on the material and the setting. Longer is possible when the story asks for it; every extra minute is real work, and priced as such." },
-      { label: "Timeline", value: "Typically two to four weeks. A ceremony version can be ready in days when it has to be." },
+      { label: "Timeline", value: "Typically two to four weeks. Is the ceremony within days? A rush version within 72 hours is possible, at a surcharge. Say so in your first message and we clear the decks." },
       { label: "Material", value: "Photos (prints or files), video fragments, voice messages, letters, music. Any quality: we restore." },
       { label: "Languages", value: "Dutch and English. Other languages in collaboration with the family." },
       { label: "Where", value: "Belgium in person, everywhere remotely." },
@@ -265,7 +265,7 @@ const nl: MemorialCopy = {
     title: "De details, gewoon gezegd.",
     items: [
       { label: "Lengte", value: "Van dertig seconden tot ongeveer drie minuten, afhankelijk van het materiaal en de gelegenheid. Langer kan als het verhaal erom vraagt; elke extra minuut is echt werk, en wordt ook zo geprijsd." },
-      { label: "Doorlooptijd", value: "Meestal twee tot vier weken. Een versie voor de dienst kan in enkele dagen klaar zijn als het moet." },
+      { label: "Doorlooptijd", value: "Meestal twee tot vier weken. Is de plechtigheid binnen enkele dagen? Een spoedversie binnen 72 uur kan, tegen meerprijs. Zeg het in je eerste bericht en we maken plaats." },
       { label: "Materiaal", value: "Foto’s (afdrukken of bestanden), videofragmenten, spraakberichten, brieven, muziek. Elke kwaliteit: wij herstellen." },
       { label: "Talen", value: "Nederlands en Engels. Andere talen in samenspraak met de familie." },
       { label: "Waar", value: "In België ter plaatse, overal op afstand." },

@@ -7,10 +7,11 @@ import CopyButton from "@/components/portal/CopyButton";
 import FileVault from "@/components/portal/FileVault";
 import PortalShell from "@/components/portal/PortalShell";
 import ReviewPanel from "@/components/portal/ReviewPanel";
-import { approveProjectAction } from "@/app/portal/actions";
+import { approveProjectAction, setRemembranceAction } from "@/app/portal/actions";
 import { BackLink, buttonClass, EmptyRow, Notice, PageHeader, StatusTrack } from "@/components/portal/ui";
 import { requireUser } from "@/lib/portal/guard";
-import { docStatusLabel, formatDateFor, kindLabel, portalLang, serviceLabel, statusLabel, ui } from "@/lib/portal/i18n";
+import { docStatusLabel, formatDateFor, formatDayMonth, kindLabel, portalLang, serviceLabel, statusLabel, ui } from "@/lib/portal/i18n";
+import { loadStudio } from "@/lib/portal/documents";
 import { checklistFor, listProjectFiles } from "@/lib/portal/files";
 import { formatMoney } from "@/lib/portal/labels";
 import { loadReview } from "@/lib/portal/review";
@@ -26,7 +27,7 @@ export default async function PortalProjectPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ approved?: string; error?: string; cut?: string }>;
+  searchParams: Promise<{ approved?: string; error?: string; cut?: string; remembrance?: string }>;
 }) {
   const { supabase, user } = await requireUser();
   const { id } = await params;
@@ -40,7 +41,7 @@ export default async function PortalProjectPage({
     supabase.from("documents").select("id, kind, number, title, status, total_cents, currency").eq("project_id", id).order("created_at", { ascending: false }),
     listProjectFiles(supabase, id),
   ]);
-  const [review, screenings] = await Promise.all([loadReview(supabase, createAdminClient(), id), listScreenings(supabase, id)]);
+  const [review, screenings, studio] = await Promise.all([loadReview(supabase, createAdminClient(), id), listScreenings(supabase, id), loadStudio(supabase)]);
   const openRooms = screenings.filter((room) => screeningState(room) === "open");
   const currentCut = review.cuts.find((c) => c.id === flags.cut) ?? review.cuts[0] ?? null;
   const t = ui(lang);
@@ -173,9 +174,35 @@ export default async function PortalProjectPage({
         </section>
       ) : null}
 
+      {typed.remembrance_date ? (
+        <section id="remembrance" className="mt-20 max-w-xl border-t border-line pt-8">
+          <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{t.remembrance.eyebrow}</p>
+          {flags.remembrance === "on" ? <p className="mt-3 text-sm text-champagne">{t.remembrance.savedOn}</p> : null}
+          {flags.remembrance === "off" ? <p className="mt-3 text-sm text-champagne">{t.remembrance.savedOff}</p> : null}
+          {typed.remembrance_optin ? (
+            <form action={setRemembranceAction} className="mt-4 flex flex-wrap items-center gap-6">
+              <input type="hidden" name="id" value={typed.id} />
+              <input type="hidden" name="on" value="0" />
+              <p className="text-sm leading-relaxed text-cream/80">{t.remembrance.active(formatDayMonth(lang, typed.remembrance_date))}</p>
+              <button type="submit" className="link-line text-[0.62rem] tracking-[0.26em] text-taupe uppercase hover:text-cream">{t.remembrance.stop}</button>
+            </form>
+          ) : (
+            <form action={setRemembranceAction} className="mt-4">
+              <input type="hidden" name="id" value={typed.id} />
+              <input type="hidden" name="on" value="1" />
+              <p className="text-sm leading-relaxed text-cream/80">{t.remembrance.lede(formatDayMonth(lang, typed.remembrance_date))}</p>
+              <button type="submit" className={`${buttonClass} mt-6`}>{t.remembrance.on}</button>
+            </form>
+          )}
+        </section>
+      ) : null}
+
       <section className="mt-20">
         <h2 className="text-eyebrow mb-4">{t.files.title}</h2>
-        <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">{t.files.lede}</p>
+        <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">
+          {t.files.lede}
+          {studio.archive_years > 0 ? ` ${t.filesKept(studio.archive_years)}` : ""}
+        </p>
         <FileVault
           projectId={typed.id}
           files={files}

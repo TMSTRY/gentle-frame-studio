@@ -231,3 +231,23 @@ export async function approveProjectAction(formData: FormData) {
   }
   redirect(`/portal/projects/${id}?approved=1`);
 }
+
+/**
+ * The family decides whether they want one quiet note a year, on the
+ * date the studio set. Ownership is proven by reading the project as
+ * the signed-in client; the write runs with the service role.
+ */
+export async function setRemembranceAction(formData: FormData) {
+  const id = String(formData.get("id") ?? "").slice(0, 60);
+  const on = formData.get("on") === "1";
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/portal/login");
+  const { data: project } = await supabase.from("projects").select("id, remembrance_date").eq("id", id).maybeSingle();
+  if (!project || !project.remembrance_date) redirect(`/portal/projects/${id}`);
+  const { createAdminClient } = await import("@/lib/supabase/admin");
+  await createAdminClient().from("projects").update({ remembrance_optin: on }).eq("id", id);
+  redirect(`/portal/projects/${id}?remembrance=${on ? "on" : "off"}#remembrance`);
+}

@@ -64,6 +64,18 @@ export default function ProjectForm({ project, clients, defaultClientId }: Proje
         </div>
       </div>
 
+      <div className="mt-8 max-w-xs">
+        <Field label="Remembrance date (memorial films: the date they passed; the family opts in, migration 007)" htmlFor="remembrance_date">
+          <input id="remembrance_date" name="remembrance_date" type="date" defaultValue={project?.remembrance_date ?? ""} className={`${inputClass} [color-scheme:dark]`} />
+        </Field>
+        {project?.remembrance_date ? (
+          <p className="mt-2 text-xs text-taupe">
+            {project.remembrance_optin ? "The family asked for the yearly note." : "The family has not opted in (yet)."}
+            {project.remembrance_last_year ? ` Last sent in ${project.remembrance_last_year}.` : ""}
+          </p>
+        ) : null}
+      </div>
+
       <div className="mt-8">
         <Field label="Description (visible to the client)" htmlFor="description">
           <textarea id="description" name="description" rows={4} defaultValue={project?.description ?? ""} className={`${inputClass} resize-none leading-relaxed`} />

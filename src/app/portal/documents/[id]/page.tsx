@@ -94,6 +94,10 @@ export default async function PortalDocumentPage({
         </ul>
       ) : null}
 
+      {document.kind === "quote" && studio.archive_years > 0 ? (
+        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-taupe">{t.archivePromise(studio.archive_years)}</p>
+      ) : null}
+
       {document.body ? (
         <section className="mt-12">
           <p className="max-w-2xl text-[0.95rem] leading-[1.9] whitespace-pre-line text-cream/80">{document.body}</p>

@@ -72,16 +72,22 @@ Zie `supabase/portal/001_schema.sql` voor kolommen, enums, RLS en grants.
 
 SEO en portfolio (17 sep): naam Tim Mostrey ingebakken (metadata authors/creator/keywords, JSON-LD Organization + Person met sameAs naar tmstry.com, strafwetboek.vercel.app, excavara.com; handtekening "Tim Mostrey, oprichter"; footer "© jaar Gentle Frame Studio · Tim Mostrey"; site.ts heeft `founder`). Strafwetboek 2026 als eerste kaart + case (EN/NL) in het archief; cover public/work/strafwetboek.jpg gemaakt via headless Chrome + DevTools-protocol (scratch-script zet de localStorage-sleutel van de eenmalige melding vóór de screenshot). De Balie Gent deelde de site met haar leden. Bewust GEEN link of credit op strafwetboek.vercel.app zelf (beslissing uit het Strafwetboek-project: de tool blijft neutraal, gedeeld door de Balie Gent als gratis hulpmiddel; een commerciële link zou de geur veranderen en de nevenactiviteit-vraag bij Justitie vervroegen). De verwijzing loopt in één richting: studio → tool, via de case en de sameAs in de Person-schema.
 
-## Openstaand (17 sep 2026)
+Premium, tweede reeks (21 sep): (5) Archiefbelofte als instelling `settings.studio.archive_years` (standaard 10, 0 = niets zeggen) op /admin/settings; staat als zin op elke offerte-PDF, op de offertepagina in het portaal en bij Bestanden op de projectpagina. (6) Spoedoptie: expliciet in de tekst van de herinneringsfilm-pagina ("spoedversie binnen 72 uur, tegen meerprijs") en als snelkeuze in de offerte-editor (components/portal/LinePresets.tsx: spoed, USB-aandenken, QR-kaartjes, extra minuut, extra revisieronde; prijs typt Tim zelf). (7) Herinneringsdatum (migratie 007: projects.remembrance_date/optin/last_year): Tim zet de datum op het project, de familie kiest zelf in het portaal ("Eén keer per jaar"), de cron stuurt op die dag één zin met link naar de open bioscoopzaal of het project, hoogstens één keer per jaar; opt-out in het portaal of door te antwoorden. Opslaan van projecten werkt ook vóór migratie 007 (valt terug zonder het veld). (8) Fysiek aandenken: per bioscoopzaal in de admin "Keepsake card" (printklaar A6-kaartje, crème, met QR, adres en kijkcode, /admin/screenings/[id]/card) en "QR" (vector-SVG-download, /admin/screenings/[id]/qr); pakket `qrcode`. Bonus: back-ups downloaden vanuit /admin/settings (route /admin/settings/backup/[name], signed URL). Daarmee is het premiumlijstje van 15 sep volledig gebouwd.
+
+## Openstaand (21 sep 2026)
+
+- Tim: migratie 007 (remembrance) plakken in de Supabase SQL Editor (op het klembord).
+- Tim: instelling "Archive promise" nakijken op /admin/settings (staat op 10 jaar); wil je dat niet beloven, zet ze op 0.
+- Tim: bij een testproject een herinneringsdatum zetten, in het portaal als klant "Ja, één keer per jaar" kiezen, en de tekst van de mail beoordelen (project-mail.ts, remembranceMail).
+- Tim: "Keepsake card" openen bij een bioscoopzaal en eens afdrukken op A6.
 
 - Migraties 004, 005 en 006 zijn gedraaid (15 sep).
 - Tim: casetekst Strafwetboek nalezen (EN+NL), vooral de claim over de Balie Gent ("gedeeld met haar leden en zet ze op haar website").
 - Tim: de portaalsectie op de homepage bekijken (desktop + telefoon) en zeggen of de fictieve namen (Marie, Els, tante Rita) goed zitten.
 - Tim: de vier nieuwe functies testen met een testklant: bestand uploaden (klant en studio), versie publiceren, opmerking met tijdcode, goedkeuren → factuurontwerp controleren, bioscoopzaal openen en de link op een telefoon zonder login proberen (met en zonder kijkcode).
-- Later, niet gevraagd: blijvend archief-belofte (tekst in offerte), herinneringsdatum-mail, fysiek aandenken, spoedoptie.
 
 - Cases NL (15 sep, commit eedaa11): alle 7 verhalen vertaald in cases.ts (veld `nl`), zonder Tims correcties; Tim leest EN én NL na op /nl/work/[slug] en geeft correcties door, die pas ik dan in beide talen toe.
 - Tim: 2FA op Gmail/Vercel/Supabase bevestigen; rondje mobiel.
 - Mollie: pas zodra er een ondernemingsnummer is (KYC). Dan MOLLIE_API_KEY (test_) in Vercel, ik bouw checkout + webhook; factuur op paid.
 - Btw-nummer later invullen in settings.studio en in privacy.ts ("Wie verantwoordelijk is"); dan Peppol plannen.
-- Optioneel: Supabase Auth e-mailtemplate in huisstijl; back-up-download buiten Supabase; itsme.
+- Optioneel: Supabase Auth e-mailtemplate in huisstijl; itsme.
