@@ -76,7 +76,7 @@ Premium, tweede reeks (21 sep): (5) Archiefbelofte als instelling `settings.stud
 
 ## Openstaand (21 sep 2026)
 
-- Tim: migratie 007 (remembrance) plakken in de Supabase SQL Editor (op het klembord).
+- Migraties 001 t/m 007 zijn allemaal gedraaid (007 op 21 sep, gecontroleerd via information_schema).
 - Tim: instelling "Archive promise" nakijken op /admin/settings (staat op 10 jaar); wil je dat niet beloven, zet ze op 0.
 - Tim: bij een testproject een herinneringsdatum zetten, in het portaal als klant "Ja, één keer per jaar" kiezen, en de tekst van de mail beoordelen (project-mail.ts, remembranceMail).
 - Tim: "Keepsake card" openen bij een bioscoopzaal en eens afdrukken op A6.
