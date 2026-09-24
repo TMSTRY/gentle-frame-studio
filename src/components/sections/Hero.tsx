@@ -108,6 +108,29 @@ export default function Hero() {
     // --- Beat 2: the frames come together (the scene is held by CSS sticky)
     // Offsets mirror the centering classes: back sits at -72% / -65%,
     // front at -28% / -35%; one frame means both at -50% / -50%.
+    //
+    // The single frame centres on the headline and, where the headline is
+    // taller than the frame (a phone, where it breaks into four lines),
+    // grows until the text sits inside with room to breathe. A frame edge
+    // must never run through a line of text: it would read as a strike.
+    const h1 = section.querySelector("h1");
+    const fit = () => {
+      if (!h1) return { scale: 1, dy: 0 };
+      const text = h1.getBoundingClientRect();
+      const scene = stage.getBoundingClientRect();
+      const width = Math.min(window.innerWidth * 0.74, 760);
+      const frameW = width * 0.92; // the rect spans 92 of the 100 viewBox units
+      const frameH = width * 0.74; // and 74 of the 82
+      const room = Math.max(26, text.height * 0.14);
+      const needed = (text.height + room * 2) / frameH;
+      const widest = (window.innerWidth - 28) / frameW;
+      return {
+        scale: Math.min(Math.max(1, needed), Math.max(1, widest)),
+        dy: text.top + text.height / 2 - (scene.top + scene.height / 2),
+      };
+    };
+    let fitted = fit();
+
     const converge = gsap.timeline({
       defaults: { ease: "none" },
       scrollTrigger: {
@@ -115,6 +138,10 @@ export default function Hero() {
         start: "top top",
         end: "bottom bottom",
         scrub: true,
+        invalidateOnRefresh: true,
+        onRefreshInit: () => {
+          fitted = fit();
+        },
         onUpdate: (self) => {
           reach = 1 - self.progress;
           drift();
@@ -126,8 +153,16 @@ export default function Hero() {
       .to(q("[data-hero-out-top]"), { autoAlpha: 0, y: -16, duration: 0.3 }, 0.03)
       .to(q("[data-hero-out-lede]"), { autoAlpha: 0, y: 16, duration: 0.3 }, 0.05)
       .to(q("[data-hero-out-bar]"), { scaleX: 0, autoAlpha: 0, duration: 0.34, ease: "power2.in" }, 0.05)
-      .to(q("[data-hero-converge-back]"), { xPercent: 22, yPercent: 15, duration: 0.8, ease: "power2.inOut" }, 0.1)
-      .to(q("[data-hero-converge-front]"), { xPercent: -22, yPercent: -15, duration: 0.8, ease: "power2.inOut" }, 0.1)
+      .to(
+        q("[data-hero-converge-back]"),
+        { xPercent: 22, yPercent: 15, y: () => fitted.dy, scale: () => fitted.scale, duration: 0.8, ease: "power2.inOut" },
+        0.1,
+      )
+      .to(
+        q("[data-hero-converge-front]"),
+        { xPercent: -22, yPercent: -15, y: () => fitted.dy, scale: () => fitted.scale, duration: 0.8, ease: "power2.inOut" },
+        0.1,
+      )
       // The lock: the back frame dissolves into the front one, which takes the light.
       .to(q("[data-hero-back]"), { opacity: 0, duration: 0.1 }, 0.84)
       .to(q("[data-hero-lock-stroke]"), { opacity: 1, duration: 0.12 }, 0.82)
@@ -148,7 +183,7 @@ export default function Hero() {
       // Hold the scene back a little as it scrolls off: a slower exit reads as depth.
       .to(stage, { y: () => window.innerHeight * 0.3, duration: 1 }, 0)
       .to(q("[data-hero-frames]"), { scale: 1.32, duration: 1, ease: "power1.in" }, 0)
-      .to(q("[data-hero-frames]"), { autoAlpha: 0, duration: 0.5 }, 0.3)
+      .to(q("[data-hero-frames]"), { autoAlpha: 0, duration: 0.4 }, 0.15)
       .to(q("[data-hero-lift]"), { yPercent: -120, duration: 0.45, stagger: 0.04, ease: "power2.in" }, 0.06);
 
     return () => {
