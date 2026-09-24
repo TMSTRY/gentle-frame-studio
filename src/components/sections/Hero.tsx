@@ -30,7 +30,13 @@ export default function Hero() {
   const stageRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
   const t = siteUi(locale).hero;
-  const HEADLINE = t.headline.map((line) => ({ words: [...line.words], tail: "tail" in line ? { word: line.tail as string } : undefined }));
+  const HEADLINE = (t.headline as ReadonlyArray<{ words: readonly string[]; tail?: string }>).map((line) => ({
+    words: [...line.words],
+    tail: line.tail ? { word: line.tail } : undefined,
+  }));
+  // A headline in three lines is set at two-thirds size, so the block keeps
+  // the height of two and stays clear of the frame edges.
+  const headlineSize = HEADLINE.length > 2 ? "text-[clamp(3rem,6vw,5.5rem)]" : "text-[clamp(3rem,9vw,8.25rem)]";
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -41,7 +47,7 @@ export default function Hero() {
     const one = (selector: string) => section.querySelector<HTMLElement>(selector);
 
     if (prefersReducedMotion()) {
-      gsap.set(q("[data-hero-back] rect, [data-hero-front] rect"), { strokeDashoffset: 0 });
+      gsap.set(q("[data-hero-back] rect, [data-hero-front] rect"), { strokeDashoffset: 0, strokeDasharray: "none" });
       gsap.set(q(".reveal-word"), { yPercent: 0, y: 0 });
       gsap.set(q("[data-hero-fade]"), { opacity: 1 });
       return;
@@ -60,6 +66,9 @@ export default function Hero() {
         .timeline({ defaults: { ease: "power3.out" } })
         .to(q("[data-hero-back] rect"), { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, 0)
         .to(q("[data-hero-front] rect"), { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, 0.35)
+        // Drawn: make each stroke one closed line. A dash that starts and
+        // ends at the same corner leaves a faint tick where its ends overlap.
+        .set(q("[data-hero-back] rect, [data-hero-front] rect"), { strokeDasharray: "none" }, 1.8)
         .to(q("[data-hero-bar]"), { scaleX: 1, duration: 0.6, ease: "power2.inOut" }, 1.3)
         .to(q(".reveal-word"), { yPercent: 0, duration: 1.2, stagger: 0.09 }, 0.5)
         .to(q("[data-hero-fade]"), { opacity: 1, duration: 1.4, stagger: 0.12 }, 1.4);
@@ -114,6 +123,7 @@ export default function Hero() {
     // grows until the text sits inside with room to breathe. A frame edge
     // must never run through a line of text: it would read as a strike.
     const h1 = section.querySelector("h1");
+    const frameBox = section.querySelector<HTMLElement>("[data-hero-converge-front]")?.parentElement ?? null;
     const fit = () => {
       if (!h1) return { scale: 1, dy: 0 };
       const text = h1.getBoundingClientRect();
@@ -127,13 +137,15 @@ export default function Hero() {
         right = Math.max(right, box.right);
       });
       const textW = right > left ? right - left : text.width;
-      const width = Math.min(window.innerWidth * 0.74, 760);
+      // The frame's own layout width (its centring wrapper, untouched by any
+      // transform). window.innerWidth can count a scrollbar that 74vw doesn't.
+      const width = frameBox?.offsetWidth || Math.min(scene.width * 0.74, 760);
       const frameW = width * 0.92; // the rect spans 92 of the 100 viewBox units
       const frameH = width * 0.74; // and 74 of the 82
       const room = Math.max(26, text.height * 0.14);
       const tall = (text.height + room * 2) / frameH; // clear the lines above and below
       const wide = (textW + 16) / frameW; // hold every word inside the sides
-      const cap = Math.min((window.innerWidth - 28) / frameW, (window.innerHeight - 112) / frameH);
+      const cap = Math.min((scene.width - 28) / frameW, (scene.height - 112) / frameH);
       // Enclose the whole headline where the screen allows it (phones,
       // portrait tablets); on wide screens the headline is meant to
       // overhang the frame, so only the vertical clearance applies.
@@ -319,7 +331,7 @@ export default function Hero() {
                 {t.eyebrow(site.location)}
               </p>
             </div>
-            <h1 className="font-display text-[clamp(3rem,9vw,8.25rem)] leading-[1.02] font-medium tracking-[-0.01em] text-cream">
+            <h1 className={`font-display ${headlineSize} leading-[1.02] font-medium tracking-[-0.01em] text-cream`}>
               {HEADLINE.map((line, lineIndex) => (
                 <span key={lineIndex} className="block">
                   {line.words.map((word) => (

@@ -158,9 +158,13 @@ const UI = {
     header: { backToTop: "Gentle Frame Studio, terug naar boven", openMenu: "Menu openen", closeMenu: "Menu sluiten", switchTo: "EN", switchLabel: "English" },
     hero: {
       eyebrow: (location: string) => `Een cinematografische creatieve studio · ${location === "Belgium" ? "België" : location}, wereldwijd aan het werk`,
+      // Three lines: the Dutch sentence is half again as wide as the English
+      // one and would reach past the frames. The hero sets a three-line
+      // headline at two-thirds size, so the block keeps the height of two.
       headline: [
         { words: ["Waar", "herinnering"] },
-        { words: ["en"], tail: "verbeelding samenkomen." },
+        { words: ["en"], tail: "verbeelding" },
+        { words: [], tail: "samenkomen." },
       ],
       lede1: "We maken herinneringsfilms, luxebeelden en stille software.",
       lede2: "Met nieuwe werktuigen en een ouderwets hart.",
