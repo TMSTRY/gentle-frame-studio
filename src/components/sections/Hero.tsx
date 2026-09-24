@@ -118,14 +118,29 @@ export default function Hero() {
       if (!h1) return { scale: 1, dy: 0 };
       const text = h1.getBoundingClientRect();
       const scene = stage.getBoundingClientRect();
+      // Width of the widest visual line: the words, not the h1 box.
+      let left = Infinity;
+      let right = -Infinity;
+      h1.querySelectorAll<HTMLElement>(".reveal-slot").forEach((slot) => {
+        const box = slot.getBoundingClientRect();
+        left = Math.min(left, box.left);
+        right = Math.max(right, box.right);
+      });
+      const textW = right > left ? right - left : text.width;
       const width = Math.min(window.innerWidth * 0.74, 760);
       const frameW = width * 0.92; // the rect spans 92 of the 100 viewBox units
       const frameH = width * 0.74; // and 74 of the 82
       const room = Math.max(26, text.height * 0.14);
-      const needed = (text.height + room * 2) / frameH;
-      const widest = (window.innerWidth - 28) / frameW;
+      const tall = (text.height + room * 2) / frameH; // clear the lines above and below
+      const wide = (textW + 16) / frameW; // hold every word inside the sides
+      const cap = Math.min((window.innerWidth - 28) / frameW, (window.innerHeight - 112) / frameH);
+      // Enclose the whole headline where the screen allows it (phones,
+      // portrait tablets); on wide screens the headline is meant to
+      // overhang the frame, so only the vertical clearance applies.
+      let scale = Math.max(1, tall);
+      if (wide <= cap) scale = Math.max(scale, wide);
       return {
-        scale: Math.min(Math.max(1, needed), Math.max(1, widest)),
+        scale: Math.min(scale, Math.max(1, cap)),
         dy: text.top + text.height / 2 - (scene.top + scene.height / 2),
       };
     };
