@@ -1,11 +1,16 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import FrameMark from "@/components/brand/FrameMark";
 import Wordmark from "@/components/brand/Wordmark";
 import Reveal from "@/components/fx/Reveal";
 import { site } from "@/content/site";
 import { localePath, useLocale } from "@/lib/i18n/locale";
 import { siteUi } from "@/lib/i18n/site-ui";
+import { gsap } from "@/lib/gsap";
+import { prefersReducedMotion } from "@/lib/motion";
+
+const WORDMARK = "GENTLE FRAMES";
 
 /**
  * Quiet closing credits: navigation, socials and contact above a
@@ -17,6 +22,32 @@ export default function Footer() {
   const t = siteUi(locale);
   const f = t.footer;
   const home = localePath(locale, "/");
+  const wordmarkRef = useRef<HTMLDivElement>(null);
+
+  // Closing credits: the letters of the wordmark start wide apart and
+  // settle into the name as you reach the end, the same gesture the
+  // opening title card makes with the studio's name.
+  useEffect(() => {
+    const wordmark = wordmarkRef.current;
+    if (!wordmark || prefersReducedMotion()) return;
+    const letters = Array.from(wordmark.querySelectorAll<HTMLElement>("[data-letter]"));
+    const centre = (WORDMARK.length - 1) / 2;
+    const spread = () => wordmark.getBoundingClientRect().height * 0.11;
+    const tween = gsap.fromTo(
+      letters,
+      { x: (_, el: HTMLElement) => (Number(el.dataset.letter) - centre) * spread(), opacity: 0.35 },
+      {
+        x: 0,
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: { trigger: wordmark, start: "top bottom", end: "bottom bottom-=40", scrub: true, invalidateOnRefresh: true },
+      },
+    );
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
 
   return (
     <footer className="relative overflow-hidden border-t border-line">
@@ -81,10 +112,19 @@ export default function Footer() {
         </Reveal>
 
         <div
+          ref={wordmarkRef}
           className="font-display text-outline pointer-events-none mt-24 text-center text-[11.5vw] leading-none font-medium whitespace-nowrap select-none"
           aria-hidden="true"
         >
-          GENTLE FRAMES
+          {WORDMARK.split("").map((char, index) =>
+            char === " " ? (
+              " "
+            ) : (
+              <span key={index} data-letter={index} className="inline-block">
+                {char}
+              </span>
+            ),
+          )}
         </div>
 
         <div className="mt-16 flex flex-col items-center justify-between gap-3 border-t border-line pt-8 text-[0.65rem] tracking-[0.22em] text-taupe uppercase md:flex-row">

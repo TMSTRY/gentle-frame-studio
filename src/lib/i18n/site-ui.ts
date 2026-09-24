@@ -25,6 +25,7 @@ const UI = {
       lede1: "We craft memorial films, luxury visuals and quiet software.",
       lede2: "With new tools and an old-fashioned heart.",
       scroll: "Scroll",
+      place: "Belgium",
       ariaLabel: "Gentle Frame Studio, where memories meet imagination",
     },
     manifesto: {
@@ -164,6 +165,7 @@ const UI = {
       lede1: "We maken herinneringsfilms, luxebeelden en stille software.",
       lede2: "Met nieuwe werktuigen en een ouderwets hart.",
       scroll: "Scroll",
+      place: "België",
       ariaLabel: "Gentle Frame Studio, waar herinnering en verbeelding samenkomen",
     },
     manifesto: {

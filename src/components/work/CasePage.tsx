@@ -1,6 +1,7 @@
 import Link from "next/link";
 import FrameMark from "@/components/brand/FrameMark";
 import Reveal from "@/components/fx/Reveal";
+import TitleReveal from "@/components/fx/TitleReveal";
 import ScrollToTop from "@/components/fx/ScrollToTop";
 import CaseFilm from "@/components/work/CaseFilm";
 import FilmStill from "@/components/work/FilmStill";
@@ -52,12 +53,14 @@ export default function CasePage({ project, study, prev, next, locale }: CasePag
               <span className="tabular">N°{number(project)}</span>
             </div>
           </Reveal>
-          <Reveal delay={0.1}>
+          <Reveal delay={0.1} y={10}>
             <p className="text-eyebrow mt-10 mb-6" style={{ color: project.tone.glow }}>
               {nl?.category ?? project.category} · {nl?.year ?? project.year}
             </p>
-            <h1 className="font-display max-w-5xl text-[clamp(3rem,8vw,7.5rem)] leading-[0.98] font-medium text-cream">{project.title}</h1>
           </Reveal>
+          <TitleReveal as="h1" delay={0.15} className="font-display max-w-5xl text-[clamp(3rem,8vw,7.5rem)] leading-[0.98] font-medium text-cream">
+            {project.title}
+          </TitleReveal>
           <Reveal delay={0.2}>
             <p className="font-display mt-10 max-w-3xl text-xl leading-snug text-champagne/90 italic md:text-2xl">{study.standfirst}</p>
           </Reveal>

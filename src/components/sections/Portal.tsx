@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Reveal from "@/components/fx/Reveal";
+import TitleReveal from "@/components/fx/TitleReveal";
 import Timecode from "@/components/fx/Timecode";
 import { SceneApprove, SceneFollow, SceneReview, SceneRoom, SceneShare } from "@/components/sections/PortalScenes";
 import { useLocale } from "@/lib/i18n/locale";
@@ -114,15 +115,17 @@ export default function Portal() {
   return (
     <section id="portal" className="scroll-mt-24 border-t border-line" aria-label={t.ariaLabel}>
       <div className="mx-auto max-w-[1680px] px-6 py-36 md:px-12 md:py-56">
-        <Reveal>
-          <div className="flex flex-wrap items-end justify-between gap-6 pb-20 lg:pb-28">
-            <div>
+        <div className="flex flex-wrap items-end justify-between gap-6 pb-20 lg:pb-28">
+          <div>
+            <Reveal y={10}>
               <p className="text-eyebrow mb-6">{t.eyebrow}</p>
-              <h2 className="font-display max-w-4xl text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">{t.title}</h2>
-            </div>
-            <p className="max-w-sm pb-2 text-sm leading-relaxed text-taupe">{t.lede}</p>
+            </Reveal>
+            <TitleReveal className="font-display max-w-4xl text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">{t.title}</TitleReveal>
           </div>
-        </Reveal>
+          <Reveal delay={0.25}>
+            <p className="max-w-sm pb-2 text-sm leading-relaxed text-taupe">{t.lede}</p>
+          </Reveal>
+        </div>
 
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-12">
           {/* The strip: sticky beside the moments on wide screens, on top elsewhere. */}

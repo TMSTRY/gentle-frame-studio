@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Reveal from "@/components/fx/Reveal";
+import TitleReveal from "@/components/fx/TitleReveal";
 import { processPhases } from "@/content/process";
 import { useLocale } from "@/lib/i18n/locale";
 import { siteUi } from "@/lib/i18n/site-ui";
@@ -56,19 +57,21 @@ export default function Process() {
   return (
     <section id="process" className="scroll-mt-24 border-t border-line" aria-label={t.ariaLabel}>
       <div className="mx-auto max-w-[1680px] px-6 py-36 md:px-12 md:py-56">
-        <Reveal>
-          <div className="flex flex-wrap items-end justify-between gap-6 pb-24">
-            <div>
+        <div className="flex flex-wrap items-end justify-between gap-6 pb-24">
+          <div>
+            <Reveal y={10}>
               <p className="text-eyebrow mb-6">{t.eyebrow}</p>
-              <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
-                {t.title}
-              </h2>
-            </div>
+            </Reveal>
+            <TitleReveal className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
+              {t.title}
+            </TitleReveal>
+          </div>
+          <Reveal delay={0.25}>
             <p className="max-w-xs pb-2 text-sm leading-relaxed text-taupe">
               {t.lede}
             </p>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
 
         <div ref={stripRef} className="relative">
           {/* The strip and its travelling light */}

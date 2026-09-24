@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const FPS = 24;
 
@@ -19,15 +19,23 @@ function format(totalFrames: number): string {
  * visitor arrived - the site as a take that is being recorded.
  */
 export default function Timecode({ className }: { className?: string }) {
-  const [code, setCode] = useState("00:00:00:00");
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
     const start = performance.now();
+    let last = -1;
     let rafId: number;
 
+    // Only touch the DOM when the frame number changes: 24 writes a
+    // second, no React render at all.
     const tick = (now: number) => {
-      const elapsed = (now - start) / 1000;
-      setCode(format(Math.floor(elapsed * FPS)));
+      const frame = Math.floor(((now - start) / 1000) * FPS);
+      if (frame !== last) {
+        last = frame;
+        element.textContent = format(frame);
+      }
       rafId = requestAnimationFrame(tick);
     };
 
@@ -36,8 +44,8 @@ export default function Timecode({ className }: { className?: string }) {
   }, []);
 
   return (
-    <span className={`tabular ${className ?? ""}`} aria-hidden="true">
-      {code}
+    <span ref={ref} className={`tabular ${className ?? ""}`} aria-hidden="true">
+      00:00:00:00
     </span>
   );
 }

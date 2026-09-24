@@ -142,7 +142,71 @@ html[data-motion="off"] .reveal-word {
   transform: none;
 }
 
-/* Slow rotation, used by the circular submark stamp */
+/* Section titles are set tight (leading-none); the taller slot keeps
+   accents and descenders inside the mask, the deeper start keeps the
+   word fully hidden until it rises. */
+.reveal-slot-tall {
+  padding: 0.12em 0.03em 0.24em;
+  margin: -0.12em -0.03em -0.24em;
+}
+
+.reveal-slot-tall > .reveal-word {
+  transform: translateY(145%);
+}
+
+/* Service chapters: the sticky numeral takes the light while its
+   chapter is the one being read. */
+.chapter-numeral {
+  color: rgba(230, 213, 179, 0);
+  -webkit-text-stroke: 1px rgba(230, 213, 179, 0.28);
+  transition:
+    color 0.9s var(--ease-gentle),
+    -webkit-text-stroke-color 0.9s var(--ease-gentle);
+}
+
+.is-current .chapter-numeral {
+  color: rgba(230, 213, 179, 0.07);
+  -webkit-text-stroke-color: rgba(230, 213, 179, 0.8);
+}
+
+/* Viewfinder marks on a cover: they close in on hover, like focus locking */
+.viewfinder > span {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(230, 213, 179, 0.75);
+  opacity: 0;
+  transition:
+    opacity 0.45s var(--ease-gentle),
+    transform 0.6s var(--ease-gentle);
+}
+.viewfinder > span:nth-child(1) { top: 14px; left: 14px; border-top-width: 1px; border-left-width: 1px; transform: translate(-7px, -7px); }
+.viewfinder > span:nth-child(2) { top: 14px; right: 14px; border-top-width: 1px; border-right-width: 1px; transform: translate(7px, -7px); }
+.viewfinder > span:nth-child(3) { bottom: 14px; left: 14px; border-bottom-width: 1px; border-left-width: 1px; transform: translate(-7px, 7px); }
+.viewfinder > span:nth-child(4) { bottom: 14px; right: 14px; border-bottom-width: 1px; border-right-width: 1px; transform: translate(7px, 7px); }
+.group:hover .viewfinder > span,
+.group:focus-visible .viewfinder > span {
+  opacity: 1;
+  transform: none;
+}
+
+/* A drop of light travelling down the scroll cue */
+@keyframes scroll-drop {
+  0% { transform: translateY(-100%); }
+  72%, 100% { transform: translateY(200%); }
+}
+
+.animate-scroll-drop {
+  animation: scroll-drop 2.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+/* The active testimonial line fills while its quote is on screen */
+@keyframes quote-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Files ticking into place in the portal preview */
 @keyframes portal-tick {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: none; }
@@ -159,14 +223,6 @@ html[data-motion="off"] .reveal-word {
 }
 .animate-peek-top { animation: peek-top 7s var(--ease-gentle) infinite; }
 .animate-peek-back { animation: peek-back 7s var(--ease-gentle) infinite; }
-
-@keyframes spin-slow {
-  to { transform: rotate(360deg); }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 46s linear infinite;
-}
 
 /* Gentle breathing glow behind hero composition */
 @keyframes breathe {
@@ -196,35 +252,6 @@ html[data-motion="off"] .reveal-word {
 
 .animate-caret {
   animation: caret-blink 1.1s steps(1) infinite;
-}
-
-/* Light sweep across the product-film sheen motif */
-@keyframes sheen-sweep {
-  0% { transform: translateX(-140%) skewX(-18deg); }
-  60%, 100% { transform: translateX(240%) skewX(-18deg); }
-}
-
-.animate-sheen {
-  animation: sheen-sweep 5.4s var(--ease-gentle) infinite;
-}
-
-/* Travelling dash along the waveform motif */
-@keyframes dash-move {
-  to { stroke-dashoffset: -260; }
-}
-
-.animate-dash {
-  animation: dash-move 7s linear infinite;
-}
-
-/* Constellation dots breathing at individual delays */
-@keyframes twinkle {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 1; }
-}
-
-.animate-twinkle {
-  animation: twinkle 3.8s ease-in-out infinite;
 }
 
 /* Underline that grows from the left on hover */
@@ -257,16 +284,19 @@ html[data-motion="off"] .reveal-word {
 
 @media (prefers-reduced-motion: reduce) {
   .grain,
-  .animate-spin-slow,
   .animate-breathe,
   .animate-peek-top,
   .animate-peek-back,
   .animate-rec,
   .animate-caret,
-  .animate-sheen,
-  .animate-dash,
-  .animate-twinkle {
+  .animate-scroll-drop,
+  .quote-progress {
     animation: none !important;
+  }
+
+  .chapter-numeral,
+  .viewfinder > span {
+    transition: none !important;
   }
 
   [data-reveal] {

@@ -18,7 +18,7 @@ interface RevealProps {
  * enter the viewport. Content stays visible without JavaScript
  * (see the `noscript` override in the root layout).
  */
-export default function Reveal({ children, className, delay = 0, y = 32 }: RevealProps) {
+export default function Reveal({ children, className, delay = 0, y = 18 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function Reveal({ children, className, delay = 0, y = 32 }: Revea
       {
         opacity: 1,
         y: 0,
-        duration: 1.3,
+        duration: 1.1,
         delay,
         ease: "power3.out",
         scrollTrigger: {

@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Parallax from "@/components/fx/Parallax";
 import Reveal from "@/components/fx/Reveal";
+import TitleReveal from "@/components/fx/TitleReveal";
+import { gsap } from "@/lib/gsap";
+import { prefersReducedMotion } from "@/lib/motion";
 import { useLocale } from "@/lib/i18n/locale";
 import { siteUi } from "@/lib/i18n/site-ui";
 
@@ -14,6 +17,28 @@ import { siteUi } from "@/lib/i18n/site-ui";
 export default function About() {
   const t = siteUi(useLocale()).about;
   const [open, setOpen] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // The business card opens like a frame as it scrolls in: it starts as a
+  // smaller, rounded window and widens to the full picture.
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card || prefersReducedMotion()) return;
+    const tween = gsap.fromTo(
+      card,
+      { clipPath: "inset(10% 12% 10% 12% round 22px)" },
+      {
+        clipPath: "inset(0% 0% 0% 0% round 12px)",
+        ease: "none",
+        scrollTrigger: { trigger: card, start: "top 92%", end: "top 28%", scrub: true },
+      },
+    );
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
+
   return (
     <section id="studio" className="scroll-mt-24" aria-label={t.ariaLabel}>
       <div className="mx-auto max-w-[1680px] px-6 py-36 md:px-12 md:py-56">
@@ -93,14 +118,14 @@ export default function About() {
 
           {/* The story */}
           <div className="md:col-span-7 lg:col-span-6 lg:col-start-7">
-            <Reveal>
+            <Reveal y={10}>
               <p className="text-eyebrow mb-6">{t.eyebrow}</p>
-              <h2 className="font-display text-[clamp(2.2rem,4.6vw,4.2rem)] leading-[1.05] font-medium text-cream">
-                {t.title1}
-                <br />
-                {t.title2}
-              </h2>
             </Reveal>
+            <TitleReveal className="font-display text-[clamp(2.2rem,4.6vw,4.2rem)] leading-[1.05] font-medium text-cream">
+              {t.title1}
+              <br />
+              {t.title2}
+            </TitleReveal>
 
             <Reveal delay={0.1}>
               <div className="mt-10 space-y-7 text-[0.95rem] leading-[2] font-light text-cream/70">
@@ -120,7 +145,7 @@ export default function About() {
       {/* The brand, made physical */}
       <div className="mx-auto max-w-[1680px] px-6 pb-36 md:px-12 md:pb-56">
         <Reveal>
-          <div className="relative h-[52vh] overflow-hidden rounded-xl border border-line md:h-[74vh]">
+          <div ref={cardRef} className="relative h-[52vh] overflow-hidden rounded-xl border border-line md:h-[74vh]">
             <Parallax speed={-0.12} className="absolute inset-0 scale-[1.18]">
               <Image
                 src="/brand/business-card.jpg"

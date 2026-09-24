@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import FrameMark from "@/components/brand/FrameMark";
 import Reveal from "@/components/fx/Reveal";
+import TitleReveal from "@/components/fx/TitleReveal";
 import WorkLightbox from "@/components/sections/WorkLightbox";
 import Link from "next/link";
 import { caseIndex } from "@/content/cases";
@@ -21,6 +22,7 @@ import { gsap } from "@/lib/gsap";
 export default function Work() {
   const pinRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
   const [screening, setScreening] = useState<Project | null>(null);
   const locale = useLocale();
   const t = siteUi(locale).work;
@@ -38,9 +40,28 @@ export default function Work() {
       track.style.overflowX = "visible";
       const distance = () => track.scrollWidth - window.innerWidth;
 
+      // The edit timeline under the reel: a playhead and the frame number
+      // it is on, written straight to the DOM from the tween's own progress
+      // (so it follows the smoothed picture, not the raw scroll).
+      const timeline = timelineRef.current;
+      const playhead = timeline?.querySelector<HTMLElement>("[data-playhead]");
+      const counter = timeline?.querySelector<HTMLElement>("[data-frame-now]");
+      const total = projects.length;
+      let shown = -1;
+      if (timeline) timeline.hidden = false;
+
       const tween = gsap.to(track, {
         x: () => -distance(),
         ease: "none",
+        onUpdate() {
+          const progress = this.progress();
+          if (playhead) playhead.style.transform = `scaleX(${progress})`;
+          const frame = Math.min(total, Math.floor(progress * total) + 1);
+          if (counter && frame !== shown) {
+            shown = frame;
+            counter.textContent = String(frame).padStart(2, "0");
+          }
+        },
         scrollTrigger: {
           trigger: pinArea,
           start: "top top",
@@ -52,8 +73,34 @@ export default function Work() {
         },
       });
 
+      // Depth inside each cover: the picture drifts a little slower than
+      // its card, like looking through a window as the camera tracks.
+      const drifts = Array.from(track.querySelectorAll<HTMLElement>("[data-cover-media]")).map((media) =>
+        gsap.fromTo(
+          media,
+          { xPercent: -3.5, scale: 1.08 },
+          {
+            xPercent: 3.5,
+            scale: 1.08,
+            ease: "none",
+            scrollTrigger: {
+              trigger: media.parentElement,
+              containerAnimation: tween,
+              start: "left right",
+              end: "right left",
+              scrub: true,
+            },
+          },
+        ),
+      );
+
       return () => {
         track.style.overflowX = "";
+        if (timeline) timeline.hidden = true;
+        drifts.forEach((drift) => {
+          drift.scrollTrigger?.kill();
+          drift.kill();
+        });
         tween.scrollTrigger?.kill();
         tween.kill();
       };
@@ -65,25 +112,27 @@ export default function Work() {
   return (
     <section id="work" className="scroll-mt-24" aria-label={t.ariaLabel}>
       <div className="mx-auto max-w-[1680px] px-6 pt-36 pb-16 md:px-12 md:pt-56">
-        <Reveal>
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <Reveal y={10}>
               <p className="text-eyebrow mb-6">{t.eyebrow}</p>
-              <h2 className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
-                {t.title}
-                <span className="text-taupe align-super text-[0.3em] tracking-[0.2em]">
-                  {"  "}( {String(projects.length).padStart(2, "0")} )
-                </span>
-              </h2>
-            </div>
+            </Reveal>
+            <TitleReveal className="font-display text-[clamp(2.6rem,6vw,5.5rem)] leading-none font-medium text-cream">
+              {t.title}
+              <span className="text-taupe align-super text-[0.3em] tracking-[0.2em]">
+                {"  "}( {String(projects.length).padStart(2, "0")} )
+              </span>
+            </TitleReveal>
+          </div>
+          <Reveal delay={0.25}>
             <p className="max-w-xs pb-2 text-sm leading-relaxed text-taupe">
               {t.lede}
             </p>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
 
-      <div ref={pinRef} className="flex min-h-[100svh] flex-col justify-center overflow-hidden">
+      <div ref={pinRef} className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden">
         <div
           ref={trackRef}
           className="flex w-max max-w-[100vw] snap-x snap-mandatory items-stretch gap-[4vw] overflow-x-auto px-6 py-10 [-ms-overflow-style:none] [scrollbar-width:none] md:px-12 [&::-webkit-scrollbar]:hidden"
@@ -112,6 +161,32 @@ export default function Work() {
             </a>
           </div>
         </div>
+
+        {/* The reel as an edit timeline: one tick per frame, a playhead,
+            and the frame it is on. Only while the tracking shot runs. */}
+        <div
+          ref={timelineRef}
+          hidden
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-8 px-12"
+        >
+          <div className="mx-auto flex max-w-[1680px] items-center gap-6 text-[0.6rem] tracking-[0.28em] text-taupe uppercase">
+            <span className="tabular w-12">
+              N°<span data-frame-now>01</span>
+            </span>
+            <div className="relative h-px flex-1 bg-line">
+              <div data-playhead className="absolute inset-0 origin-left bg-champagne/70" style={{ transform: "scaleX(0)" }} />
+              {projects.map((project, index) => (
+                <span
+                  key={project.id}
+                  className="absolute -top-[3px] h-[7px] w-px bg-champagne/35"
+                  style={{ left: `${(index / projects.length) * 100}%` }}
+                />
+              ))}
+            </div>
+            <span className="tabular w-12 text-right">{String(projects.length).padStart(2, "0")}</span>
+          </div>
+        </div>
       </div>
 
       {/* Fixed overlay lives outside the pinned, transformed track -
@@ -138,10 +213,11 @@ function CoverCard({
   const playable = Boolean(project.video || project.youtube);
   const hasCase = caseIndex.has(project.id);
   const cardClass =
-    "group relative block aspect-[3/4] w-[78vw] max-w-[460px] shrink-0 snap-center overflow-hidden rounded-md border border-line text-left transition-transform duration-700 ease-out hover:-translate-y-2 md:w-[440px]";
+    "group relative block aspect-[3/4] w-[78vw] max-w-[460px] shrink-0 snap-center overflow-hidden rounded-md border border-line text-left transition-colors duration-700 ease-out hover:border-champagne/35 md:w-[440px]";
 
   const cover = project.image ? (
     <>
+      <div data-cover-media className="absolute inset-0">
       {project.imageB ? (
         <>
           {/* Diagonal split: two views of one world, hinged on a
@@ -174,6 +250,7 @@ function CoverCard({
           className="object-cover object-top saturate-[0.88] transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         />
       )}
+      </div>
       {/* Readability veil: always present at the edges, deepens on
           hover so the text overlay never fights the screenshot */}
       <div
@@ -204,6 +281,14 @@ function CoverCard({
   );
 
   const content = (
+    <>
+    {/* Viewfinder marks: they close in on hover, like focus locking on */}
+    <span className="viewfinder pointer-events-none absolute inset-0 z-[1]" aria-hidden="true">
+      <span />
+      <span />
+      <span />
+      <span />
+    </span>
     <div className="relative flex h-full flex-col justify-between p-7 md:p-9">
       <div className="flex items-start justify-between text-[0.6rem] tracking-[0.28em] text-cream/60 uppercase">
         <span>{t.caseTag}</span>
@@ -245,6 +330,7 @@ function CoverCard({
         ) : null}
       </div>
     </div>
+    </>
   );
 
   if (hasCase) {

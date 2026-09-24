@@ -64,10 +64,18 @@ export default function Testimonials() {
               type="button"
               onClick={() => select(index)}
               aria-label={t.showQuote(index + 1)}
-              className={`h-px w-10 transition-all duration-500 ${
-                index === active ? "bg-champagne" : "bg-line hover:bg-champagne/40"
-              }`}
-            />
+              aria-current={index === active}
+              className="relative h-px w-10 bg-line transition-colors duration-500 hover:bg-champagne/40"
+            >
+              {/* The active line fills while its quote is on screen: you see when the next one comes */}
+              {index === active ? (
+                <span
+                  key={`fill-${active}`}
+                  className="quote-progress absolute inset-0 block origin-left bg-champagne"
+                  style={{ animation: `quote-progress ${ROTATION_MS}ms linear both` }}
+                />
+              ) : null}
+            </button>
           ))}
         </div>
       </div>
