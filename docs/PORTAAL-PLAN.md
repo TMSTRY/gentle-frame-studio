@@ -82,8 +82,8 @@ Verbreding van de positionering (6 okt 2026, Tims keuzes na een doorlichting met
 
 ## Openstaand (6 okt 2026)
 
-- Tim: migratie 008 (dienstsoorten) plakken in de Supabase SQL Editor (op het klembord). Tot dan geeft een nieuwe dienst kiezen in de admin de melding om 008 te draaien; al de rest werkt al.
-- Tim: Cloudflare R2-bucket voor de voorbeeldfilms per case aanmaken, met eigen domein (bv. media.gentleframestudio.com, DNS bij Vercel zoals bij EXCAVARA) en NEXT_PUBLIC_MEDIA_URL in Vercel zetten; daarna per case een mp4 + 16:9 poster aanleveren, ik zet video: media("work/<id>.mp4") en videoKind per case, en verhuis memorial-rudy.mp4.
+- Migraties 001 t/m 008 zijn gedraaid (008 op 6 okt).
+- Tim, later (geen haast, er zijn nog geen casefilms behalve één EXCAVARA-film in 4K die eerst een webversie nodig heeft): Cloudflare R2-bucket voor de voorbeeldfilms per case aanmaken, met eigen domein (bv. media.gentleframestudio.com, DNS bij Vercel zoals bij EXCAVARA) en NEXT_PUBLIC_MEDIA_URL in Vercel zetten; daarna per case een mp4 + 16:9 poster aanleveren, ik zet video: media("work/<id>.mp4") en videoKind per case, en verhuis memorial-rudy.mp4.
 - Tim: nalezen op de homepage (EN+NL): hero-lede, manifest, de acht diensten (vooral Websites en Motion design, nieuwe tekst), de Medixa-demo in de portaalsectie, de contactonderwerpen. Medixa is de naam die Tim zelf koos; als het een echte klant is, graag bevestigen dat de fictieve details (Sofie, 0:42, medixa26) oké zijn.
 - Later: een echte bedrijfswebsite-kaart in het portfolio (Gevangenis Gent zodra clip en logo er zijn) en een presentatiefilm voor QuietWalk als motion-kaart.
 
