@@ -60,7 +60,7 @@ export default function Footer() {
                 <Wordmark />
               </div>
               <p className="font-display mt-8 max-w-xs text-xl text-cream/80 italic">
-                {site.tagline}
+                {site.taglines[locale]}
               </p>
             </div>
 
@@ -83,6 +83,14 @@ export default function Footer() {
                     className="link-line text-sm text-cream/70 transition-colors hover:text-cream"
                   >
                     {f.memorial}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={f.webHref}
+                    className="link-line text-sm text-cream/70 transition-colors hover:text-cream"
+                  >
+                    {f.web}
                   </a>
                 </li>
                 <li className="pt-3">

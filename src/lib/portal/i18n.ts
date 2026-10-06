@@ -32,14 +32,24 @@ const STATUS_NL: Record<ProjectStatus, string> = {
 
 const SERVICE_NL: Record<ServiceKind, string> = {
   memorial_film: "Herinneringsfilm",
-  product_film: "Productfilm",
+  brand_film: "Merkfilm",
+  product_film: "Product- of appfilm",
   music_video: "Muziekvideo",
+  motion_design: "Motion design",
   ai_visual: "AI-beeldproductie",
+  website: "Website",
   app: "App",
   platform: "Platform",
   consulting: "Creatief advies",
   other: "Overig",
 };
+
+/**
+ * The portal speaks a neutral language that fits every kind of work;
+ * a memorial film gets the warmer sentences back. One switch, used by
+ * the three strings below that name the people or the material.
+ */
+const isMemorial = (service: ServiceKind) => service === "memorial_film";
 
 const DOC_STATUS_NL: Record<DocumentStatus, string> = {
   draft: "Ontwerp",
@@ -73,7 +83,7 @@ const UI = {
     docsAppear: "Quotes, invoices and contracts will appear here.",
     progress: "Project progress",
     downloadPdf: "Download PDF",
-    archivePromise: (years: number) => `What we deliver stays available in your portal for at least ${years} years, in the formats you need.`,
+    archivePromise: (years: number) => `What we deliver stays available in your portal for at least ${years} years: the finished work and its source files, in the formats you need.`,
     filesKept: (years: number) => `Your files and the finished work stay here for at least ${years} years.`,
     remembrance: {
       eyebrow: "Once a year",
@@ -87,7 +97,7 @@ const UI = {
     },
     approve: {
       eyebrow: "Your approval",
-      lede: "Watched the final version and happy with it? Approve it here. The project is then delivered, and the balance invoice (if any) will follow in your portal.",
+      lede: "Seen the final version and happy with it? Approve it here. The project is then delivered, and the balance invoice (if any) will follow in your portal.",
       check: "This is the final version. I approve it.",
       button: "Approve this version",
       done: "Approved, thank you. This project is now delivered, and you have a confirmation by email.",
@@ -95,7 +105,10 @@ const UI = {
     },
     screening: {
       title: "Screening room",
-      lede: "Your film has its own quiet page, without platforms or advertising. Share the link with everyone who was there, and with those who couldn’t be. If there is a viewing code, pass it along with the link.",
+      lede: (service: ServiceKind) =>
+        isMemorial(service)
+          ? "Your film has its own quiet page, without platforms or advertising. Share the link with everyone who was there, and with those who couldn’t be. If there is a viewing code, pass it along with the link."
+          : "Your film has its own quiet page, without platforms or advertising. Share the link with the people it was made for, and with anyone else who should see it. If there is a viewing code, pass it along with the link.",
       link: "Link",
       code: "Viewing code",
       noCode: "No code needed",
@@ -108,8 +121,11 @@ const UI = {
     },
     review: {
       title: "Review",
-      lede: "Watch the cut here. To ask for a change, pause at the moment, press “use this moment” and write what you notice. Small things included: a name, a photo that lingers too long, a sound that jars.",
-      version: "Cut",
+      lede: (service: ServiceKind) =>
+        isMemorial(service)
+          ? "Watch the version here. To ask for a change, pause at the moment, press “use this moment” and write what you notice. Small things included: a name, a photo that lingers too long, a sound that jars."
+          : "Watch the version here. To ask for a change, pause at the moment, press “use this moment” and write what you notice. Small things included: a word, a shot that lingers too long, a colour that feels off, a sound that jars.",
+      version: "Version",
       noteAt: "At",
       general: "General",
       useMoment: "Use this moment",
@@ -121,10 +137,11 @@ const UI = {
       reopen: "Reopen",
       remove: "Remove",
       noNotes: "No notes yet.",
-      openLink: "Open the film",
+      openLink: "Open the preview",
       timecodeHint: "Type the moment as minutes:seconds, or leave empty.",
+      linkHint: "Name the page or screen in your note.",
       studio: "Studio",
-      earlier: "Earlier cuts",
+      earlier: "Earlier versions",
     },
     files: {
       title: "Files",
@@ -132,7 +149,7 @@ const UI = {
       fromStudio: "From the studio",
       fromClient: "Your files",
       empty: "Nothing here yet.",
-      drop: "Drop photos, videos or voice notes here.",
+      drop: (service: ServiceKind) => (isMemorial(service) ? "Drop photos, videos or voice notes here." : "Drop your material here: photos, videos, texts, logos, voice notes."),
       choose: "Choose files",
       uploading: "Uploading…",
       tooLarge: "too large for one upload, please split it or send a link",
@@ -176,7 +193,7 @@ const UI = {
     docsAppear: "Offertes, facturen en contracten verschijnen hier.",
     progress: "Voortgang van het project",
     downloadPdf: "Download PDF",
-    archivePromise: (years: number) => `Wat we opleveren blijft minstens ${years} jaar beschikbaar in je portaal, in de formaten die je nodig hebt.`,
+    archivePromise: (years: number) => `Wat we opleveren blijft minstens ${years} jaar beschikbaar in je portaal: het afgewerkte werk en de bronbestanden, in de formaten die je nodig hebt.`,
     filesKept: (years: number) => `Je bestanden en het afgewerkte werk blijven hier minstens ${years} jaar staan.`,
     remembrance: {
       eyebrow: "Eén keer per jaar",
@@ -198,7 +215,10 @@ const UI = {
     },
     screening: {
       title: "Bioscoopzaal",
-      lede: "Je film heeft een eigen rustige pagina, zonder platformen of reclame. Deel de link met iedereen die erbij was, en met wie er niet bij kon zijn. Is er een kijkcode, geef die dan mee met de link.",
+      lede: (service: ServiceKind) =>
+        isMemorial(service)
+          ? "Je film heeft een eigen rustige pagina, zonder platformen of reclame. Deel de link met iedereen die erbij was, en met wie er niet bij kon zijn. Is er een kijkcode, geef die dan mee met de link."
+          : "Je film heeft een eigen rustige pagina, zonder platformen of reclame. Deel de link met de mensen voor wie hij gemaakt is, en met wie hem verder nog moet zien. Is er een kijkcode, geef die dan mee met de link.",
       link: "Link",
       code: "Kijkcode",
       noCode: "Geen code nodig",
@@ -211,7 +231,10 @@ const UI = {
     },
     review: {
       title: "Review",
-      lede: "Bekijk de versie hier. Wil je iets veranderen, pauzeer op dat moment, druk op “dit moment gebruiken” en schrijf wat je opvalt. Ook kleine dingen: een naam, een foto die te lang blijft, een geluid dat stoort.",
+      lede: (service: ServiceKind) =>
+        isMemorial(service)
+          ? "Bekijk de versie hier. Wil je iets veranderen, pauzeer op dat moment, druk op “dit moment gebruiken” en schrijf wat je opvalt. Ook kleine dingen: een naam, een foto die te lang blijft, een geluid dat stoort."
+          : "Bekijk de versie hier. Wil je iets veranderen, pauzeer op dat moment, druk op “dit moment gebruiken” en schrijf wat je opvalt. Ook kleine dingen: een woord, een beeld dat te lang blijft, een kleur die niet klopt, een geluid dat stoort.",
       version: "Versie",
       noteAt: "Bij",
       general: "Algemeen",
@@ -224,8 +247,9 @@ const UI = {
       reopen: "Heropenen",
       remove: "Verwijderen",
       noNotes: "Nog geen opmerkingen.",
-      openLink: "Open de film",
+      openLink: "Open de voorvertoning",
       timecodeHint: "Typ het moment als minuten:seconden, of laat leeg.",
+      linkHint: "Noem de pagina of het scherm in je opmerking.",
       studio: "Studio",
       earlier: "Eerdere versies",
     },
@@ -235,7 +259,7 @@ const UI = {
       fromStudio: "Van de studio",
       fromClient: "Jouw bestanden",
       empty: "Nog niets hier.",
-      drop: "Sleep foto’s, filmpjes of spraakberichten hierheen.",
+      drop: (service: ServiceKind) => (isMemorial(service) ? "Sleep foto’s, filmpjes of spraakberichten hierheen." : "Sleep je materiaal hierheen: foto’s, filmpjes, teksten, logo’s, spraakberichten."),
       choose: "Kies bestanden",
       uploading: "Bezig met uploaden…",
       tooLarge: "te groot voor één upload, splits het of stuur een link",

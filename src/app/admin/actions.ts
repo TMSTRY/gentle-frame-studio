@@ -127,7 +127,7 @@ export async function createProjectAction(formData: FormData) {
   const admin = createAdminClient();
   let { data, error } = await admin.from("projects").insert(values).select("id").single();
   if (error?.code === "42703") ({ data, error } = await admin.from("projects").insert(withoutRemembrance(values)).select("id").single());
-  if (error || !data) redirect(`/admin/projects/new?client=${values.client_id}&error=save`);
+  if (error || !data) redirect(`/admin/projects/new?client=${values.client_id}&error=${error?.code === "22P02" ? "migration" : "save"}`);
   revalidatePath("/admin/projects");
   revalidatePath(`/admin/clients/${values.client_id}`);
   redirect(`/admin/projects/${data.id}?saved=1`);
@@ -142,7 +142,7 @@ export async function updateProjectAction(formData: FormData) {
   const admin = createAdminClient();
   let { error } = await admin.from("projects").update(values).eq("id", id);
   if (error?.code === "42703") ({ error } = await admin.from("projects").update(withoutRemembrance(values)).eq("id", id));
-  if (error) redirect(`/admin/projects/${id}?error=save`);
+  if (error) redirect(`/admin/projects/${id}?error=${error.code === "22P02" ? "migration" : "save"}`);
   revalidatePath(`/admin/projects/${id}`);
   revalidatePath("/admin/projects");
   redirect(`/admin/projects/${id}?saved=1`);

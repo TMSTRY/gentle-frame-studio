@@ -7,7 +7,7 @@ import type { DocumentLine, DocumentRecord, StudioSettings } from "@/lib/portal/
 interface DocumentFormProps {
   document?: DocumentRecord;
   lines?: DocumentLine[];
-  clients: { id: string; name: string; company: string | null }[];
+  clients: { id: string; name: string; company: string | null; language: "nl" | "en" }[];
   projects: { id: string; title: string; client_id: string }[];
   studio: StudioSettings;
   defaults?: { client?: string; project?: string; kind?: string };
@@ -20,6 +20,9 @@ export default function DocumentForm({ document, lines = [], clients, projects, 
   const editing = Boolean(document);
   const selectClass = `${inputClass} cursor-pointer appearance-none bg-ink`;
   const kind = (document?.kind ?? defaults?.kind ?? "quote") as DocumentKind;
+  // The quick-add lines are written in the client's language; without a known client they default to English.
+  const selectedClientId = document?.client_id ?? defaults?.client;
+  const lang: "nl" | "en" = clients.find((client) => client.id === selectedClientId)?.language === "nl" ? "nl" : "en";
   const dueDefault = new Date(Date.now() + studio.payment_terms_days * 86400000).toISOString().slice(0, 10);
 
   return (
@@ -79,7 +82,7 @@ export default function DocumentForm({ document, lines = [], clients, projects, 
 
       <div className="mt-12">
         <p className="text-eyebrow mb-4">Lines (quotes &amp; invoices)</p>
-        <LinePresets />
+        <LinePresets lang={lang} />
         <div className="hidden grid-cols-[1fr_80px_130px] gap-4 border-b border-line pb-2 text-[0.6rem] tracking-[0.26em] text-taupe uppercase md:grid">
           <span>Description</span>
           <span className="text-right">Qty</span>

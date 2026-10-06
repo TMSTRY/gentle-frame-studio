@@ -121,6 +121,26 @@ function ServiceChapter({ service, readMore }: { service: Service; readMore: str
       );
     }
 
+    if (motif && kind === "keyframe") {
+      // One keyframe to the next: the dot rides the easing curve as the chapter scrolls by.
+      const curve = motif.querySelector<SVGPathElement>("[data-curve]");
+      const dot = motif.querySelector<SVGCircleElement>("[data-dot]");
+      if (curve && dot) {
+        const total = curve.getTotalLength();
+        const ride = ScrollTrigger.create({
+          trigger: article,
+          start: "top bottom",
+          end: "bottom top",
+          onUpdate: (self) => {
+            const point = curve.getPointAtLength(self.progress * total);
+            dot.setAttribute("cx", point.x.toFixed(2));
+            dot.setAttribute("cy", point.y.toFixed(2));
+          },
+        });
+        cleanups.push(() => ride.kill());
+      }
+    }
+
     if (motif && kind === "constellation") {
       // Lines draw from star to star, then the stars come on.
       const lines = motif.querySelectorAll("[data-link]");
@@ -322,6 +342,39 @@ function Motif({ kind }: { kind: ServiceMotif }) {
             />
           ))}
           <circle cx="100" cy="100" r="6" stroke="currentColor" strokeWidth="1" />
+        </svg>
+      );
+    case "frame":
+      // A quiet browser window: a hairline bar, a block of light, three lines of copy.
+      return (
+        <div data-motif="frame" className="relative h-52 w-52" aria-hidden="true">
+          <div className="absolute inset-x-2 inset-y-7 overflow-hidden rounded-md border border-champagne/45 bg-ink-soft">
+            <div className="flex h-6 items-center gap-1.5 border-b border-line px-3">
+              <span className="h-1.5 w-1.5 rounded-full bg-taupe/50" />
+              <span className="h-1.5 w-1.5 rounded-full bg-taupe/30" />
+              <span className="h-1.5 w-1.5 rounded-full bg-taupe/20" />
+            </div>
+            <div className="p-4">
+              <div
+                className="h-16 rounded-sm"
+                style={{ background: "radial-gradient(80% 100% at 30% 20%, rgba(230,213,179,0.28), rgba(194,161,101,0.06) 70%)" }}
+              />
+              <div className="mt-4 h-px w-3/4 bg-champagne/50" />
+              <div className="mt-2.5 h-px w-1/2 bg-champagne/30" />
+              <div className="mt-2.5 h-px w-2/3 bg-champagne/20" />
+            </div>
+          </div>
+        </div>
+      );
+    case "keyframe":
+      // Two keyframes, the easing curve between them, and the dot that travels it with the scroll.
+      return (
+        <svg data-motif="keyframe" viewBox="0 0 200 200" fill="none" className="h-52 w-52 text-champagne/80" aria-hidden="true">
+          <path data-curve d="M24 150 C 70 150, 90 50, 176 50" stroke="currentColor" strokeWidth="1" opacity="0.4" />
+          <path d="M24 150 H 176" stroke="currentColor" strokeWidth="0.5" opacity="0.2" />
+          <rect x="20" y="146" width="8" height="8" transform="rotate(45 24 150)" fill="currentColor" opacity="0.55" />
+          <rect x="172" y="46" width="8" height="8" transform="rotate(45 176 50)" fill="currentColor" opacity="0.55" />
+          <circle data-dot cx="24" cy="150" r="4" fill="#e6d5b3" />
         </svg>
       );
   }

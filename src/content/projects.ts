@@ -41,10 +41,14 @@ export interface Project {
   youtube?: string;
   /** Small caption shown in the lightbox, e.g. a consent line */
   caption?: string;
+  /** 16:9 still for the film player (public/work/); falls back to `image` */
+  poster?: string;
+  /** "film" = the work itself; "preview" = a walkthrough of a website or app. Drives the play label. */
+  videoKind?: "film" | "preview";
   /** Replaces the hover cue when the project can't be visited */
   note?: string;
   /** Dutch category, year label and blurb */
-  nl?: { category: string; year?: string; blurb: string; note?: string };
+  nl?: { category: string; year?: string; blurb: string; note?: string; caption?: string };
 }
 
 export const projects: Project[] = [
@@ -118,11 +122,11 @@ export const projects: Project[] = [
   {
     id: "nft-collections",
     title: "NFT Collections",
-    category: "Digital Artifacts",
+    category: "Music Platform & Game",
     year: "2025",
     blurb: "Five on-chain drops: collectible artifacts excavated from a fictional mining world.",
     tone: { base: "#100e0a", glow: "#c9a96a", light: "80% 60%" },
-    nl: { category: "Digitale artefacten", blurb: "Vijf on-chain drops: verzamelbare artefacten, opgegraven uit een fictieve mijnwereld.", },
+    nl: { category: "Muziekplatform en game", blurb: "Vijf on-chain drops: verzamelbare artefacten, opgegraven uit een fictieve mijnwereld.", },
     image: "/work/excavara-a.jpg",
     imageB: "/work/excavara-b.jpg",
     url: "https://excavara.com/",
@@ -130,11 +134,11 @@ export const projects: Project[] = [
   {
     id: "tmstry",
     title: "TMSTRY",
-    category: "AI Music Artist",
+    category: "Artist Website",
     year: "Ongoing",
     blurb: "Human // signal // AI. An artist site built as a living transmission: music, videos and a signal to tune into.",
     tone: { base: "#0b0e14", glow: "#9db4c9", light: "40% 12%" },
-    nl: { category: "AI-muziekartiest", year: "Doorlopend", blurb: "Human // signal // AI. Een artiestensite gebouwd als een levende uitzending: muziek, video’s en een signaal om op af te stemmen.", },
+    nl: { category: "Artiestenwebsite", year: "Doorlopend", blurb: "Human // signal // AI. Een artiestensite gebouwd als een levende uitzending: muziek, video’s en een signaal om op af te stemmen.", },
     image: "/work/tmstry.jpg",
     url: "https://www.tmstry.com",
   },
@@ -143,8 +147,8 @@ export const projects: Project[] = [
     title: "Future Products",
     category: "In Development",
     year: "Soon",
-    blurb: "Quiet tools and new rituals, currently taking shape in the studio.",
+    blurb: "New tools and formats, currently taking shape in the studio.",
     tone: { base: "#0f0c12", glow: "#a795c9", light: "60% 40%" },
-    nl: { category: "In ontwikkeling", year: "Binnenkort", blurb: "Stille tools en nieuwe rituelen, nu vorm aan het krijgen in de studio.", },
+    nl: { category: "In ontwikkeling", year: "Binnenkort", blurb: "Nieuwe tools en formaten, nu vorm aan het krijgen in de studio.", },
   },
 ];

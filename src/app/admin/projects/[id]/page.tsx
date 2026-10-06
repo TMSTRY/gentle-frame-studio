@@ -86,7 +86,7 @@ export default async function ProjectDetailPage({
             : flags.error === "cut"
               ? "Pick a video from the vault or paste an https link."
               : flags.error === "migration"
-                ? "Run the missing migration in Supabase first (004 files, 005 review)."
+                ? "Run the missing migration in Supabase first (004 files, 005 review, 006 screenings, 008 service kinds)."
                 : "Saving failed. Please try again."}
         </Notice>
       ) : null}
@@ -150,7 +150,7 @@ export default async function ProjectDetailPage({
       <section id="review" className="mt-20">
         <h2 className="text-eyebrow mb-4">Review</h2>
         <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">
-          Publish a cut for the client to watch and annotate. Upload the video under Files first (as the studio), then pick it here, or paste a YouTube, Vimeo or direct video link. Publishing moves the project to “In review”. Needs migration 005.
+          Publish a version for the client to watch and annotate: a film, a motion piece, or a walkthrough of a website or app. Upload the video under Files first (as the studio), then pick it here, or paste a YouTube, Vimeo or direct video link. Publishing moves the project to “In review”. Needs migration 005.
         </p>
         <form action={createCutAction} className="grid max-w-3xl gap-6 border-t border-line pt-6 md:grid-cols-2">
           <input type="hidden" name="project_id" value={typed.id} />

@@ -10,7 +10,7 @@ export function approvedMail({ language, clientName, projectTitle, url, invoiceF
     const subject = `Goedgekeurd: ${projectTitle}`;
     const html = wrapMail(
       `Dag ${first(clientName)},`,
-      mailParagraph(`Dank je. <strong>${title}</strong> is goedgekeurd en staat nu op opgeleverd. De definitieve bestanden vind je in je portaal, of ze volgen daar binnenkort.`) +
+      mailParagraph(`Dank je. <strong>${title}</strong> is goedgekeurd en staat nu op opgeleverd. De definitieve bestanden, of de link naar het afgewerkte werk, vind je in je portaal of ze volgen daar binnenkort.`) +
         (invoiceFollows ? mailParagraph("De saldofactuur verschijnt binnenkort in je portaal.") : "") +
         mailButton(url, "Open je project") +
         mailParagraph("Warm,<br/>Tim · Gentle Frame Studio"),
@@ -20,7 +20,7 @@ export function approvedMail({ language, clientName, projectTitle, url, invoiceF
   const subject = `Approved: ${projectTitle}`;
   const html = wrapMail(
     `Hello ${first(clientName)},`,
-    mailParagraph(`Thank you. <strong>${title}</strong> is approved and now marked as delivered. The final files are in your portal, or will appear there shortly.`) +
+    mailParagraph(`Thank you. <strong>${title}</strong> is approved and now marked as delivered. The final files, or the link to the finished work, are in your portal or will appear there shortly.`) +
       (invoiceFollows ? mailParagraph("The balance invoice will appear in your portal soon.") : "") +
       mailButton(url, "Open your project") +
       mailParagraph("Warmly,<br/>Tim · Gentle Frame Studio"),
@@ -28,27 +28,27 @@ export function approvedMail({ language, clientName, projectTitle, url, invoiceF
   return { subject, html, text: `Hello ${clientName.split(" ")[0]},\n\n${projectTitle} is approved and delivered. ${invoiceFollows ? "The balance invoice follows in your portal. " : ""}${url}\n\nWarmly, Tim` };
 }
 
-/** To the client when a new cut is ready to watch. */
+/** To the client when a new version is ready to see; the same mail for a film, a website or an app. */
 export function cutReadyMail({ language, clientName, projectTitle, version, url }: { language: Lang; clientName: string; projectTitle: string; version: number; url: string }) {
   const title = escapeHtml(projectTitle);
   if (language === "nl") {
     const subject = `Nieuwe versie om te bekijken: ${projectTitle}`;
     const html = wrapMail(
       `Dag ${first(clientName)},`,
-      mailParagraph(`Versie ${version} van <strong>${title}</strong> staat klaar in je portaal. Bekijk ze rustig. Wil je iets aanpassen, klik dan op een moment in de film en schrijf erbij wat je opvalt. Klopt alles, dan kun je de versie meteen goedkeuren.`) +
-        mailButton(url, "Bekijk de versie") +
+      mailParagraph(`Versie ${version} van <strong>${title}</strong> staat klaar in je portaal. Bekijk ze rustig. Wil je iets aanpassen, markeer dan het moment en schrijf erbij wat je opvalt. Klopt alles, dan kun je de versie meteen goedkeuren.`) +
+        mailButton(url, "Open de versie") +
         mailParagraph("Warm,<br/>Tim · Gentle Frame Studio"),
     );
     return { subject, html, text: `Dag ${clientName.split(" ")[0]},\n\nVersie ${version} van ${projectTitle} staat klaar in je portaal: ${url}\n\nWarm, Tim` };
   }
-  const subject = `A new cut to watch: ${projectTitle}`;
+  const subject = `A new version to watch: ${projectTitle}`;
   const html = wrapMail(
     `Hello ${first(clientName)},`,
-    mailParagraph(`Cut ${version} of <strong>${title}</strong> is ready in your portal. Take your time. If something should change, click a moment in the film and write what you notice. If it all feels right, you can approve it straight away.`) +
-      mailButton(url, "Watch the cut") +
+    mailParagraph(`Version ${version} of <strong>${title}</strong> is ready in your portal. Take your time. If something should change, mark the moment and write what you notice. If it all feels right, you can approve it straight away.`) +
+      mailButton(url, "Open the version") +
       mailParagraph("Warmly,<br/>Tim · Gentle Frame Studio"),
   );
-  return { subject, html, text: `Hello ${clientName.split(" ")[0]},\n\nCut ${version} of ${projectTitle} is ready in your portal: ${url}\n\nWarmly, Tim` };
+  return { subject, html, text: `Hello ${clientName.split(" ")[0]},\n\nVersion ${version} of ${projectTitle} is ready in your portal: ${url}\n\nWarmly, Tim` };
 }
 
 /** To the client when the studio adds a file to their project. */

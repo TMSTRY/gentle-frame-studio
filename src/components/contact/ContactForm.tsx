@@ -77,9 +77,13 @@ export default function ContactForm({ variant, lang, copy }: ContactFormProps) {
           <select
             id={`${variant}-topic`}
             name="topic"
-            defaultValue={copy.topicOptions[0]}
+            required
+            defaultValue=""
             className={`${field} cursor-pointer appearance-none bg-ink`}
           >
+            <option value="" disabled className="bg-ink text-cream">
+              {copy.topicPlaceholder ?? "…"}
+            </option>
             {copy.topicOptions.map((option) => (
               <option key={option} value={option} className="bg-ink text-cream">
                 {option}

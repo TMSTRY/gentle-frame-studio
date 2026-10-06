@@ -33,11 +33,19 @@ export const STATUS_TRACK: ProjectStatus[] = [
   "delivered",
 ];
 
+/**
+ * Order = order in the Service dropdown: films first (memorial stays first),
+ * then motion and AI, then digital work. Postgres enum order does not matter.
+ * website, motion_design and brand_film need migration 008 in Supabase.
+ */
 export const SERVICES = [
   "memorial_film",
+  "brand_film",
   "product_film",
   "music_video",
+  "motion_design",
   "ai_visual",
+  "website",
   "app",
   "platform",
   "consulting",
@@ -47,9 +55,12 @@ export type ServiceKind = (typeof SERVICES)[number];
 
 export const SERVICE_LABEL: Record<ServiceKind, string> = {
   memorial_film: "Memorial film",
-  product_film: "Product film",
+  brand_film: "Brand film",
+  product_film: "Product or app film",
   music_video: "Music video",
+  motion_design: "Motion design",
   ai_visual: "AI visual production",
+  website: "Website",
   app: "App",
   platform: "Platform",
   consulting: "Creative consulting",

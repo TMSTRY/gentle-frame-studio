@@ -23,6 +23,7 @@ export interface ReviewLabels {
   noNotes: string;
   openLink: string;
   timecodeHint: string;
+  linkHint?: string;
   studio: string;
 }
 
@@ -136,7 +137,7 @@ export default function ReviewPanel({ cut, source, notes, mode, lang, labels, re
                   {labels.useMoment}
                 </button>
               ) : (
-                <span className="pb-3 text-xs text-taupe">{labels.timecodeHint}</span>
+                <span className="pb-3 text-xs text-taupe">{source?.kind === "link" && labels.linkHint ? labels.linkHint : labels.timecodeHint}</span>
               )}
             </div>
             <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={3} placeholder={labels.placeholder} className={`${inputClass} mt-4 resize-none leading-relaxed`} />

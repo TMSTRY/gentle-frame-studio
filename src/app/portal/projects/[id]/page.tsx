@@ -68,7 +68,7 @@ export default async function PortalProjectPage({
       {currentCut ? (
         <section id="review" className="mt-20">
           <h2 className="text-eyebrow mb-4">{t.review.title}</h2>
-          <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">{t.review.lede}</p>
+          <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">{t.review.lede(typed.service)}</p>
           <ReviewPanel
             cut={currentCut}
             source={review.sources.get(currentCut.id) ?? null}
@@ -147,7 +147,7 @@ export default async function PortalProjectPage({
       {openRooms.length ? (
         <section id="screening" className="mt-20">
           <h2 className="text-eyebrow mb-4">{t.screening.title}</h2>
-          <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">{t.screening.lede}</p>
+          <p className="mb-8 max-w-xl text-sm leading-relaxed text-taupe">{t.screening.lede(typed.service)}</p>
           <ul>
             {openRooms.map((room) => (
               <li key={room.id} className="grid gap-4 border-t border-line py-6 md:grid-cols-[1fr_auto] md:items-center">
@@ -174,7 +174,7 @@ export default async function PortalProjectPage({
         </section>
       ) : null}
 
-      {typed.remembrance_date ? (
+      {typed.service === "memorial_film" && typed.remembrance_date ? (
         <section id="remembrance" className="mt-20 max-w-xl border-t border-line pt-8">
           <p className="text-[0.62rem] tracking-[0.26em] text-taupe uppercase">{t.remembrance.eyebrow}</p>
           {flags.remembrance === "on" ? <p className="mt-3 text-sm text-champagne">{t.remembrance.savedOn}</p> : null}
@@ -208,7 +208,7 @@ export default async function PortalProjectPage({
           files={files}
           mode="client"
           lang={lang}
-          labels={t.files}
+          labels={{ ...t.files, drop: t.files.drop(typed.service) }}
           checklist={files.some((f) => f.uploaded_by === "client") ? undefined : checklistFor(lang, typed.service)}
           readOnly={typed.status === "cancelled"}
         />

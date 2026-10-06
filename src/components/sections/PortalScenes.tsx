@@ -32,7 +32,7 @@ export function SceneFollow({ t }: { t: Scenes }) {
       <ul className="mt-5">
         {t.updates.map((u, i) => (
           <li key={u} className={`${hair} py-3`}>
-            <span className={eyebrow}>{i === 0 ? "12 sep" : "19 sep"}</span>
+            <span className={eyebrow}>{t.dates[i]}</span>
             <p className="mt-1 text-[0.72rem] leading-relaxed text-cream/85">{u}</p>
           </li>
         ))}
@@ -92,7 +92,7 @@ export function SceneReview({ t }: { t: Scenes }) {
         </li>
         <li className={`${hair} py-3 opacity-80`}>
           <div className="flex items-baseline gap-3">
-            <span className={eyebrow}>Studio</span>
+            <span className={eyebrow}>{t.studio}</span>
             <span className="text-[0.42rem] tracking-[0.2em] text-champagne/70 uppercase">✓</span>
           </div>
           <p className="mt-1 text-[0.74rem] leading-relaxed text-cream/80">{t.reply}</p>
@@ -135,7 +135,7 @@ export function SceneRoom({ t }: { t: Scenes }) {
         </div>
       </div>
       <p className="mt-4 text-[0.5rem] tracking-[0.24em] text-taupe uppercase">
-        {t.roomCode} <span className="ml-1 tracking-[0.3em] text-champagne">marie47</span>
+        {t.roomCode} <span className="ml-1 tracking-[0.3em] text-champagne">{t.roomCodeValue}</span>
       </p>
       <span className="mt-4 inline-block rounded-full border border-champagne/50 px-5 py-2.5 text-[0.46rem] tracking-[0.3em] text-champagne uppercase">{t.roomKeep}</span>
       <p className="mt-auto text-[0.42rem] tracking-[0.26em] text-taupe/70 uppercase">{t.roomMade}</p>

@@ -37,7 +37,10 @@ export default function ProjectForm({ project, clients, defaultClientId }: Proje
           </select>
         </Field>
         <Field label="Service" htmlFor="service">
-          <select id="service" name="service" defaultValue={project?.service ?? "memorial_film"} className={selectClass}>
+          <select id="service" name="service" required defaultValue={project?.service ?? ""} className={selectClass}>
+            <option value="" disabled className="bg-ink text-cream">
+              Choose a service…
+            </option>
             {SERVICES.map((service) => (
               <option key={service} value={service} className="bg-ink text-cream">
                 {SERVICE_LABEL[service]}
@@ -64,17 +67,24 @@ export default function ProjectForm({ project, clients, defaultClientId }: Proje
         </div>
       </div>
 
-      <div className="mt-8 max-w-xs">
-        <Field label="Remembrance date (memorial films: the date they passed; the family opts in, migration 007)" htmlFor="remembrance_date">
-          <input id="remembrance_date" name="remembrance_date" type="date" defaultValue={project?.remembrance_date ?? ""} className={`${inputClass} [color-scheme:dark]`} />
-        </Field>
-        {project?.remembrance_date ? (
-          <p className="mt-2 text-xs text-taupe">
-            {project.remembrance_optin ? "The family asked for the yearly note." : "The family has not opted in (yet)."}
-            {project.remembrance_last_year ? ` Last sent in ${project.remembrance_last_year}.` : ""}
-          </p>
-        ) : null}
-      </div>
+      {project?.service === "memorial_film" ? (
+        <div className="mt-8 max-w-xs">
+          <Field label="Remembrance date · memorial films only (the date they passed; the family opts in from their portal)" htmlFor="remembrance_date">
+            <input id="remembrance_date" name="remembrance_date" type="date" defaultValue={project.remembrance_date ?? ""} className={`${inputClass} [color-scheme:dark]`} />
+          </Field>
+          {project.remembrance_date ? (
+            <p className="mt-2 text-xs text-taupe">
+              {project.remembrance_optin ? "The family asked for the yearly note." : "The family has not opted in (yet)."}
+              {project.remembrance_last_year ? ` Last sent in ${project.remembrance_last_year}.` : ""}
+            </p>
+          ) : null}
+        </div>
+      ) : !project ? (
+        <p className="mt-8 text-xs text-taupe">Memorial film? The remembrance date can be set after the first save.</p>
+      ) : project.remembrance_date ? (
+        // A date set while this was a memorial film is kept, not silently wiped; the yearly note only goes out for memorial films.
+        <input type="hidden" name="remembrance_date" value={project.remembrance_date} />
+      ) : null}
 
       <div className="mt-8">
         <Field label="Description (visible to the client)" htmlFor="description">

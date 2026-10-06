@@ -33,6 +33,22 @@ export function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 }
 
+/** Apps and platforms ask for the same things; one list, two kinds. */
+const APP_NL = [
+  "Wat het moet doen, in een paar gewone zinnen",
+  "Wie het gaat gebruiken, en op welke toestellen",
+  "Schermen, schetsen of tools die je al gebruikt, ook ruwe",
+  "Logo en huisstijl, als je die hebt",
+  "De gegevens waarmee het moet werken, of een voorbeeld ervan",
+];
+const APP_EN = [
+  "What it must do, in a few plain sentences",
+  "Who will use it, and on which devices",
+  "Screens, sketches or tools you already use, even rough ones",
+  "Logo and brand assets, if you have them",
+  "The data it needs to work with, or an example of it",
+];
+
 /** What we gently ask a client to share, per kind of work. */
 export const CHECKLIST: Record<"nl" | "en", Partial<Record<ServiceKind, string[]>> & { default: string[] }> = {
   nl: {
@@ -43,8 +59,30 @@ export const CHECKLIST: Record<"nl" | "en", Partial<Record<ServiceKind, string[]
       "Een lievelingslied of muziek die bij hem of haar past",
     ],
     music_video: ["De definitieve mix (WAV of hoge-kwaliteit MP3)", "De songtekst", "Referenties: beelden, kleuren, sfeer", "Foto’s van de artiest"],
-    product_film: ["Productfoto’s of een adres waar we het product kunnen ophalen", "Logo en huisstijl", "De kernboodschap in één zin", "Referenties die je mooi vindt"],
+    brand_film: [
+      "Logo en huisstijl",
+      "Het product zelf, of een plek waar we het kunnen filmen",
+      "Wie er aan het woord komt, als er iemand spreekt: een oprichter, een collega, een klant",
+      "Foto’s en beelden die je al hebt",
+      "Referenties: films die je mooi vindt, het tempo en de sfeer",
+    ],
+    product_film: ["Productfoto’s, een link naar de app, of een adres waar we het product kunnen ophalen", "Logo en huisstijl", "De kernboodschap in één zin", "Referenties die je mooi vindt"],
+    motion_design: [
+      "Logo en huisstijl, liefst als vectorbestanden",
+      "Het script of de verhaallijn, ook als het nog ruw is",
+      "De formaten en lengtes die je nodig hebt, en waar het zal spelen",
+      "Referenties: beweging die je mooi vindt, het tempo en de sfeer",
+    ],
     ai_visual: ["Logo en huisstijl", "Referentiebeelden en sfeer", "Teksten die in beeld moeten", "Formaten waarin je het nodig hebt"],
+    website: [
+      "De teksten die je al hebt, of de pagina’s die je voor ogen hebt",
+      "Logo en huisstijl, als je die hebt",
+      "Foto’s van je team, je plek of je werk",
+      "Toegang tot je huidige domein of hosting, of waar ze geregistreerd zijn",
+      "Websites die je mooi vindt, en wat je er mooi aan vindt",
+    ],
+    app: APP_NL,
+    platform: APP_NL,
     default: ["Alles wat helpt: teksten, logo’s, referenties, bestaand materiaal"],
   },
   en: {
@@ -55,8 +93,30 @@ export const CHECKLIST: Record<"nl" | "en", Partial<Record<ServiceKind, string[]
       "A favourite song or music that suits them",
     ],
     music_video: ["The final mix (WAV or high-quality MP3)", "The lyrics", "References: images, colours, mood", "Photographs of the artist"],
-    product_film: ["Product photographs or an address where we can collect the product", "Logo and brand assets", "The core message in one sentence", "References you like"],
+    brand_film: [
+      "Logo and brand assets",
+      "The product itself, or a place where we can film it",
+      "Who speaks in the film, if anyone: a founder, a colleague, a customer",
+      "Photographs and footage you already have",
+      "References: films you like, their pace and mood",
+    ],
+    product_film: ["Product photographs, a link to the app, or an address where we can collect the product", "Logo and brand assets", "The core message in one sentence", "References you like"],
+    motion_design: [
+      "Logo and brand assets, vector files if possible",
+      "The script or storyline, even in rough form",
+      "The formats and durations you need, and where it will play",
+      "References: motion you like, its pace and mood",
+    ],
     ai_visual: ["Logo and brand assets", "Reference images and mood", "Any text that must appear on screen", "The formats you need"],
+    website: [
+      "The texts you already have, or the pages you have in mind",
+      "Logo and brand assets, if you have them",
+      "Photographs of your team, your place or your work",
+      "Access to your current domain or hosting, or where they are registered",
+      "Websites you like, and what you like about them",
+    ],
+    app: APP_EN,
+    platform: APP_EN,
     default: ["Anything that helps: texts, logos, references, existing material"],
   },
 };

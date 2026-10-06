@@ -11,6 +11,7 @@ export interface ContactFormCopy {
   email: string;
   topic?: string;
   topicOptions?: string[];
+  topicPlaceholder?: string;
   message: string;
   messagePlaceholder: string;
   date?: string;
@@ -30,16 +31,17 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     email: "Your email",
     topic: "What is it about?",
     topicOptions: [
-      "A memorial film",
-      "A product film",
-      "A music video",
-      "AI visuals",
+      "A website",
+      "A brand or product film",
+      "Motion design",
       "An app or platform",
-      "Creative consulting",
+      "A memorial film",
+      "A music video",
       "Something else",
     ],
+    topicPlaceholder: "Choose a topic…",
     message: "Tell us a little",
-    messagePlaceholder: "A memory, a product, a song, an idea…",
+    messagePlaceholder: "A website, a film, a product, a memory, an idea…",
     submit: "Send",
     sending: "Sending…",
     success: {
@@ -56,16 +58,17 @@ export const contactCopy: Record<`${ContactVariant}-${ContactLang}`, ContactForm
     email: "Je e-mailadres",
     topic: "Waarover gaat het?",
     topicOptions: [
-      "Een herinneringsfilm",
-      "Een productfilm",
-      "Een muziekvideo",
-      "AI-beelden",
+      "Een website",
+      "Een merk- of productfilm",
+      "Motion design",
       "Een app of platform",
-      "Creatief advies",
+      "Een herinneringsfilm",
+      "Een muziekvideo",
       "Iets anders",
     ],
+    topicPlaceholder: "Kies een onderwerp…",
     message: "Vertel ons kort",
-    messagePlaceholder: "Een herinnering, een product, een lied, een idee…",
+    messagePlaceholder: "Een website, een film, een product, een herinnering, een idee…",
     submit: "Versturen",
     sending: "Versturen…",
     success: {

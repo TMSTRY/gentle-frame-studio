@@ -321,7 +321,7 @@ function CoverCard({
           </p>
         ) : playable ? (
           <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-champagne uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-            {t.playFilm}
+            {project.videoKind === "preview" ? t.playPreview : t.playFilm}
           </p>
         ) : project.note ? (
           <p className="mt-6 translate-y-3 text-[0.66rem] tracking-[0.3em] text-taupe uppercase opacity-0 transition-all delay-75 duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">

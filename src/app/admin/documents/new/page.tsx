@@ -20,7 +20,7 @@ export default async function NewDocumentPage({
   const params = await searchParams;
   const admin = createAdminClient();
   const [{ data: clients }, { data: projects }, studio] = await Promise.all([
-    admin.from("clients").select("id, name, company").is("deleted_at", null).order("name"),
+    admin.from("clients").select("id, name, company, language").is("deleted_at", null).order("name"),
     admin.from("projects").select("id, title, client_id").is("deleted_at", null).order("updated_at", { ascending: false }),
     loadStudio(admin),
   ]);

@@ -79,6 +79,7 @@ export async function GET(request: Request) {
     .from("projects")
     .select("id, title, remembrance_date, remembrance_last_year, clients(name, email, language)")
     .eq("remembrance_optin", true)
+    .eq("service", "memorial_film")
     .not("remembrance_date", "is", null)
     .is("deleted_at", null);
   if (!remErr && resend) {

@@ -41,7 +41,7 @@ export default async function DocumentDetailPage({
   if (!bundle) notFound();
   const { document, lines, client, project, studio, signatures } = bundle;
   const [{ data: clients }, { data: projects }, { data: derived }] = await Promise.all([
-    admin.from("clients").select("id, name, company").is("deleted_at", null).order("name"),
+    admin.from("clients").select("id, name, company, language").is("deleted_at", null).order("name"),
     admin.from("projects").select("id, title, client_id").is("deleted_at", null).order("updated_at", { ascending: false }),
     document.kind === "quote"
       ? admin.from("documents").select("id, number, title, status, total_cents, currency").eq("source_document_id", id).is("deleted_at", null).order("created_at")

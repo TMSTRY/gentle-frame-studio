@@ -12,10 +12,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export const metadata: Metadata = { title: "Private screening", robots: { index: false, follow: false, noarchive: true } };
 
 /**
- * The family's own screening room: one film, no platform, no feed.
- * Reachable only through an unguessable link, optionally behind a
- * code the family hands out. The film streams from private storage
- * through a signed URL that lives a few hours.
+ * The client's own screening room: one film, no platform, no feed.
+ * A family, a team or a whole company reaches it only through an
+ * unguessable link, optionally behind a code the client hands out.
+ * The film streams from private storage through a signed URL that
+ * lives a few hours.
  */
 export default async function ScreeningPage({ params, searchParams }: { params: Promise<{ token: string }>; searchParams: Promise<{ wrong?: string }> }) {
   const { token } = await params;

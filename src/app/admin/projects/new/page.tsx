@@ -27,7 +27,7 @@ export default async function NewProjectPage({
         <PageHeader eyebrow="New project" title="A new frame to fill." />
       </div>
       {error ? (
-        <Notice tone="alert">{error === "invalid" ? "Choose a client and give the project a title." : "Saving failed. Please try again."}</Notice>
+        <Notice tone="alert">{error === "invalid" ? "Choose a client and give the project a title." : error === "migration" ? "That service kind is not in the database yet: run migration 008 in the Supabase SQL Editor, then save again." : "Saving failed. Please try again."}</Notice>
       ) : null}
       {!clients?.length ? <Notice>Create a client first, a project always belongs to someone.</Notice> : null}
       <div className="mt-14">

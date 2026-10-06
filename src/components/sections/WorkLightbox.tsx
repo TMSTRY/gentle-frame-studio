@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { Project } from "@/content/projects";
+import { useLocale } from "@/lib/i18n/locale";
 import { gsap } from "@/lib/gsap";
 import { getLenis } from "@/lib/scroll";
 
@@ -48,6 +49,8 @@ export default function WorkLightbox({ project, onClose }: WorkLightboxProps) {
     };
   }, [onClose]);
 
+  const locale = useLocale();
+  const caption = (locale === "nl" && project.nl?.caption) || project.caption;
   const youtubeSrc = project.youtube
     ? `https://www.youtube-nocookie.com/embed/${project.youtube}?autoplay=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1`
     : null;
@@ -69,6 +72,7 @@ export default function WorkLightbox({ project, onClose }: WorkLightboxProps) {
             {project.video ? (
               <video
                 src={project.video}
+                poster={project.poster}
                 controls
                 autoPlay
                 playsInline
@@ -89,9 +93,9 @@ export default function WorkLightbox({ project, onClose }: WorkLightboxProps) {
         <div className="mt-5 flex items-baseline justify-between gap-6 px-1">
           <p className="font-display text-xl text-cream italic md:text-2xl">{project.title}</p>
           <div className="flex items-baseline gap-8">
-            {project.caption ? (
+            {caption ? (
               <p className="hidden text-[0.62rem] tracking-[0.24em] text-taupe uppercase sm:block">
-                {project.caption}
+                {caption}
               </p>
             ) : null}
             <button

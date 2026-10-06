@@ -21,10 +21,13 @@ const outfit = Outfit({
   display: "swap",
 });
 
+/** The <title> and link-preview title: descriptive, not the slogan. */
+const pageTitle = `${site.legalName} · ${site.titleLines.en}`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.legalName} · ${site.tagline}`,
+    default: pageTitle,
     template: `%s · ${site.legalName}`,
   },
   description: site.description,
@@ -34,27 +37,32 @@ export const metadata: Metadata = {
   keywords: [
     "Tim Mostrey",
     "Gentle Frame Studio",
+    "creative studio Belgium",
     "memorial films",
-    "AI film studio",
+    "brand films",
     "product films",
     "music videos",
-    "AI visual production",
-    "creative studio Belgium",
+    "motion design",
+    "websites",
+    "web design Belgium",
+    "web development",
+    "app development",
     "digital platforms",
+    "AI visual production",
     "creative consulting",
   ],
   openGraph: {
     type: "website",
     url: site.url,
     siteName: site.legalName,
-    title: `${site.legalName} · ${site.tagline}`,
+    title: pageTitle,
     description: site.description,
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: `${site.name} · ${site.tagline}` }],
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: `${site.name} · ${site.titleLines.en}` }],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.legalName} · ${site.tagline}`,
+    title: pageTitle,
     description: site.description,
     images: ["/og.jpg"],
   },
@@ -67,6 +75,19 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
+/** The disciplines, spelled out for the knowledge graph; one list for the studio and its founder. */
+const knowsAbout = [
+  "films",
+  "memorial films",
+  "brand films",
+  "websites",
+  "motion design",
+  "apps",
+  "platforms",
+  "AI visual production",
+  "creative consulting",
+];
+
 const founderSchema = {
   "@type": "Person",
   "@id": `${site.url}/#founder`,
@@ -75,6 +96,7 @@ const founderSchema = {
   url: `${site.url}/#studio`,
   worksFor: { "@id": `${site.url}/#organization` },
   sameAs: site.founder.sameAs,
+  knowsAbout,
 };
 
 const organizationSchema = {
@@ -93,6 +115,7 @@ const organizationSchema = {
       employee: { "@id": `${site.url}/#founder` },
       address: { "@type": "PostalAddress", addressCountry: "BE" },
       description: site.description,
+      knowsAbout,
     },
     founderSchema,
   ],

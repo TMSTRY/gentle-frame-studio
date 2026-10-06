@@ -13,9 +13,10 @@ import { createClient } from "@/lib/supabase/server";
 const text = (fd: FormData, key: string, max = 200) => String(fd.get(key) ?? "").trim().slice(0, max);
 
 /**
- * Studio publishes a cut: a video from the vault or an outside link.
- * The project moves to "review", the timeline gets a line, and the
- * client is (optionally) mailed. Version numbers count up per project.
+ * Studio publishes a version: a video from the vault or an outside
+ * link (a staging site, an app build). The project moves to "review",
+ * the timeline gets a line, and the client is (optionally) mailed.
+ * Version numbers count up per project.
  */
 export async function createCutAction(formData: FormData) {
   await requireAdmin();
@@ -49,7 +50,7 @@ export async function createCutAction(formData: FormData) {
   await admin.from("project_updates").insert({
     project_id: projectId,
     visible_to_client: true,
-    message: nl ? `Versie ${version} staat klaar om te bekijken.` : `Cut ${version} is ready to watch.`,
+    message: nl ? `Versie ${version} staat klaar om te bekijken.` : `Version ${version} is ready to watch.`,
   });
 
   const resend = getResend();
@@ -63,7 +64,7 @@ export async function createCutAction(formData: FormData) {
   redirect(`/admin/projects/${projectId}?saved=1#review`);
 }
 
-/** Takes a cut out of the client's view; its notes stay with it. */
+/** Takes a version out of the client's view; its notes stay with it. */
 export async function deleteCutAction(formData: FormData) {
   await requireAdmin();
   const id = text(formData, "id", 60);
@@ -78,9 +79,9 @@ export async function deleteCutAction(formData: FormData) {
 export type NoteResult = { ok: true; id: string } | { ok: false; error: "auth" | "empty" | "save" };
 
 /**
- * A note on a cut, at a moment in the film or in general. Ownership is
- * proven by reading the cut as the signed-in user. The studio hears
- * about a client's notes at most once per quarter hour per cut.
+ * A note on a version, at a moment or in general. Ownership is proven
+ * by reading the version as the signed-in user. The studio hears about
+ * a client's notes at most once per quarter hour per version.
  */
 export async function addReviewNoteAction(input: { cutId: string; timecode: number | null; body: string }): Promise<NoteResult> {
   const body = String(input.body ?? "").trim().slice(0, 2000);
@@ -107,8 +108,8 @@ export async function addReviewNoteAction(input: { cutId: string; timecode: numb
       await resend.emails.send({
         from: MAIL_FROM,
         to: adminEmail() || site.email,
-        subject: `Review notes · ${who.project.title} · cut ${cut.version}`,
-        text: `${authorName} is leaving notes on cut ${cut.version} of "${who.project.title}".\n\nFirst one${timecode !== null ? ` at ${Math.floor(timecode / 60)}:${String(Math.floor(timecode % 60)).padStart(2, "0")}` : ""}: ${body}\n\n${site.url}/admin/projects/${cut.project_id}#review`,
+        subject: `Review notes · ${who.project.title} · version ${cut.version}`,
+        text: `${authorName} is leaving notes on version ${cut.version} of "${who.project.title}".\n\nFirst one${timecode !== null ? ` at ${Math.floor(timecode / 60)}:${String(Math.floor(timecode % 60)).padStart(2, "0")}` : ""}: ${body}\n\n${site.url}/admin/projects/${cut.project_id}#review`,
       });
     }
   }

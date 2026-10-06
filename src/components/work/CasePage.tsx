@@ -114,7 +114,7 @@ export default function CasePage({ project, study, prev, next, locale }: CasePag
           {(project.video || project.youtube) && project.image ? (
             <Reveal>
               <div className="mb-16">
-                <CaseFilm project={project} poster={project.image} label={t.playFilm} />
+                <CaseFilm project={project} poster={project.poster ?? project.image} label={project.videoKind === "preview" ? t.playPreview : t.playFilm} />
               </div>
             </Reveal>
           ) : null}
